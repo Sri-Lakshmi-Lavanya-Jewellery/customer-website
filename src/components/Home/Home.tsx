@@ -2,46 +2,15 @@ import React from 'react';
 import Carousel from '../Carousel/Carousel';
 import CategoryCard from '../CategoryCard/CategoryCard';
 import ProductCard from '../ProductCard/ProductCard';
+import { categories as categoryData } from '../../data/productData';
 
-// Sample category data
-const categories = [
-    {
-        title: "Gold Jewelry",
-        image: "/assets/images/categories/gold-collection.jpg",
-        description: "Timeless 22K & 24K gold jewelry crafted for elegance",
-        link: "/products/gold"
-    },
-    {
-        title: "Silver Jewelry",
-        image: "/assets/images/categories/silver-collection.jpg",
-        description: "Contemporary silver designs for everyday luxury",
-        link: "/products/silver"
-    },
-    {
-        title: "Diamond Jewelry",
-        image: "/assets/images/categories/diamond-collection.jpg",
-        description: "Certified diamonds in exquisite settings",
-        link: "/products/diamond"
-    },
-    {
-        title: "Bridal Collection",
-        image: "/assets/images/categories/bridal-collection.jpg",
-        description: "Complete wedding jewelry sets for the perfect bride",
-        link: "/products/bridal"
-    },
-    {
-        title: "Traditional Jewelry",
-        image: "/assets/images/categories/traditional-collection.jpg",
-        description: "Heritage pieces inspired by Indian craftsmanship",
-        link: "/products/traditional"
-    },
-    {
-        title: "Modern Collection",
-        image: "/assets/images/categories/modern-collection.jpg",
-        description: "Minimalist designs for the contemporary woman",
-        link: "/products/modern"
-    }
-];
+// Convert our categoryData to the format expected by CategoryCard
+const categories = categoryData.map(category => ({
+    title: category.title,
+    image: category.image,
+    description: category.description,
+    link: `/products/${category.id}`
+}));
 
 // Sample carousel images
 const carouselImages = [
@@ -115,7 +84,7 @@ export default function Home() {
                     <p className="text-gray-600">Explore our wide range of jewelry collections</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {categories.map((category, index) => (
                         <CategoryCard
                             key={index}
@@ -142,8 +111,6 @@ export default function Home() {
                             id={product.id}
                             title={product.title}
                             image={product.image}
-                            price={product.price}
-                            oldPrice={product.oldPrice}
                             isNew={product.isNew}
                             link={product.link}
                         />
