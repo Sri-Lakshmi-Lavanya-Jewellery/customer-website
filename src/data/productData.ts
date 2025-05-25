@@ -1,8 +1,8 @@
 export interface Product {
   id: string;
   title: string;
-  oldPrice?: string;
   isNew?: boolean;
+  images?: string[];
   category: string;
   subcategory: string;
   weight?: string;
@@ -44,9 +44,7 @@ export const products: Product[] = [
   {
     id: "1",
     title: "Silver Kamakshi Deepam",
-    image: "/assets/images/products/silver-diya-1.jpg",
-    price: "₹8,500",
-    oldPrice: "₹9,500",
+    images: ["/assets/images/products/kamakshi-deepam/1.jpg", "/assets/images/products/kamakshi-deepam/2.jpg"],
     isNew: true,
     category: "pooja-items",
     subcategory: "kamakshi-deepam",

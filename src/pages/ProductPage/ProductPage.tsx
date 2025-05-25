@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { products, getCategoryById } from '../../data/productData';
+import ProductGallery from '../../components/ProductGallery/ProductGallery';
 
 export default function ProductPage() {
   const { productId } = useParams<{ productId: string }>();
@@ -18,7 +19,10 @@ export default function ProductPage() {
       const foundProduct = products.find(p => p.id === productId);
       if (foundProduct) {
         setProduct(foundProduct);
-        setSelectedImage(foundProduct.image);
+        // Set the first image as selected if images exist
+        if (foundProduct.images && foundProduct.images.length > 0) {
+          setSelectedImage(foundProduct.images[0]);
+        }
         
         // If product has models, set the first one as default selected
         if (foundProduct.models && Object.keys(foundProduct.models).length > 0) {
@@ -213,26 +217,12 @@ export default function ProductPage() {
 
       {/* Product Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-        {/* Product Images */}
-        <div>
-          <div className="mb-4 border rounded-lg overflow-hidden bg-white">
-            <img 
-              src={selectedImage} 
-              alt={product.title} 
-              className="w-full h-auto object-contain aspect-square"
-            />
-          </div>
-          
-          {/* Image thumbnails would go here */}
-          <div className="grid grid-cols-4 gap-2">
-            <button 
-              className={`border rounded-md overflow-hidden ${selectedImage === product.image ? 'ring-2 ring-blue-500' : ''}`}
-              onClick={() => setSelectedImage(product.image)}
-            >
-              <img src={product.image} alt={product.title} className="w-full h-20 object-cover" />
-            </button>
-            {/* Additional product images would be mapped here */}
-          </div>
+        {/* Product Gallery */}
+        <div className="w-full">
+          <ProductGallery 
+            images={product.images || []} 
+            title={product.title} 
+          />
         </div>
 
         {/* Product Info */}
