@@ -259,7 +259,7 @@ export default function ProductPage() {
           {hasModels && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Select Model</h3>
-              <div className="flex flex-col space-y-3">
+              <div className="flex gap-3">
                 {modelKeys.map(modelKey => {
                   // Get a preview of the current model dimensions to show in the selector
                   const modelData = product.models[modelKey];
@@ -322,7 +322,7 @@ export default function ProductPage() {
                   if (!dimensionRange) return null;
                   
                   return (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                       {dimensionRange.length && (
                         <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm transition-transform hover:translate-y-[-2px]">
                           <div className="flex justify-between items-center">

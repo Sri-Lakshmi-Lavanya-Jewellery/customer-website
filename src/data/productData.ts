@@ -37,6 +37,17 @@ export const categories: Category[] = [
       { id: "agarbatti-stand", name: "Agarabatti Stand" },
     ]
   },
+  {
+    id: "gifts",
+    title: "Gifts",
+    image: "/assets/images/categories/silver-cover-1.png",
+    description: "Silver pooja items for auspicious occasions",
+    subcategories: [
+      { id: "gift-1", name: "Gift 1" },
+      { id: "harathi-stand", name: "Harathi Stand" },
+      { id: "agarbatti-stand", name: "Agarabatti Stand" },
+    ]
+  },
 ];
 
 // Sample Products Data
@@ -49,7 +60,6 @@ export const products: Product[] = [
     category: "pooja-items",
     subcategory: "kamakshi-deepam",
     weight: "20g-60g",
-    purity: "92.5%",
     inStock: true,
     models: {
       "Model 1": {
@@ -57,7 +67,7 @@ export const products: Product[] = [
           length: "6.5cm",
           height: "11.5cm",
           breadth: "7cm",
-          weight: "60g"
+          weight: "60g",
         },
         dimensions2: {
           length: "6cm",
