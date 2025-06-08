@@ -1,30 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import ProductGalleryModal from './ProductGalleryModal';
-import ProductGalleryThumbnails from './ProductGalleryThumbnails';
-import { ProductGalleryProps } from '../../types/productGallery.types';
+import { X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+
+interface ProductGalleryProps {
+  images?: string[];
+  title?: string;
+}
 
 export default function ProductGallery({ 
-  images = [], // Default to empty array if undefined
+  images, 
   title = "Product Gallery" 
 }: ProductGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState<string>(images[0] || '');
+  const [selectedImage, setSelectedImage] = useState<string>(images?.[0] || '');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  
-  // State for main page image hover zoom (distinct from modal zoom)
-  const [isMainPageZoomed, setIsMainPageZoomed] = useState<boolean>(false);
-  const [mainPageZoomPosition, setMainPageZoomPosition] = useState({ x: 50, y: 50 });
+  const [isZoomed, setIsZoomed] = useState<boolean>(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
 
-  // Effect to update selectedImage if images prop changes and selectedImage is no longer valid
-  useEffect(() => {
-    if (images.length > 0 && !images.includes(selectedImage)) {
-      setSelectedImage(images[0]);
-    } else if (images.length === 0 && selectedImage !== '') {
-      setSelectedImage(''); // Clear selected image if images array becomes empty
-    }
-  }, [images, selectedImage]);
-
-
-  if (images.length === 0) {
+  if (!images || images.length === 0) {
     return (
       <div className="w-full h-96 bg-gray-100 flex items-center justify-center rounded-lg">
         <div className="text-gray-400 text-center">
@@ -37,31 +28,81 @@ export default function ProductGallery({
     );
   }
 
-  const handleMainPageImageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isMainPageZoomed) return;
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isZoomed) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    setMainPageZoomPosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
+    setZoomPosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
   };
-  
-  const openModal = () => {
-    if (selectedImage) { // Only open modal if there's an image to show
-        setIsModalOpen(true);
-        setIsMainPageZoomed(false); // Turn off main page zoom when modal opens
+
+  const toggleZoom = () => {
+    setIsZoomed(!isZoomed);
+    if (!isZoomed) {
+      setZoomPosition({ x: 50, y: 50 });
     }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+    setIsZoomed(false);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setIsZoomed(false);
   };
 
-  const handleSelectThumbnail = (image: string) => {
-    setSelectedImage(image);
-    setIsMainPageZoomed(false); // Reset zoom when a new thumbnail is selected
+  const navigateImage = (direction: 'prev' | 'next') => {
+    const currentIndex = images.indexOf(selectedImage);
+    let newIndex;
+    
+    if (direction === 'prev') {
+      newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    } else {
+      newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
+    }
+    
+    setSelectedImage(images[newIndex]);
   };
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isModalOpen) return;
+      
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          navigateImage('next');
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          navigateImage('prev');
+          break;
+        case 'Escape':
+          e.preventDefault();
+          closeModal();
+          break;
+        case ' ':
+          e.preventDefault();
+          toggleZoom();
+          break;
+      }
+    };
+
+    if (isModalOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isModalOpen, selectedImage, images]);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -70,47 +111,160 @@ export default function ProductGallery({
         <div 
           className="relative w-full h-96 md:h-[500px] cursor-pointer group"
           onClick={openModal}
-          onMouseMove={handleMainPageImageMouseMove}
-          onMouseEnter={() => selectedImage && setIsMainPageZoomed(true)} // Only zoom if there's an image
-          onMouseLeave={() => {
-            setIsMainPageZoomed(false);
-            setMainPageZoomPosition({ x: 50, y: 50 }); // Reset position
-          }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setIsZoomed(false)}
         >
           <img
             src={selectedImage}
             alt={title}
             className="w-full h-full object-contain transition-transform duration-200"
             style={{
-              transform: isMainPageZoomed ? 'scale(1.5)' : 'scale(1)',
-              transformOrigin: `${mainPageZoomPosition.x}% ${mainPageZoomPosition.y}%`
+              transform: isZoomed ? 'scale(2)' : 'scale(1)',
+              transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
             }}
           />
-           {!isMainPageZoomed && selectedImage && ( // Show overlay only if there's an image
-             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 bg-black bg-opacity-50 rounded-md">
-                  Click to view gallery
-                </span>
-             </div>
-           )}
         </div>
       </div>
 
-      <ProductGalleryThumbnails
-        images={images}
-        selectedImage={selectedImage}
-        onSelectImage={handleSelectThumbnail}
-        title={title}
-      />
+      {/* Thumbnails */}
+      {images.length > 1 && (
+        <div className="grid grid-cols-4 gap-2">
+          {images.map((img, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedImage(img)}
+              className={`relative overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-105 ${
+                selectedImage === img
+                  ? 'border-blue-500 ring-2 ring-blue-200 shadow-md'
+                  : 'border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <img
+                src={img}
+                alt={`${title} - View ${index + 1}`}
+                className="w-full h-20 object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
-      {selectedImage && <ProductGalleryModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        selectedImage={selectedImage}
-        setSelectedImage={setSelectedImage} // Allows modal to change the selected image
-        images={images}
-        title={title}
-      />}
+      {/* Modal */}
+      {isModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center p-4"
+          onClick={closeModal}
+        >
+          <div 
+            className="relative max-w-7xl max-h-full w-full h-full flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-white text-xl font-semibold">{title}</h2>
+              <button
+                onClick={closeModal}
+                className="text-white hover:text-gray-300 transition-colors p-2 hover:bg-white hover:bg-opacity-10 rounded-full"
+                aria-label="Close modal"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Main Image Container */}
+            <div className="flex-1 flex items-center justify-center relative">
+              <div 
+                className="relative max-w-full max-h-full cursor-pointer"
+                onMouseMove={handleMouseMove}
+                onClick={toggleZoom}
+              >
+                <img
+                  src={selectedImage}
+                  alt={title}
+                  className="max-w-full max-h-[70vh] object-contain transition-transform duration-300"
+                  style={{
+                    transform: isZoomed ? 'scale(2)' : 'scale(1)',
+                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                  }}
+                />
+                
+                {/* Zoom indicator */}
+                {!isZoomed && (
+                  <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                    <ZoomIn className="h-4 w-4" />
+                    Click to zoom
+                  </div>
+                )}
+                
+                {isZoomed && (
+                  <div className="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                    Press ESC or click to exit zoom
+                  </div>
+                )}
+              </div>
+
+              {/* Navigation Arrows */}
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigateImage('prev');
+                    }}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-200 hover:scale-110"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigateImage('next');
+                    }}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-200 hover:scale-110"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Modal Thumbnails */}
+            {images.length > 1 && (
+              <div className="mt-4 flex justify-center gap-2 overflow-x-auto pb-2">
+                {images.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage(img);
+                      setIsZoomed(false);
+                    }}
+                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-110 ${
+                      selectedImage === img 
+                        ? 'border-blue-400 ring-2 ring-blue-300 bg-transparent' 
+                        : 'border-gray-600 hover:border-gray-400 bg-transparent'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`${title} - View ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Instructions */}
+            <div className="mt-4 text-center text-gray-400 text-sm">
+              Use arrow keys to navigate • Press Space to zoom • Press ESC to close
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
