@@ -322,7 +322,7 @@ export default function ProductPage() {
                   if (!dimensionRange) return null;
                   
                   return (
-                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       {dimensionRange.length && (
                         <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm transition-transform hover:translate-y-[-2px]">
                           <div className="flex justify-between items-center">
@@ -420,7 +420,7 @@ export default function ProductPage() {
                     {selectedDimension} Specifications
                   </h4>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {currentModelData[selectedDimension].length && (
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
                         <div className="text-gray-600 text-sm mb-1">Length</div>

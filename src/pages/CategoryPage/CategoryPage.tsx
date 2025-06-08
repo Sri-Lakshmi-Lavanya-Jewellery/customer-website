@@ -181,7 +181,7 @@ export default function CategoryPage() {
               key={product.id}
               id={product.id}
               title={product.title}
-              image={product.image}
+              image={product.images?.[1]}
               isNew={product.isNew}
               link={`/product/${product.id}`}
             />
