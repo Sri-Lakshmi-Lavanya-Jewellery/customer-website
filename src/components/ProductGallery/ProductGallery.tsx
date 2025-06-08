@@ -29,8 +29,6 @@ export default function ProductGallery({
   }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isZoomed) return;
-    
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -112,7 +110,11 @@ export default function ProductGallery({
           className="relative w-full h-96 md:h-[500px] cursor-pointer group"
           onClick={openModal}
           onMouseMove={handleMouseMove}
-          onMouseLeave={() => setIsZoomed(false)}
+          onMouseEnter={() => setIsZoomed(true)}
+          onMouseLeave={() => {
+            setIsZoomed(false);
+            setZoomPosition({ x: 50, y: 50 });
+          }}
         >
           <img
             src={selectedImage}
