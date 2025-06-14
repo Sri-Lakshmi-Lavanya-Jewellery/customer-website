@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-interface ProductImage {
+export interface ProductImage {
   id: number;
   url: string;
   altText: string;
@@ -26,7 +26,7 @@ interface UseProductGalleryReturn {
 }
 
 export const useProductGallery = ({ images, title }: UseProductGalleryProps): UseProductGalleryReturn => {
-  const [selectedImage, setSelectedImage] = useState<ProductImage>(images[0]);
+  const [selectedImage, setSelectedImage] = useState<ProductImage>(images[0] || { id: 0, url: '', altText: 'No image' });
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });

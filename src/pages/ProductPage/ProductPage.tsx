@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getCategoryById } from '../../data/productData';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import { useProductDetails } from '../../hooks/useProductDetails';
+import { useDynamicImages } from '../../hooks/useDynamicImages';
 import type { Category, Product } from '../../data/productData'; // Ensure Product is imported
 
 // Import new components
@@ -34,6 +35,13 @@ export default function ProductPage() {
     handleDimensionChange,
     handleQuantityChange,
   } = useProductDetails(productId);
+
+  // Get dynamic images based on selected dimension (always call hooks before any early returns)
+  const dynamicImages = useDynamicImages({
+    product,
+    selectedModel,
+    selectedDimension
+  });
 
   if (loading) {
     return (
@@ -69,8 +77,8 @@ export default function ProductPage() {
         {/* Product Gallery */}
         <div className="w-full">
           <ProductGallery 
-            images={product.images || []} 
-            title={product.title} 
+            images={dynamicImages}
+            title={`${product.title}${selectedDimension ? ` - ${selectedDimension}` : ''}`} 
           />
         </div>
 

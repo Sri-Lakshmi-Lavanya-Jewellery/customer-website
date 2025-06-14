@@ -2,7 +2,8 @@ export interface Product {
   id: string;
   title: string;
   isNew?: boolean;
-  images?: string[];
+  images?: string[]; // Common/default images
+  commonImages?: string[]; // Explicit common images that show when no dimension-specific images
   category: string;
   subcategory: string;
   weight?: string;
@@ -56,6 +57,7 @@ export const products: Product[] = [
     id: "1",
     title: "Silver Kamakshi Deepam",
     images: ["/assets/images/products/kamakshi-deepam/1.jpg", "/assets/images/products/kamakshi-deepam/2.jpg"],
+    commonImages: ["/assets/images/products/kamakshi-deepam/1.jpg", "/assets/images/products/kamakshi-deepam/2.jpg"],
     isNew: true,
     category: "pooja-items",
     subcategory: "kamakshi-deepam",
@@ -68,30 +70,35 @@ export const products: Product[] = [
           height: "11.5cm",
           breadth: "7cm",
           weight: "60g",
+          images: ["/assets/images/products/kamakshi-deepam/1.jpg"] // Dimension-specific images
         },
         dimensions2: {
           length: "6cm",
           height: "11cm",
           breadth: "6.5cm",
-          weight: "50g"
+          weight: "50g",
+          images: ["/assets/images/products/kamakshi-deepam/2.jpg"]
         },
         dimensions3: {
           length: "5.5cm",
           height: "10cm",
           breadth: "5.5cm",
-          weight: "40g"
+          weight: "40g",
+          images: ["/assets/images/products/kamakshi-deepam/1.jpg"]
         },
         dimensions4: {
           length: "5cm",
           height: "9cm",
           breadth: "5cm",
-          weight: "30g"
+          weight: "30g",
+          images: ["/assets/images/products/kamakshi-deepam/2.jpg"]
         },
         dimensions5: {
           length: "4.5cm",
           height: "8cm",
           breadth: "5cm",
-          weight: "25g"
+          weight: "25g",
+          images: ["/assets/images/products/kamakshi-deepam/1.jpg"]
         },
       },
     }
@@ -103,6 +110,7 @@ export const products: Product[] = [
     "subcategory": "harathi-stand",
     "weight": "15g-55g",
     "inStock": true,
+    "commonImages": ["/assets/images/products/kamakshi-deepam/1.jpg"], // Using available images as fallback
     "models": {
       "Model 1": {
         "dimensions1": {
@@ -199,6 +207,43 @@ export const products: Product[] = [
         "dimensions4": {
           "height": "9.5cm",
           "weight": "10g"
+        }
+      }
+    }
+  },
+  {
+    "id": "demo-product",
+    "title": "Demo Product with Dimension Images",
+    "category": "pooja-items",
+    "subcategory": "kamakshi-deepam",
+    "weight": "10g-50g",
+    "inStock": true,
+    "commonImages": [
+      "/assets/images/products/kamakshi-deepam/1.jpg",
+      "/assets/images/products/kamakshi-deepam/2.jpg"
+    ],
+    "models": {
+      "Standard Model": {
+        "Small": {
+          "length": "4cm",
+          "height": "6cm",
+          "weight": "15g",
+          "images": ["/assets/images/products/kamakshi-deepam/1.jpg"]
+        },
+        "Medium": {
+          "length": "5cm", 
+          "height": "8cm",
+          "weight": "25g",
+          "images": ["/assets/images/products/kamakshi-deepam/2.jpg"]
+        },
+        "Large": {
+          "length": "6cm",
+          "height": "10cm", 
+          "weight": "40g",
+          "images": [
+            "/assets/images/products/kamakshi-deepam/1.jpg",
+            "/assets/images/products/kamakshi-deepam/2.jpg"
+          ]
         }
       }
     }

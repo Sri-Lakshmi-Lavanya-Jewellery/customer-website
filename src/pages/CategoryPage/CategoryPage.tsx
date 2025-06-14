@@ -7,9 +7,6 @@ import {
   // getProductsBySubcategory, // This is now handled within the hook based on allProductsForCategory
   Category,
   Product,
-  Subcategory, // Keep Subcategory if SubcategoryFilterList expects it, or adjust SubcategoryFilterList prop
-  Category, 
-  Product,
 } from '../../data/productData';
 import { useProductFilters } from '../../hooks/useProductFilters';
 
