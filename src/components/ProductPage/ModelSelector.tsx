@@ -45,7 +45,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
                   </div>
                   {previewDimensions && (
                     <div className="text-sm text-gray-500 mt-1">
-                      {previewDimensions.length && `Length: ${previewDimensions.length}`}
+                      {previewDimensions.length !== undefined && previewDimensions.length !== null && `Length: ${previewDimensions.length}`}
                       {previewDimensions.weight && ` • Weight: ${previewDimensions.weight}`}
                     </div>
                   )}
