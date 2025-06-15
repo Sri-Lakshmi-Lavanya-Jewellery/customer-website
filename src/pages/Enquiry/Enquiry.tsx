@@ -1,49 +1,15 @@
-import React, { useState } from 'react';
-
-interface EnquiryForm {
-    name: string;
-    email: string;
-    phone: string;
-    productType: string;
-    budget: string;
-    message: string;
-}
+import React from 'react'; // Removed useState
+import { useEnquiryForm } from '../../hooks/useEnquiryForm'; // Import the custom hook
+// EnquiryForm interface will be implicitly handled by the hook's return types
+// or can be imported if needed for other purposes, but not strictly necessary for basic usage here.
 
 export default function Enquiry() {
-    const [formData, setFormData] = useState<EnquiryForm>({
-        name: '',
-        email: '',
-        phone: '',
-        productType: '',
-        budget: '',
-        message: ''
-    });
-
-    const [isSubmitted, setIsSubmitted] = useState(false);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Here you would typically send the data to your backend
-        console.log('Form submitted:', formData);
-        setIsSubmitted(true);
-        // Reset form after submission
-        setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            productType: '',
-            budget: '',
-            message: ''
-        });
-    };
+    const {
+        formData,
+        isSubmitted,
+        handleChange,
+        handleSubmit
+    } = useEnquiryForm();
 
     return (
         <div className="container mx-auto px-4 py-12">
@@ -160,4 +126,4 @@ export default function Enquiry() {
             </div>
         </div>
     );
-} 
+}

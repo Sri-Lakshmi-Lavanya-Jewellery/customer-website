@@ -1,96 +1,16 @@
-import React, { useState, ReactElement } from 'react';
+import React from 'react'; // Removed useState and ReactElement
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-
-interface AuspiciousDay {
-    type: 'valarpirai' | 'subhamuhurtham' | 'chaturti' | 'shasti_viradham' | 'kirthigai' | 'womens_day' | 'ekhadashi' | 'pradhosham' | 'pournami' | 'sankatahara_chaturti';
-    date: number;
-}
-
-interface DayType {
-    name: string;
-    icon: string;
-}
-
-const dayTypes: Record<string, DayType> = {
-    valarpirai: { name: 'Valarpirai', icon: '🌒' },
-    subhamuhurtham: { name: 'Subhamuhurtham', icon: '🕉️' },
-    chaturti: { name: 'Chaturti', icon: '🙏' },
-    shasti_viradham: { name: 'Shasti Viradham', icon: '🪔' },
-    kirthigai: { name: 'Kirthigai', icon: '☀️' },
-    womens_day: { name: 'Womens day', icon: '🌺' },
-    ekhadashi: { name: 'Ekhadashi', icon: '🌙' },
-    pradhosham: { name: 'Pradhosham', icon: '👥' },
-    pournami: { name: 'Pournami', icon: '😊' },
-    sankatahara_chaturti: { name: 'Sankatahara Chaturti', icon: '🙏' }
-};
+import { useCalendar } from '../../hooks/useCalendar'; // Import custom hook
+import { dayTypes } from '../../data/calendarData'; // Import dayTypes from new location
 
 export default function AuspiciousCalendar() {
-    const [currentMonth, setCurrentMonth] = useState(new Date());
-
-    // Sample data for March 2025
-    const marchData: AuspiciousDay[] = [
-        { type: 'valarpirai', date: 1 },
-        { type: 'subhamuhurtham', date: 2 },
-        { type: 'chaturti', date: 3 },
-        { type: 'shasti_viradham', date: 4 },
-        { type: 'kirthigai', date: 5 },
-        { type: 'womens_day', date: 8 },
-        { type: 'ekhadashi', date: 9 },
-        { type: 'pradhosham', date: 10 },
-        { type: 'pournami', date: 15 }
-    ];
-
-    const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-    const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
-
-    const weeks: ReactElement[] = [];
-    let days: ReactElement[] = [];
-    let dayCount = 1;
-
-    // Add empty cells for days before the first day of the month
-    for (let i = 0; i < firstDayOfMonth; i++) {
-        days.push(<td key={`empty-${i}`} className="p-4"></td>);
-    }
-
-    // Fill in the days of the month
-    while (dayCount <= daysInMonth) {
-        const auspiciousDays = marchData.filter(day => day.date === dayCount);
-        
-        days.push(
-            <td key={dayCount} className="p-4 border relative min-h-[100px] align-top">
-                <span className="font-medium">{dayCount}</span>
-                <div className="mt-2">
-                    {auspiciousDays.map((day, index) => (
-                        <div key={index} className="text-yellow-500 text-lg">
-                            {dayTypes[day.type].icon}
-                        </div>
-                    ))}
-                </div>
-            </td>
-        );
-
-        if ((firstDayOfMonth + dayCount) % 7 === 0) {
-            weeks.push(<tr key={dayCount}>{days}</tr>);
-            days = [];
-        }
-        dayCount++;
-    }
-
-    // Add remaining days to the last week
-    if (days.length > 0) {
-        while (days.length < 7) {
-            days.push(<td key={`empty-end-${days.length}`} className="p-4"></td>);
-        }
-        weeks.push(<tr key={dayCount}>{days}</tr>);
-    }
-
-    const handlePrevMonth = () => {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
-    };
-
-    const handleNextMonth = () => {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
-    };
+    const {
+        weeks,
+        handlePrevMonth,
+        handleNextMonth,
+        monthName,
+        year,
+    } = useCalendar();
 
     return (
         <div className="container mx-auto py-8 px-4">
@@ -110,7 +30,7 @@ export default function AuspiciousCalendar() {
                             <IoIosArrowBack size={24} />
                         </button>
                         <h2 className="text-2xl font-semibold">
-                            {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                            {monthName} {year}
                         </h2>
                         <button 
                             onClick={handleNextMonth}
@@ -133,7 +53,34 @@ export default function AuspiciousCalendar() {
                             </tr>
                         </thead>
                         <tbody>
-                            {weeks}
+                            {weeks.map((week, weekIndex) => (
+                                <tr key={weekIndex}>
+                                    {week.days.map((day, dayIndex) => (
+                                        <td
+                                            key={dayIndex}
+                                            className={`p-4 border relative min-h-[100px] align-top ${
+                                                day.isCurrentMonth ? (day.isToday ? 'bg-red-100' : 'bg-white') : 'bg-gray-50'
+                                            }`}
+                                        >
+                                            {day.isCurrentMonth && day.date && (
+                                                <>
+                                                    <span className={`font-medium ${day.isToday ? 'text-red-700 font-bold' : 'text-gray-800'}`}>
+                                                        {day.date}
+                                                    </span>
+                                                    <div className="mt-1 space-y-1">
+                                                        {day.auspiciousTypes.map((auspiciousDay, index) => (
+                                                            <div key={index} className="text-yellow-500 text-lg flex items-center" title={dayTypes[auspiciousDay.type]?.name}>
+                                                                {dayTypes[auspiciousDay.type]?.icon}
+                                                                {/* Optionally display name: <span className="text-xs ml-1">{dayTypes[auspiciousDay.type]?.name}</span> */}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </>
+                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

@@ -2,7 +2,8 @@ export interface Product {
   id: string;
   title: string;
   isNew?: boolean;
-  images?: string[];
+  images?: string[]; // Common/default images
+  commonImages?: string[]; // Explicit common images that show when no dimension-specific images
   category: string;
   subcategory: string;
   weight?: string;
@@ -64,7 +65,7 @@ export const products: Product[] = [
   {
     id: "1",
     title: "Silver Kamakshi Deepam",
-    images: ["/assets/images/products/kamakshi-deepam/1.jpg", "/assets/images/products/kamakshi-deepam/2.jpg","/assets/images/products/kamakshi-deepam/1.1.jpg","/assets/images/products/kamakshi-deepam/1.2.jpg","/assets/images/products/kamakshi-deepam/2.1.jpg","/assets/images/products/kamakshi-deepam/2.2.jpg","/assets/images/products/kamakshi-deepam/3.1.jpg","/assets/images/products/kamakshi-deepam/3.2.jpg","/assets/images/products/kamakshi-deepam/4.1.jpg","/assets/images/products/kamakshi-deepam/4.2.jpg"],
+    images: ["/assets/images/products/kamakshi-deepam/1.jpg", "/assets/images/products/kamakshi-deepam/2.jpg"],
     isNew: true,
     category: "pooja-items",
     subcategory: "kamakshi-deepam",

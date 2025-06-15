@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useProductGallery } from '../../hooks/useProductGallery';
+import type { ProductImage } from '../../hooks/useProductGallery';
 
 interface ProductGalleryProps {
-  images?: string[];
+  images?: ProductImage[];
   title?: string;
 }
 
@@ -10,11 +12,21 @@ export default function ProductGallery({
   images, 
   title = "Product Gallery" 
 }: ProductGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState<string>(images?.[0] || '');
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isZoomed, setIsZoomed] = useState<boolean>(false);
-  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+  const {
+    selectedImage,
+    isModalOpen,
+    isZoomed,
+    zoomPosition,
+    setSelectedImage,
+    handleMouseMove,
+    toggleZoom,
+    openModal,
+    closeModal,
+    navigateImage,
+    disableZoomAndResetPosition,
+  } = useProductGallery({ images: images || [], title });
 
+  // Check for no images
   if (!images || images.length === 0) {
     return (
       <div className="w-full h-96 bg-gray-100 flex items-center justify-center rounded-lg">
@@ -28,80 +40,6 @@ export default function ProductGallery({
     );
   }
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
-    setZoomPosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
-  };
-
-  const toggleZoom = () => {
-    setIsZoomed(!isZoomed);
-    if (!isZoomed) {
-      setZoomPosition({ x: 50, y: 50 });
-    }
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-    setIsZoomed(false);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setIsZoomed(false);
-  };
-
-  const navigateImage = (direction: 'prev' | 'next') => {
-    const currentIndex = images.indexOf(selectedImage);
-    let newIndex;
-    
-    if (direction === 'prev') {
-      newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
-    } else {
-      newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
-    }
-    
-    setSelectedImage(images[newIndex]);
-  };
-
-  // Handle keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isModalOpen) return;
-      
-      switch (e.key) {
-        case 'ArrowRight':
-          e.preventDefault();
-          navigateImage('next');
-          break;
-        case 'ArrowLeft':
-          e.preventDefault();
-          navigateImage('prev');
-          break;
-        case 'Escape':
-          e.preventDefault();
-          closeModal();
-          break;
-        case ' ':
-          e.preventDefault();
-          toggleZoom();
-          break;
-      }
-    };
-
-    if (isModalOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    }
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isModalOpen, selectedImage, images]);
-
   return (
     <div className="w-full max-w-2xl mx-auto">
       {/* Main Image Display */}
@@ -110,15 +48,18 @@ export default function ProductGallery({
           className="relative w-full h-96 md:h-[500px] cursor-pointer group"
           onClick={openModal}
           onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsZoomed(true)}
+          onMouseEnter={() => {
+            setIsMouseEntered(true);
+            if (!isMouseEntered) toggleZoom();
+          }}
           onMouseLeave={() => {
-            setIsZoomed(false);
-            setZoomPosition({ x: 50, y: 50 });
+            setIsMouseEntered(false);
+            disableZoomAndResetPosition();
           }}
         >
           <img
-            src={selectedImage}
-            alt={title}
+            src={selectedImage.url}
+            alt={selectedImage.altText}
             className="w-full h-full object-contain transition-transform duration-200"
             style={{
               transform: isZoomed ? 'scale(2)' : 'scale(1)',
@@ -131,19 +72,19 @@ export default function ProductGallery({
       {/* Thumbnails */}
       {images.length > 1 && (
         <div className="grid grid-cols-4 gap-2">
-          {images.map((img, index) => (
+          {images.map((img) => (
             <button
-              key={index}
+              key={img.id}
               onClick={() => setSelectedImage(img)}
               className={`relative overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-105 ${
-                selectedImage === img
+                selectedImage.id === img.id
                   ? 'border-blue-500 ring-2 ring-blue-200 shadow-md'
                   : 'border-gray-200 hover:border-gray-400'
               }`}
             >
               <img
-                src={img}
-                alt={`${title} - View ${index + 1}`}
+                src={img.url}
+                alt={img.altText}
                 className="w-full h-20 object-cover"
               />
             </button>
@@ -181,8 +122,8 @@ export default function ProductGallery({
                 onClick={toggleZoom}
               >
                 <img
-                  src={selectedImage}
-                  alt={title}
+                  src={selectedImage.url}
+                  alt={selectedImage.altText}
                   className="max-w-full max-h-[70vh] object-contain transition-transform duration-300"
                   style={{
                     transform: isZoomed ? 'scale(2)' : 'scale(1)',
@@ -236,23 +177,23 @@ export default function ProductGallery({
             {/* Modal Thumbnails */}
             {images.length > 1 && (
               <div className="mt-4 flex justify-center gap-2 overflow-x-auto pb-2">
-                {images.map((img, index) => (
+                {images.map((img) => (
                   <button
-                    key={index}
+                    key={img.id}
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedImage(img);
-                      setIsZoomed(false);
+                      if (isZoomed) toggleZoom();
                     }}
                     className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-110 ${
-                      selectedImage === img 
+                      selectedImage.id === img.id
                         ? 'border-blue-400 ring-2 ring-blue-300 bg-transparent' 
                         : 'border-gray-600 hover:border-gray-400 bg-transparent'
                     }`}
                   >
                     <img
-                      src={img}
-                      alt={`${title} - View ${index + 1}`}
+                      src={img.url}
+                      alt={img.altText}
                       className="w-full h-full object-cover"
                     />
                   </button>
