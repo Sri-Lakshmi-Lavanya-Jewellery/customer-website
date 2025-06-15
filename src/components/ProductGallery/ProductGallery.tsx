@@ -26,6 +26,8 @@ export default function ProductGallery({
     disableZoomAndResetPosition,
   } = useProductGallery({ images: images || [], title });
 
+  const [isMouseEntered, setIsMouseEntered] = React.useState(false);
+
   // Check for no images
   if (!images || images.length === 0) {
     return (
