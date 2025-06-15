@@ -48,8 +48,14 @@ export default function ProductGallery({
           className="relative w-full h-96 md:h-[500px] cursor-pointer group"
           onClick={openModal}
           onMouseMove={handleMouseMove}
-          onMouseEnter={toggleZoom}
-          onMouseLeave={disableZoomAndResetPosition}
+          onMouseEnter={() => {
+            setIsMouseEntered(true);
+            if (!isMouseEntered) toggleZoom();
+          }}
+          onMouseLeave={() => {
+            setIsMouseEntered(false);
+            disableZoomAndResetPosition();
+          }}
         >
           <img
             src={selectedImage.url}
