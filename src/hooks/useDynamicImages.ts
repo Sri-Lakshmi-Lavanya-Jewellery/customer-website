@@ -22,29 +22,36 @@ export const useDynamicImages = ({
 
     let imageUrls: string[] = [];
     
-    // Try to get dimension-specific images first
+    // Always start with top-level product images (these should be visible in all dimensions)
+    if (product.images && product.images.length > 0) {
+      imageUrls = [...product.images];
+      console.log('🖼️ Starting with top-level product images:', imageUrls);
+    } else if (product.commonImages && product.commonImages.length > 0) {
+      imageUrls = [...product.commonImages];
+      console.log('📦 Starting with common images:', imageUrls);
+    }
+    
+    // Add dimension-specific images if they exist
     if (selectedModel && selectedDimension && product.models) {
       const modelData = product.models[selectedModel];
       if (modelData && modelData[selectedDimension] && modelData[selectedDimension].images) {
-        imageUrls = modelData[selectedDimension].images;
-      }
-    }
-    
-    // Fall back to common images if no dimension-specific images
-    if (imageUrls.length === 0) {
-      if (product.commonImages && product.commonImages.length > 0) {
-        imageUrls = product.commonImages;
-      } else if (product.images && product.images.length > 0) {
-        imageUrls = product.images;
+        const dimensionImages = modelData[selectedDimension].images;
+        // Only add dimension images that aren't already in the main images
+        const newImages = dimensionImages.filter(img => !imageUrls.includes(img));
+        imageUrls = [...imageUrls, ...newImages];
+        console.log('🎯 Added dimension-specific images:', newImages, 'for dimension:', selectedDimension);
       }
     }
     
     // Convert string URLs to ProductImage objects
-    return imageUrls.map((url, index) => ({
+    const convertedImages = imageUrls.map((url, index) => ({
       id: index + 1,
       url,
       altText: `${product.title}${selectedDimension ? ` - ${selectedDimension}` : ''} - Image ${index + 1}`
     }));
+    
+    console.log('✨ Final converted images:', convertedImages);
+    return convertedImages;
   }, [product, selectedModel, selectedDimension]);
   
   return images;

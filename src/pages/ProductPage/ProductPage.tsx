@@ -77,6 +77,7 @@ export default function ProductPage() {
         {/* Product Gallery */}
         <div className="w-full">
           <ProductGallery 
+            key={`${selectedModel}-${selectedDimension}`} // Force re-render when selection changes
             images={dynamicImages}
             title={`${product.title}${selectedDimension ? ` - ${selectedDimension}` : ''}`} 
           />

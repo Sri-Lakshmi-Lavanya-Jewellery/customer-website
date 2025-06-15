@@ -12,9 +12,6 @@ export default function ProductGallery({
   images, 
   title = "Product Gallery" 
 }: ProductGalleryProps) {
-  // Debug: Log the images data
-  console.log('ProductGallery received images:', images);
-  
   const {
     selectedImage,
     isModalOpen,
@@ -68,8 +65,7 @@ export default function ProductGallery({
 
       {/* Thumbnails */}
       {images.length > 1 && (
-        <div className="grid grid-cols-4 gap-2 p-4 bg-red-100 border-2 border-red-500">
-          <div className="text-red-600 text-sm mb-2 col-span-4">Debug: Thumbnails container (images count: {images.length})</div>
+        <div className="grid grid-cols-4 gap-2">
           {images.map((img) => (
             <button
               key={img.id}

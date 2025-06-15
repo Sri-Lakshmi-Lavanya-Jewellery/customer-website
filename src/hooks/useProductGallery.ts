@@ -36,6 +36,17 @@ export const useProductGallery = ({ images, title }: UseProductGalleryProps): Us
     setZoomPosition({ x: 50, y: 50 });
   }, []);
 
+  // Update selectedImage when images array changes
+  useEffect(() => {
+    console.log('🔄 Images array changed:', images.length, 'images');
+    
+    if (images.length > 0) {
+      console.log('� Setting to first image:', images[0]);
+      // Always select the first image when images array changes
+      setSelectedImage(images[0]);
+    }
+  }, [images]); // Remove selectedImage from dependencies to avoid infinite loop
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
