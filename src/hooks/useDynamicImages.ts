@@ -22,15 +22,6 @@ export const useDynamicImages = ({
 
     let imageUrls: string[] = [];
     
-    // Always start with top-level product images (these should be visible in all dimensions)
-    if (product.images && product.images.length > 0) {
-      imageUrls = [...product.images];
-      console.log('🖼️ Starting with top-level product images:', imageUrls);
-    } else if (product.commonImages && product.commonImages.length > 0) {
-      imageUrls = [...product.commonImages];
-      console.log('📦 Starting with common images:', imageUrls);
-    }
-    
     // Add dimension-specific images if they exist
     if (selectedModel && selectedDimension && product.models) {
       const modelData = product.models[selectedModel];
@@ -40,6 +31,17 @@ export const useDynamicImages = ({
         const newImages = dimensionImages.filter(img => !imageUrls.includes(img));
         imageUrls = [...imageUrls, ...newImages];
         console.log('🎯 Added dimension-specific images:', newImages, 'for dimension:', selectedDimension);
+      }
+    }
+
+    if(imageUrls.length === 0){
+       // Always start with top-level product images (these should be visible in all dimensions)
+      if (product.images && product.images.length > 0) {
+        imageUrls = [...product.images];
+        console.log('🖼️ Starting with top-level product images:', imageUrls);
+      } else if (product.commonImages && product.commonImages.length > 0) {
+        imageUrls = [...product.commonImages];
+        console.log('📦 Starting with common images:', imageUrls);
       }
     }
     
