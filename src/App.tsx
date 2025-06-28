@@ -6,6 +6,11 @@ import AuspiciousCalendar from './components/AuspiciousCalendar/AuspiciousCalend
 import Enquiry from './pages/Enquiry/Enquiry';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
 import ProductPage from './pages/ProductPage/ProductPage';
+import CatalogPage from './pages/CatalogPage/CatalogPage';
+import CategoriesPage from './pages/CategoriesPage/CategoriesPage';
+import CollectionPage from './pages/CollectionPage/CollectionPage';
+import CollectionsIndexPage from './pages/CollectionsIndexPage/CollectionsIndexPage';
+import LatestProductsPage from './pages/LatestProductsPage/LatestProductsPage';
 
 function App() {
   return (
@@ -15,7 +20,12 @@ function App() {
           <Route index element={<Home />} />
           <Route path="calendar" element={<AuspiciousCalendar />} />
           <Route path="about" element={<div className="container mx-auto py-8 px-4">About Page</div>} />
-          <Route path="products" element={<div className="container mx-auto py-8 px-4">Product Categories</div>} />
+          <Route path="catalog" element={<CatalogPage />} />
+          <Route path="latest" element={<LatestProductsPage />} />
+          <Route path="categories" element={<CategoriesPage />} />
+          <Route path="collections" element={<CollectionsIndexPage />} />
+          <Route path="collections/:collectionType" element={<CollectionPage />} />
+          <Route path="products" element={<CategoriesPage />} />
           <Route path="products/:categoryId" element={<CategoryPage />} />
           <Route path="product/:productId" element={<ProductPage />} />
           <Route path="weight-range" element={<div className="container mx-auto py-8 px-4">Weight Range</div>} />

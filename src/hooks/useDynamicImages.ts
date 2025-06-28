@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Product } from '../data/productData';
+import type { Product } from '../services/api';
 import type { ProductImage } from './useProductGallery';
 
 interface UseDynamicImagesProps {

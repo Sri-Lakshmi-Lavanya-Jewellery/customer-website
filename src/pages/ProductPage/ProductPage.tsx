@@ -2,9 +2,10 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getCategoryById } from '../../data/productData';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
-import { useProductDetails } from '../../hooks/useProductDetails';
+import { useProductDetailsWithModels } from '../../hooks/useApi';
 import { useDynamicImages } from '../../hooks/useDynamicImages';
-import type { Category, Product } from '../../data/productData'; // Ensure Product is imported
+import type { Category } from '../../data/productData';
+import type { Product } from '../../services/api'; // Import Product from API service
 
 // Import new components
 import ProductBreadcrumb from '../../components/ProductPage/ProductBreadcrumb';
@@ -17,13 +18,16 @@ import DimensionRangeDisplay from '../../components/ProductPage/DimensionRangeDi
 import DimensionSelector from '../../components/ProductPage/DimensionSelector';
 import SelectedDimensionDetails from '../../components/ProductPage/SelectedDimensionDetails';
 import ProductSection from '../../components/ProductPage/ProductSection'; // Import ProductSection
+import ProductCard from '../../components/ProductCard/ProductCard';
 
 export default function ProductPage() {
   const { productId } = useParams<{ productId: string }>();
 
   const {
+    productDetails,
     product,
     loading,
+    error,
     quantity,
     selectedModel,
     modelKeys,
@@ -34,7 +38,7 @@ export default function ProductPage() {
     handleModelChange,
     handleDimensionChange,
     handleQuantityChange,
-  } = useProductDetails(productId);
+  } = useProductDetailsWithModels(productId || '');
 
   // Get dynamic images based on selected dimension (always call hooks before any early returns)
   const dynamicImages = useDynamicImages({
@@ -51,12 +55,14 @@ export default function ProductPage() {
     );
   }
 
-  if (!product) {
+  if (!product || error) {
     return (
       <div className="container mx-auto py-16 px-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Product Not Found</h1>
-          <p className="text-gray-600 mb-6">The product you are looking for does not exist.</p>
+          <p className="text-gray-600 mb-6">
+            {error ? 'An error occurred while loading the product.' : 'The product you are looking for does not exist.'}
+          </p>
           <Link to="/" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
             Back to Home
           </Link>
@@ -67,10 +73,32 @@ export default function ProductPage() {
 
   const category: Category | undefined = product ? getCategoryById(product.category) : undefined;
   const hasModels = product.models && modelKeys.length > 0;
+  
+  // Use breadcrumbs from API if available, otherwise fall back to local breadcrumb component
+  const apiBreadcrumbs = productDetails?.breadcrumbs;
+  const relatedProducts = productDetails?.relatedProducts || [];
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <ProductBreadcrumb product={product} category={category} />
+      {/* API Breadcrumbs */}
+      {apiBreadcrumbs && apiBreadcrumbs.length > 0 ? (
+        <nav className="mb-8 text-sm">
+          <ol className="list-none p-0 inline-flex">
+            {apiBreadcrumbs.map((breadcrumb, index) => (
+              <li key={index} className="flex items-center">
+                <Link to={breadcrumb.url} className="text-blue-600 hover:text-blue-800">
+                  {breadcrumb.name}
+                </Link>
+                {index < apiBreadcrumbs.length - 1 && (
+                  <span className="mx-2 text-gray-500">/</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      ) : (
+        <ProductBreadcrumb product={product} category={category} />
+      )}
 
       {/* Product Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
@@ -151,8 +179,22 @@ export default function ProductPage() {
 
       <ProductSection title="You May Also Like">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Related products would be mapped here */}
-          <div className="text-center">Related products would be displayed here</div>
+          {relatedProducts && relatedProducts.length > 0 ? (
+            relatedProducts.map((relatedProduct) => (
+              <ProductCard 
+                key={relatedProduct.id} 
+                id={relatedProduct.id}
+                title={relatedProduct.title}
+                image={relatedProduct.images?.[0]}
+                isNew={relatedProduct.isNew || relatedProduct.isNewProduct}
+                link={`/products/${relatedProduct.id}`}
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              No related products available
+            </div>
+          )}
         </div>
       </ProductSection>
     </div>
