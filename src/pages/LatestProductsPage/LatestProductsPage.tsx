@@ -249,12 +249,12 @@ const LatestProductsPage: React.FC = () => {
                 <ProductCard
                   id={product.id}
                   title={product.title}
-                  image={product.images?.[0] || '/assets/images/products/default.jpg'}
-                  isNew={product.isNew}
+                  image={product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg'}
+                  isNew={product.isNewProduct || product.isNew}
                   link={`/product/${product.id}`}
                 />
                 {/* New Badge for recent items */}
-                {product.isNew && (
+                {(product.isNewProduct || product.isNew) && (
                   <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
                     NEW
                   </div>
@@ -335,7 +335,7 @@ const LatestProductsPage: React.FC = () => {
               Expand Time Range
             </button>
             <Link
-              to="/catalog"
+              to="/products"
               className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
             >
               Browse All Products

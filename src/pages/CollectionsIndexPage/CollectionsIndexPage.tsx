@@ -159,14 +159,14 @@ const CollectionsIndexPage: React.FC = () => {
               
               {collection.id === 'in-stock' ? (
                 <Link
-                  to="/catalog?inStock=true"
+                  to="/products?inStock=true"
                   className="inline-flex items-center px-4 py-3 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors border"
                 >
                   View All
                 </Link>
               ) : collection.id === 'trending' ? (
                 <Link
-                  to="/catalog?sortBy=popularity&sortOrder=desc"
+                  to="/products?sortBy=popularity&sortOrder=desc"
                   className="inline-flex items-center px-4 py-3 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors border"
                 >
                   View All
@@ -197,7 +197,7 @@ const CollectionsIndexPage: React.FC = () => {
           </Link>
 
           <Link
-            to="/catalog"
+            to="/products"
             className="flex items-center p-4 bg-white rounded-lg hover:bg-green-50 transition-colors border hover:border-green-200 group"
           >
             <div className="text-green-600 mr-4 group-hover:text-green-700">
@@ -212,7 +212,7 @@ const CollectionsIndexPage: React.FC = () => {
           </Link>
 
           <Link
-            to="/catalog?sortBy=createdAt&sortOrder=desc&limit=24"
+            to="/products?sortBy=createdAt&sortOrder=desc&limit=24"
             className="flex items-center p-4 bg-white rounded-lg hover:bg-purple-50 transition-colors border hover:border-purple-200 group"
           >
             <div className="text-purple-600 mr-4 group-hover:text-purple-700">

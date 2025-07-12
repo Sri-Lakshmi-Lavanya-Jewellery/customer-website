@@ -99,7 +99,7 @@ export default function Header() {
                         </li>
                         <li>
                             <NavLink 
-                                to="/products" 
+                                to="/categories" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
                                     isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"

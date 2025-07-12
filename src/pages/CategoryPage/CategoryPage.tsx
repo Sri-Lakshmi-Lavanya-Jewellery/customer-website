@@ -166,8 +166,8 @@ export default function CategoryPage() {
                 key={product.id}
                 id={product.id}
                 title={product.title}
-                image={product.images?.[1]}
-                isNew={product.isNew}
+                image={product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg'}
+                isNew={product.isNewProduct || product.isNew}
                 link={`/product/${product.id}`}
               />
             ))}

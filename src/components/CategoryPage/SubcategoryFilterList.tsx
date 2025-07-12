@@ -27,7 +27,7 @@ const SubcategoryFilterList: React.FC<SubcategoryFilterListProps> = ({
       <h2 className="text-xl font-semibold text-gray-800 mb-4">Subcategories</h2>
       <div className="flex flex-wrap gap-2">
         <Link
-          to={`/catalog?category=${currentCategorySlug}`}
+          to={`/products?category=${currentCategorySlug}`}
           className={`px-4 py-2 rounded-lg transition-colors ${
             selectedSubcategory === null
               ? 'bg-blue-600 text-white'
@@ -39,7 +39,7 @@ const SubcategoryFilterList: React.FC<SubcategoryFilterListProps> = ({
         {subcategories.map((subcategory) => (
           <Link
             key={subcategory.id}
-            to={`/catalog?category=${currentCategorySlug}&subcategory=${subcategory.slug || subcategory.id}`}
+            to={`/products?category=${currentCategorySlug}&subcategory=${subcategory.slug || subcategory.id}`}
             className={`px-4 py-2 rounded-lg transition-colors ${
               selectedSubcategory === subcategory.id
                 ? 'bg-blue-600 text-white'

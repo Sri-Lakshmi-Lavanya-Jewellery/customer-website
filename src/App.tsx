@@ -20,13 +20,11 @@ function App() {
           <Route index element={<Home />} />
           <Route path="calendar" element={<AuspiciousCalendar />} />
           <Route path="about" element={<div className="container mx-auto py-8 px-4">About Page</div>} />
-          <Route path="catalog" element={<CatalogPage />} />
+          <Route path="products" element={<CatalogPage />} />
           <Route path="latest" element={<LatestProductsPage />} />
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="collections" element={<CollectionsIndexPage />} />
           <Route path="collections/:collectionType" element={<CollectionPage />} />
-          <Route path="products" element={<CategoriesPage />} />
-          <Route path="products/:categoryId" element={<CategoryPage />} />
           <Route path="category/:slug" element={<CategoryPage />} />
           <Route path="category/:categorySlug/subcategory/:subcategorySlug" element={<CategoryPage />} />
           <Route path="product/:productId" element={<ProductPage />} />

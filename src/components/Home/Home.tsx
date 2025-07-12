@@ -29,7 +29,7 @@ const Home: React.FC = () => {
         ? latestProducts.map(product => ({
             id: product.id,
             title: product.title,
-            image: product.images?.[0] || '/assets/images/products/default.jpg',
+            image: product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg',
             isNew: product.isNewProduct || product.isNew || false,
             link: `/product/${product.id}`
         }))
@@ -37,7 +37,7 @@ const Home: React.FC = () => {
         ? newArrivals.map(product => ({
             id: product.id,
             title: product.title,
-            image: product.images?.[0] || '/assets/images/products/default.jpg',
+            image: product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg',
             isNew: product.isNewProduct || product.isNew || false,
             link: `/product/${product.id}`
         }))

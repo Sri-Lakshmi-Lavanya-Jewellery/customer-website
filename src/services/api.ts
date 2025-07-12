@@ -48,6 +48,7 @@ export interface Product {
   models?: any;
   weight?: string;
   purity?: string;
+  description?: string;
   isNew?: boolean;
   isNewProduct?: boolean; // API uses this field name
   commonImages?: string[];
@@ -282,7 +283,7 @@ class ApiService {
   // Product Catalog & Browsing
   async getProductCatalog(params: CatalogParams = {}): Promise<{ data: CatalogData; pagination: PaginationInfo }> {
     const queryString = buildQueryString(params);
-    const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/catalog${queryString}`);
+    const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/products${queryString}`);
     return {
       data: response.data,
       pagination: response.pagination!
@@ -408,7 +409,7 @@ class ApiService {
     };
     
     const queryString = buildQueryString(defaultParams);
-    const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/catalog/latest${queryString}`);
+    const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/products/latest${queryString}`);
     return {
       data: response.data,
       pagination: response.pagination!
@@ -427,7 +428,7 @@ class ApiService {
     };
     
     const queryString = buildQueryString(defaultParams);
-    const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/catalog/trending${queryString}`);
+    const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/products/trending${queryString}`);
     return {
       data: response.data,
       pagination: response.pagination!

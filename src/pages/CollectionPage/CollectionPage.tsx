@@ -210,8 +210,8 @@ const CollectionPage: React.FC = () => {
                 key={product.id}
                 id={product.id}
                 title={product.title}
-                image={product.images?.[0] || '/assets/images/products/default.jpg'}
-                isNew={product.isNew}
+                image={product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg'}
+                isNew={product.isNewProduct || product.isNew}
                 link={`/product/${product.id}`}
               />
             ))}
@@ -301,7 +301,7 @@ const CollectionPage: React.FC = () => {
             No products available in this collection at the moment
           </p>
           <Link
-            to="/catalog"
+            to="/products"
             className={`inline-flex items-center px-6 py-3 text-white font-medium rounded-lg transition-colors ${currentCollection.buttonColor}`}
           >
             Browse All Products

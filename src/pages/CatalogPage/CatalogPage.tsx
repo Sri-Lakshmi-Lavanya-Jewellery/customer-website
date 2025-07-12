@@ -143,12 +143,12 @@ const CatalogPage: React.FC = () => {
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <Link to="/catalog" className="hover:text-blue-600">Catalog</Link>
+              <Link to="/products" className="hover:text-blue-600">Catalog</Link>
             </li>
             {selectedCategory && (
               <li className="flex items-center">
                 <span className="mx-2">/</span>
-                <Link to={`/catalog?category=${selectedCategory}`} className="hover:text-blue-600">
+                <Link to={`/products?category=${selectedCategory}`} className="hover:text-blue-600">
                   {selectedCategoryName}
                 </Link>
               </li>
@@ -289,8 +289,8 @@ const CatalogPage: React.FC = () => {
                 key={product.id}
                 id={product.id}
                 title={product.title}
-                image={product.images?.[0] || '/assets/images/products/default.jpg'}
-                isNew={product.isNew}
+                image={product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg'}
+                isNew={product.isNewProduct || product.isNew}
                 link={`/product/${product.id}`}
               />
             ))}

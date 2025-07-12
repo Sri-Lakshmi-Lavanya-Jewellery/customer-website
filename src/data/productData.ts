@@ -1,6 +1,7 @@
 export interface Product {
   id: string;
   title: string;
+  description?: boolean;
   isNew?: boolean;
   images?: string[]; // Common/default images
   commonImages?: string[]; // Explicit common images that show when no dimension-specific images

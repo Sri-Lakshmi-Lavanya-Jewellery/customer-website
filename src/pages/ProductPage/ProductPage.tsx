@@ -166,9 +166,7 @@ export default function ProductPage() {
       <ProductSection title="Product Description">
         {/* The text-gray-600 class is now handled by ProductSection's child wrapper */}
         <p>
-          This beautiful silver {product.title} is crafted with high-quality {product.purity || 'fine'} silver,
-          weighing approximately {product.weight || 'various weights'}. Perfect for various occasions and celebrations,
-          this item exemplifies fine craftsmanship and attention to detail.
+          {product.description || 'This is a beautiful silver jewelry piece that complements any outfit.'}
         </p>
       </ProductSection>
 
@@ -191,8 +189,8 @@ export default function ProductPage() {
                 key={relatedProduct.id} 
                 id={relatedProduct.id}
                 title={relatedProduct.title}
-                image={relatedProduct.images?.[0]}
-                isNew={relatedProduct.isNew || relatedProduct.isNewProduct}
+                image={relatedProduct.images?.[0] || relatedProduct.commonImages?.[0] || '/assets/images/products/default.jpg'}
+                isNew={relatedProduct.isNewProduct || relatedProduct.isNew}
                 link={`/products/${relatedProduct.id}`}
               />
             ))
