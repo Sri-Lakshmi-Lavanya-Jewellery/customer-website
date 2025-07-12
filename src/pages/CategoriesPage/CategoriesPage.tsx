@@ -2,21 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCategories, usePublicStats } from '../../hooks/useApi';
 import CategoryCard from '../../components/CategoryCard/CategoryCard';
-import { categories as fallbackCategories } from '../../data/productData';
 
 const CategoriesPage: React.FC = () => {
   const { data: apiCategories, loading: categoriesLoading, error: categoriesError } = useCategories();
   const { data: stats, loading: statsLoading } = usePublicStats();
 
-  // Use API data if available, otherwise fallback to local data
-  const categories = apiCategories || fallbackCategories.map(cat => ({
-    id: cat.id,
-    name: cat.title,
-    title: cat.title,
-    description: cat.description,
-    image: cat.image,
-    subcategories: cat.subcategories
-  }));
+  // Use API data directly - no fallbacks
+  const categories = apiCategories || [];
 
   if (categoriesLoading) {
     return (
@@ -30,7 +22,25 @@ const CategoriesPage: React.FC = () => {
   }
 
   if (categoriesError) {
-    console.warn('Categories API Error, using fallback data:', categoriesError);
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">
+            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Unable to Load Categories</h2>
+          <p className="text-gray-600 mb-4">There was an error loading the categories.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -93,42 +103,49 @@ const CategoriesPage: React.FC = () => {
 
       {/* Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
-        {categories.map((category) => (
-          <div key={category.id} className="group">
-            <CategoryCard
-              title={category.title || category.name}
-              image={category.image || '/assets/images/categories/silver-cover-1.png'}
-              description={category.description || 'Explore this category'}
-              link={`/products/${category.id}`}
-            />
-            
-            {/* Subcategories */}
-            {category.subcategories && category.subcategories.length > 0 && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <h4 className="text-sm font-semibold text-gray-700 mb-3">Subcategories:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {category.subcategories.slice(0, 6).map((subcategory) => (
-                    <Link
-                      key={subcategory.id}
-                      to={`/products/${category.id}?subcategory=${subcategory.id}`}
-                      className="inline-flex items-center px-3 py-1 text-xs font-medium bg-white text-gray-700 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-colors border"
-                    >
-                      {subcategory.name}
-                    </Link>
-                  ))}
-                  {category.subcategories.length > 6 && (
-                    <Link
-                      to={`/products/${category.id}`}
-                      className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors"
-                    >
-                      +{category.subcategories.length - 6} more
-                    </Link>
-                  )}
+        {categories.map((category) => {
+          // Create slug from category name if not provided
+          const slug = category.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+          return (
+            <div key={category.id} className="group">
+              <CategoryCard
+                title={category.title || category.name}
+                image={category.image || '/assets/images/categories/silver-cover-1.png'}
+                description={category.description || 'Explore this category'}
+                link={`/category/${slug}`}
+              />
+              
+              {/* Subcategories */}
+              {category.subcategories && category.subcategories.length > 0 && (
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-3">Subcategories:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {category.subcategories.slice(0, 6).map((subcategory) => {
+                      const subcategorySlug = subcategory.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      return (
+                        <Link
+                          key={subcategory.id}
+                          to={`/category/${slug}/subcategory/${subcategorySlug}`}
+                          className="inline-flex items-center px-3 py-1 text-xs font-medium bg-white text-gray-700 rounded-full hover:bg-blue-50 hover:text-blue-600 transition-colors border"
+                        >
+                          {subcategory.name}
+                        </Link>
+                      );
+                    })}
+                    {category.subcategories.length > 6 && (
+                      <Link
+                        to={`/category/${slug}`}
+                        className="inline-flex items-center px-3 py-1 text-xs font-medium bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors"
+                      >
+                        +{category.subcategories.length - 6} more
+                      </Link>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Quick Actions */}

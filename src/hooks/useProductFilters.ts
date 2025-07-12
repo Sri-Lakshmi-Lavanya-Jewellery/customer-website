@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import type { Product } from '../../data/productData'; // Assuming Product type is exported from productData
+import type { Product } from '../services/api'; // Import Product type from API service
 
 // If getProductsBySubcategory is to be used directly and it's not already imported,
 // it would need to be imported here. However, the plan is to replicate its logic

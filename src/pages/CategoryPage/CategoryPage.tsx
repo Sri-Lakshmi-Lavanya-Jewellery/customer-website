@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard/ProductCard';
-import { 
-  getCategoryById, 
-  getProductsByCategory, 
-  Category,
-  Product,
-} from '../../data/productData';
 import { useProductFilters } from '../../hooks/useProductFilters';
-import { useCategoryPage, usePagination } from '../../hooks/useApi';
+import { useCategoryPageBySlug, usePagination, useSubcategoryPage } from '../../hooks/useApi';
 
 // Import new components
 import CategoryHeader from '../../components/CategoryPage/CategoryHeader';
@@ -19,37 +13,51 @@ import ProductCountDisplay from '../../components/CategoryPage/ProductCountDispl
 import NoProductsMessage from '../../components/CategoryPage/NoProductsMessage';
 
 export default function CategoryPage() {
-  const { categoryId } = useParams<{ categoryId: string }>();
+  const { categoryId, slug, categorySlug, subcategorySlug } = useParams<{ 
+    categoryId?: string; 
+    slug?: string; 
+    categorySlug?: string; 
+    subcategorySlug?: string; 
+  }>();
   const { page, limit, nextPage, prevPage, goToPage } = usePagination();
   
-  // Try to fetch from API first, fallback to local data
-  const { data: apiData, loading, error } = useCategoryPage(categoryId || '', { page, limit });
+  // Determine the category identifier (either ID or slug)
+  const categoryIdentifier = categoryId || slug || categorySlug || '';
   
-  // Fallback state for local data
-  const [fallbackCategory, setFallbackCategory] = useState<Category | undefined>(undefined);
-  const [fallbackProducts, setFallbackProducts] = useState<Product[]>([]);
-
-  // Effect to fetch category details and initial products for that category (fallback)
-  useEffect(() => {
-    if (categoryId) {
-      const categoryData = getCategoryById(categoryId);
-      setFallbackCategory(categoryData);
-      
-      const productsData = getProductsByCategory(categoryId);
-      setFallbackProducts(productsData);
-    }
-  }, [categoryId]);
+  // Determine if this is a subcategory page
+  const isSubcategoryPage = !!(categorySlug && subcategorySlug);
+  
+  // Fetch from API - no fallback
+  const { data: apiData, loading, error } = isSubcategoryPage
+    ? useSubcategoryPage(categorySlug!, subcategorySlug!, { page, limit })
+    : useCategoryPageBySlug(categoryIdentifier, { page, limit });
 
   // Determine which data to use
-  const category = apiData?.data.category || fallbackCategory;
-  const products = apiData?.data.products || fallbackProducts;
-  const breadcrumbs = apiData?.data.breadcrumbs || [
-    { name: 'Home', url: '/' },
-    { name: 'Categories', url: '/categories' },
-    { name: category?.title || 'Category', url: `/products/${categoryId}` }
-  ];
+  const category = apiData?.data.category;
+  const products = apiData?.data.products || [];
+  const subcategories = apiData?.data.subcategories || [];
+  
+  // Generate breadcrumbs based on page type
+  const generateBreadcrumbs = () => {
+    if (isSubcategoryPage && categorySlug && subcategorySlug) {
+      return [
+        { name: 'Home', url: '/' },
+        { name: 'Categories', url: '/categories' },
+        { name: category?.title || categorySlug, url: `/category/${categorySlug}` },
+        { name: subcategorySlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), url: `/category/${categorySlug}/subcategory/${subcategorySlug}` }
+      ];
+    } else {
+      return [
+        { name: 'Home', url: '/' },
+        { name: 'Categories', url: '/categories' },
+        { name: category?.title || 'Category', url: slug ? `/category/${slug}` : `/products/${categoryId}` }
+      ];
+    }
+  };
+  
+  const breadcrumbs = apiData?.data.breadcrumbs || generateBreadcrumbs();
 
-  // Instantiate the hook with API or fallback data
+  // Instantiate the hook with API data
   const {
     filteredProducts,
     selectedSubcategory,
@@ -58,7 +66,7 @@ export default function CategoryPage() {
     handleFilterChange,
   } = useProductFilters({
     allProductsForCategory: products,
-    initialCategoryId: categoryId
+    initialCategoryId: categoryIdentifier
   });
 
   // Loading state
@@ -73,25 +81,46 @@ export default function CategoryPage() {
     );
   }
 
-  // Error state (but continue with fallback data)
+  // Error state - no fallback
   if (error) {
-    console.warn('API Error, using fallback data:', error);
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">
+            <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Unable to Load Category</h2>
+          <p className="text-gray-600 mb-4">There was an error loading the category.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!category) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Category not found</h1>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Category not found</h1>
+          <p className="text-gray-600">The requested category could not be found.</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <CategoryHeader title={category.title || 'Category'} description={category.description || ''} />
+      <CategoryHeader title={category.title || category.name || 'Category'} description={category.description || ''} />
 
       <SubcategoryFilterList
-        subcategories={category.subcategories || []}
+        subcategories={subcategories}
         selectedSubcategory={selectedSubcategory}
         onSubcategorySelect={handleSubcategorySelect}
       />

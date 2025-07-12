@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Product } from '../../data/productData'; // For Product['models'] type
+import type { Product } from '../../services/api'; // For Product['models'] type
 
 interface ModelSelectorProps {
   models: Product['models']; // The entire models object for the product

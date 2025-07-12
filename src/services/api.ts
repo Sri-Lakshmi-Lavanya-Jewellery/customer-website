@@ -60,15 +60,33 @@ export interface Product {
 export interface Category {
   id: string;
   name: string;
+  slug?: string;
   title?: string;
   description?: string;
   image?: string;
+  thumbnail?: string;
+  parentCategory?: string | null;
   subcategories?: Subcategory[];
+  isActive?: boolean;
+  sortOrder?: number;
+  createdBy?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Subcategory {
   id: string;
   name: string;
+  slug?: string;
+  title?: string;
+  description?: string;
+  categoryId?: string;
+  parentCategory?: string;
+  isActive?: boolean;
+  sortOrder?: number;
+  createdBy?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ProductDetails {
@@ -130,8 +148,10 @@ export interface CollectionData {
 
 export interface CategoryPageData {
   category: Category;
+  subcategories?: Subcategory[];
   products: Product[];
   breadcrumbs: BreadcrumbItem[];
+  currentSubcategory?: Subcategory | null;
 }
 
 export interface UploadImageData {
@@ -270,14 +290,45 @@ class ApiService {
   }
 
   // Category Navigation
+
+  // Fetch all categories from the API (no fallback)
   async getAllCategories(): Promise<Category[]> {
     const response = await fetchWithErrorHandling<Category[]>(`${API_BASE_URL}/categories`);
     return response.data;
   }
 
-  async getCategoryPage(categoryId: string, params: CategoryParams = {}): Promise<{ data: CategoryPageData; pagination: PaginationInfo }> {
+  // Fetch category by slug
+  async getCategoryBySlug(slug: string): Promise<Category> {
+    const response = await fetchWithErrorHandling<Category>(`${API_BASE_URL}/categories/slug/${slug}`);
+    return response.data;
+  }
+
+  // Fetch all subcategories for a specific category (by slug)
+  async getSubcategoriesByCategory(categorySlug: string): Promise<{ subcategories: Subcategory[] }> {
+    const response = await fetchWithErrorHandling<{ subcategories: Subcategory[] }>(`${API_BASE_URL}/categories/${categorySlug}`);
+    return response.data;
+  }
+
+  // Fetch specific subcategory details by slugs
+  async getSubcategoryBySlug(categorySlug: string, subcategorySlug: string): Promise<Subcategory> {
+    const response = await fetchWithErrorHandling<Subcategory>(`${API_BASE_URL}/categories/slug/${categorySlug}/subcategories/${subcategorySlug}`);
+    return response.data;
+  }
+
+  // Fetch subcategory page with products
+  async getSubcategoryPage(categorySlug: string, subcategorySlug: string, params: CategoryParams = {}): Promise<{ data: CategoryPageData; pagination: PaginationInfo }> {
     const queryString = buildQueryString(params);
-    const response = await fetchWithErrorHandling<CategoryPageData>(`${API_BASE_URL}/categories/${categoryId}${queryString}`);
+    const response = await fetchWithErrorHandling<CategoryPageData>(`${API_BASE_URL}/categories/slug/${categorySlug}/subcategories/${subcategorySlug}${queryString}`);
+    return {
+      data: response.data,
+      pagination: response.pagination!
+    };
+  }
+
+  // Fetch category page by slug
+  async getCategoryPageBySlug(slug: string, params: CategoryParams = {}): Promise<{ data: CategoryPageData; pagination: PaginationInfo }> {
+    const queryString = buildQueryString(params);
+    const response = await fetchWithErrorHandling<CategoryPageData>(`${API_BASE_URL}/categories/${slug}${queryString}`);
     return {
       data: response.data,
       pagination: response.pagination!
@@ -358,26 +409,6 @@ class ApiService {
     
     const queryString = buildQueryString(defaultParams);
     const response = await fetchWithErrorHandling<CatalogData>(`${API_BASE_URL}/catalog/latest${queryString}`);
-    return {
-      data: response.data,
-      pagination: response.pagination!
-    };
-  }
-
-  // Enhanced method: Get products by category with better filtering
-  async getProductsByCategory(categoryId: string, params: CategoryParams = {}): Promise<{ data: CategoryPageData; pagination: PaginationInfo }> {
-    // Set default parameters
-    const defaultParams = {
-      sortBy: 'createdAt',
-      sortOrder: 'desc' as const,
-      limit: 12,
-      page: 1,
-      inStock: true,
-      ...params
-    };
-    
-    const queryString = buildQueryString(defaultParams);
-    const response = await fetchWithErrorHandling<CategoryPageData>(`${API_BASE_URL}/categories/${categoryId}${queryString}`);
     return {
       data: response.data,
       pagination: response.pagination!
@@ -482,13 +513,18 @@ export const {
   getHomepageContent,
   getProductCatalog,
   getAllCategories,
-  getCategoryPage,
+  getCategoryBySlug,
+  getSubcategoriesByCategory,
+  getSubcategoryBySlug,
+  getSubcategoryPage,
+  getCategoryPageBySlug,
   getProductDetails,
   getRelatedProducts,
   searchProducts,
   getNewArrivals,
   getFeaturedProducts,
   getLatestProducts,
+  getTrendingProducts,
   getNavigation,
   getPublicStats,
   uploadSingleImage,

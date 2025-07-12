@@ -1,34 +1,67 @@
-import React, { useState } from 'react';
-import { useProductCatalog, usePagination, useDebouncedSearch } from '../../hooks/useApi';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { useProductCatalog, usePagination, useDebouncedSearch, useCategories, useSubcategoriesByCategory } from '../../hooks/useApi';
 import ProductCard from '../../components/ProductCard/ProductCard';
 
 const CatalogPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { page, limit, nextPage, prevPage, goToPage, changeLimit } = usePagination(1, 12);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [sortBy, setSortBy] = useState<string>('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [inStock, setInStock] = useState<boolean>(true);
+  
+  // Get initial values from URL parameters
+  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || '');
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>(searchParams.get('subcategory') || '');
+  const [sortBy, setSortBy] = useState<string>(searchParams.get('sortBy') || 'createdAt');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>((searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc');
+  const [inStock, setInStock] = useState<boolean>(searchParams.get('inStock') !== 'false');
 
   // Search functionality
   const { query, setQuery, data: searchData, loading: searchLoading } = useDebouncedSearch();
+
+  // Load categories with subcategories separately
+  const { data: categoriesData, loading: categoriesLoading } = useCategories();
+  
+  // Load subcategories for selected category using the hook
+  const { data: subcategoriesResponse, loading: subcategoriesLoading, error: subcategoriesError } = useSubcategoriesByCategory(selectedCategory || '');
+  
+  // Extract subcategories from the API response - the response has a data.subcategories structure
+  const subcategories = subcategoriesResponse?.subcategories || [];
 
   // Main catalog data
   const { data: catalogData, loading: catalogLoading, error } = useProductCatalog({
     page,
     limit,
     category: selectedCategory || undefined,
+    subcategory: selectedSubcategory || undefined,
     search: query || undefined,
     sortBy,
     sortOrder,
     inStock
   });
 
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedCategory) params.set('category', selectedCategory);
+    if (selectedSubcategory) params.set('subcategory', selectedSubcategory);
+    if (sortBy !== 'createdAt') params.set('sortBy', sortBy);
+    if (sortOrder !== 'desc') params.set('sortOrder', sortOrder);
+    if (!inStock) params.set('inStock', 'false');
+    
+    setSearchParams(params);
+  }, [selectedCategory, selectedSubcategory, sortBy, sortOrder, inStock, setSearchParams]);
+
   const loading = query ? searchLoading : catalogLoading;
   const data = query ? searchData : catalogData;
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    setSelectedSubcategory(''); // Reset subcategory when category changes
     goToPage(1); // Reset to first page when filter changes
+  };
+
+  const handleSubcategoryChange = (subcategory: string) => {
+    setSelectedSubcategory(subcategory);
+    goToPage(1);
   };
 
   const handleSortChange = (newSortBy: string, newSortOrder: 'asc' | 'desc') => {
@@ -67,16 +100,68 @@ const CatalogPage: React.FC = () => {
   const products = data?.data?.products || [];
   const pagination = data?.pagination;
   const filters = catalogData?.data?.filters;
+  
+  // Use categories from useCategories hook if available, otherwise fall back to filters
+  const categories = categoriesData || filters?.categories || [];
+
+  // Get display names for selected filters
+  const selectedCategoryName = categories?.find(cat => cat.slug === selectedCategory)?.name || 
+                               categories?.find(cat => cat.id === selectedCategory)?.name || 
+                               selectedCategory;
+  const selectedSubcategoryName = selectedCategory && selectedSubcategory && Array.isArray(subcategories) ? 
+    subcategories.find(sub => sub.slug === selectedSubcategory)?.name ||
+    subcategories.find(sub => sub.id === selectedSubcategory)?.name ||
+    selectedSubcategory : '';
 
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Catalog</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          {selectedCategory && selectedSubcategory ? 
+            `${selectedCategoryName} - ${selectedSubcategoryName}` :
+            selectedCategory ? 
+              selectedCategoryName :
+              'Product Catalog'
+          }
+        </h1>
         <p className="text-gray-600">
-          {query ? `Search results for "${query}"` : 'Browse our complete product collection'}
+          {query ? `Search results for "${query}"` : 
+           selectedCategory ? 
+             `Browse products in ${selectedCategoryName}${selectedSubcategoryName ? ` - ${selectedSubcategoryName}` : ''}` :
+             'Browse our complete product collection'
+          }
         </p>
       </div>
+
+      {/* Breadcrumbs */}
+      {(selectedCategory || selectedSubcategory) && (
+        <nav className="mb-6 text-sm text-gray-600">
+          <ol className="flex items-center space-x-2">
+            <li>
+              <Link to="/" className="hover:text-blue-600">Home</Link>
+            </li>
+            <li className="flex items-center">
+              <span className="mx-2">/</span>
+              <Link to="/catalog" className="hover:text-blue-600">Catalog</Link>
+            </li>
+            {selectedCategory && (
+              <li className="flex items-center">
+                <span className="mx-2">/</span>
+                <Link to={`/catalog?category=${selectedCategory}`} className="hover:text-blue-600">
+                  {selectedCategoryName}
+                </Link>
+              </li>
+            )}
+            {selectedSubcategory && (
+              <li className="flex items-center">
+                <span className="mx-2">/</span>
+                <span className="text-gray-800">{selectedSubcategoryName}</span>
+              </li>
+            )}
+          </ol>
+        </nav>
+      )}
 
       {/* Search Bar */}
       <div className="mb-6">
@@ -91,7 +176,7 @@ const CatalogPage: React.FC = () => {
 
       {/* Filters */}
       <div className="mb-6 bg-gray-50 p-6 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Category Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
@@ -101,12 +186,37 @@ const CatalogPage: React.FC = () => {
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">All Categories</option>
-              {filters?.categories?.map((category) => (
-                <option key={category.id} value={category.id}>
+              {categories?.map((category) => (
+                <option key={category.id} value={category.slug}>
                   {category.name || category.title}
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* Subcategory Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
+            <select
+              value={selectedSubcategory}
+              onChange={(e) => handleSubcategoryChange(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              disabled={!selectedCategory || subcategoriesLoading}
+            >
+              <option value="">
+                {!selectedCategory ? 'Select a category first' : 
+                 subcategoriesLoading ? 'Loading subcategories...' : 
+                 'All Subcategories'}
+              </option>
+              {selectedCategory && Array.isArray(subcategories) && subcategories.length > 0 && subcategories.map((subcategory) => (
+                <option key={subcategory.id} value={subcategory.slug || subcategory.id}>
+                  {subcategory.name || subcategory.title}
+                </option>
+              ))}
+            </select>
+            {subcategoriesError && (
+              <p className="mt-1 text-sm text-red-600">{subcategoriesError}</p>
+            )}
           </div>
 
           {/* Sort Filter */}

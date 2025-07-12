@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { Product } from '../../services/api';
-import type { Category } from '../../data/productData';
+import type { Category } from '../../services/api';
 
 interface ProductBreadcrumbProps {
   product: Product;

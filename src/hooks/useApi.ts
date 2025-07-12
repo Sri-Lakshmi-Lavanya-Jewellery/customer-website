@@ -71,10 +71,31 @@ export function useCategories() {
   return useApiCall(() => apiService.getAllCategories());
 }
 
-export function useCategoryPage(categoryId: string, params: any = {}) {
+export function useCategoryBySlug(slug: string) {
   return useApiCall(
-    () => apiService.getCategoryPage(categoryId, params),
-    [categoryId, JSON.stringify(params)]
+    () => apiService.getCategoryBySlug(slug),
+    [slug]
+  );
+}
+
+export function useSubcategoriesByCategory(categorySlug: string) {
+  return useApiCall(
+    () => apiService.getSubcategoriesByCategory(categorySlug),
+    [categorySlug]
+  );
+}
+
+export function useSubcategoryBySlug(categorySlug: string, subcategorySlug: string) {
+  return useApiCall(
+    () => apiService.getSubcategoryBySlug(categorySlug, subcategorySlug),
+    [categorySlug, subcategorySlug]
+  );
+}
+
+export function useCategoryPageBySlug(slug: string, params: any = {}) {
+  return useApiCall(
+    () => apiService.getCategoryPageBySlug(slug, params),
+    [slug, JSON.stringify(params)]
   );
 }
 
@@ -217,7 +238,7 @@ export function useRelatedProducts(productId: string, limit: number = 4) {
   );
 }
 
-export function useProductSearch(params: any) {
+export function useSearchProducts(params: any = {}) {
   return useApiCall(
     () => apiService.searchProducts(params),
     [JSON.stringify(params)]
@@ -238,7 +259,6 @@ export function useFeaturedProducts(params: any = {}) {
   );
 }
 
-// New hooks for enhanced functionality
 export function useLatestProducts(params: any = {}) {
   return useApiCall(
     () => apiService.getLatestProducts(params),
@@ -250,13 +270,6 @@ export function useTrendingProducts(params: any = {}) {
   return useApiCall(
     () => apiService.getTrendingProducts(params),
     [JSON.stringify(params)]
-  );
-}
-
-export function useProductsByCategory(categoryId: string, params: any = {}) {
-  return useApiCall(
-    () => apiService.getProductsByCategory(categoryId, params),
-    [categoryId, JSON.stringify(params)]
   );
 }
 
@@ -364,7 +377,7 @@ export function useDebouncedSearch(initialQuery = '', delay = 500) {
   const [query, setQuery] = useState(initialQuery);
   const debouncedQuery = useDebounce(query, delay);
   
-  const searchResults = useProductSearch(
+  const searchResults = useSearchProducts(
     debouncedQuery.length >= 2 ? { q: debouncedQuery, page: 1, limit: 12 } : null
   );
 
@@ -374,4 +387,11 @@ export function useDebouncedSearch(initialQuery = '', delay = 500) {
     debouncedQuery,
     ...searchResults
   };
+}
+
+export function useSubcategoryPage(categorySlug: string, subcategorySlug: string, params: any = {}) {
+  return useApiCall(
+    () => apiService.getSubcategoryPage(categorySlug, subcategorySlug, params),
+    [categorySlug, subcategorySlug, JSON.stringify(params)]
+  );
 }

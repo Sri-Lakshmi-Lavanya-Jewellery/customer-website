@@ -27,6 +27,8 @@ function App() {
           <Route path="collections/:collectionType" element={<CollectionPage />} />
           <Route path="products" element={<CategoriesPage />} />
           <Route path="products/:categoryId" element={<CategoryPage />} />
+          <Route path="category/:slug" element={<CategoryPage />} />
+          <Route path="category/:categorySlug/subcategory/:subcategorySlug" element={<CategoryPage />} />
           <Route path="product/:productId" element={<ProductPage />} />
           <Route path="weight-range" element={<div className="container mx-auto py-8 px-4">Weight Range</div>} />
           <Route path="enquiry" element={<Enquiry />} />
