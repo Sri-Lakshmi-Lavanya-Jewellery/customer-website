@@ -42,8 +42,8 @@ export interface Product {
   id: string;
   title: string;
   images: string[];
-  category: string;
-  subcategory?: string;
+  category: Category | string; // Can be either object or string for backward compatibility
+  subcategory?: Subcategory | string; // Can be either object or string for backward compatibility
   inStock: boolean;
   models?: any;
   weight?: string;

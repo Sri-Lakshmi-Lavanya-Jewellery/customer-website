@@ -4,6 +4,7 @@ import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import { useProductDetailsWithModels } from '../../hooks/useApi';
 import { useDynamicImages } from '../../hooks/useDynamicImages';
 import type { Category, Product } from '../../services/api'; // Import from API service
+import { getCategoryName, getCategorySlug, generateProductBreadcrumbs } from '../../utils/productUtils';
 
 // Import new components
 import ProductBreadcrumb from '../../components/ProductPage/ProductBreadcrumb';
@@ -71,13 +72,13 @@ export default function ProductPage() {
 
   // Use API service to get category information
   const category: Category | undefined = product ? 
-    // For now, we'll create a basic category object from the product data
-    // In a real implementation, you might want to fetch the full category details
-    {
-      id: product.category,
-      name: product.category,
-      title: product.category
-    } : undefined;
+    // Handle both object and string category formats
+    (typeof product.category === 'object' ? product.category : {
+      id: getCategorySlug(product),
+      name: getCategoryName(product),
+      title: getCategoryName(product),
+      slug: getCategorySlug(product)
+    }) : undefined;
   const hasModels = product.models && modelKeys.length > 0;
   
   // Use breadcrumbs from API if available, otherwise fall back to local breadcrumb component
@@ -120,7 +121,7 @@ export default function ProductPage() {
         {/* Product Info */}
         <div>
           <ProductTitleBadge title={product.title} />
-          <ProductBasicInfo weight={product.weight} inStock={product.inStock} />
+          <ProductBasicInfo product={product} weight={product.weight} inStock={product.inStock} />
 
           {hasModels && product.models && (
             <ModelSelector
@@ -159,7 +160,7 @@ export default function ProductPage() {
           )}
 
           <QuantityInput quantity={quantity} onQuantityChange={handleQuantityChange} />
-          <ProductActions inStock={product.inStock} />
+          <ProductActions inStock={product.inStock} product={product} />
         </div>
       </div>
 
