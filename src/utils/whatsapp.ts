@@ -5,7 +5,7 @@ import { getCategoryName, getSubcategoryName, formatCategoryDisplay } from './pr
 export const WHATSAPP_CONFIG = {
   // Replace this with your actual WhatsApp Business number
   // Format: Include country code without + or spaces (e.g., "919876543210" for India)
-  businessNumber: "919876543210", // Update this with your WhatsApp Business number
+  businessNumber: "918712507069", // Update this with your WhatsApp Business number
   
   // Default message template for product inquiries
   getProductInquiryMessage: (product: Product) => {
