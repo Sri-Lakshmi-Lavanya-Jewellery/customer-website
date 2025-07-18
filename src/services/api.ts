@@ -175,6 +175,36 @@ export interface MultipleUploadData {
   count: number;
 }
 
+export interface EnquiryRequest {
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  subject: string;
+  message: string;
+  type?: 'general' | 'product' | 'order' | 'complaint' | 'suggestion' | 'other';
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  productId?: string;
+  tags?: string[];
+}
+
+export interface EnquiryResponse {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+  subject: string;
+  message: string;
+  type: string;
+  priority: string;
+  status: string;
+  productId?: string;
+  responses: any[];
+  tags: string[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Query parameter interfaces
 export interface CatalogParams {
   page?: number;
@@ -503,6 +533,23 @@ class ApiService {
       throw error;
     }
   }
+
+  // Enquiry Management
+  async submitEnquiry(enquiryData: EnquiryRequest): Promise<EnquiryResponse> {
+    try {
+      const response = await fetchWithErrorHandling<EnquiryResponse>(
+        `${API_BASE_URL}/enquiry`,
+        {
+          method: 'POST',
+          body: JSON.stringify(enquiryData),
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Enquiry submission error:', error);
+      throw error;
+    }
+  }
 }
 
 // Create and export a singleton instance
@@ -530,6 +577,7 @@ export const {
   getPublicStats,
   uploadSingleImage,
   uploadMultipleImages,
+  submitEnquiry,
 } = apiService;
 
 // Helper hooks for React components (optional)
