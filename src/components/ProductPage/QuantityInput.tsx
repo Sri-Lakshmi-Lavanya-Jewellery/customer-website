@@ -39,10 +39,10 @@ const QuantityInput: React.FC<QuantityInputProps> = ({ quantity, onQuantityChang
       <div className="flex items-center">
         <button
           onClick={handleDecrement}
-          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-lg disabled:opacity-50"
+          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-lg disabled:opacity-50 hover:bg-blue-50 transition-colors"
           disabled={quantity <= MIN_QUANTITY}
         >
-          <span className="text-xl">-</span>
+          <span className="text-xl text-blue-600">-</span>
         </button>
         <input
           type="number"
@@ -50,14 +50,14 @@ const QuantityInput: React.FC<QuantityInputProps> = ({ quantity, onQuantityChang
           max={MAX_QUANTITY}
           value={quantity}
           onChange={handleChange}
-          className="w-16 h-10 border-y border-gray-300 text-center [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-16 h-10 border-y border-gray-300 text-center focus:border-blue-500 focus:ring-1 focus:ring-blue-500 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
         />
         <button
           onClick={handleIncrement}
-          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-r-lg disabled:opacity-50"
+          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-r-lg disabled:opacity-50 hover:bg-blue-50 transition-colors"
           disabled={quantity >= MAX_QUANTITY}
         >
-          <span className="text-xl">+</span>
+          <span className="text-xl text-blue-600">+</span>
         </button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { TrendingUp, TrendingDown, Clock, Crown, Gem } from 'lucide-react';
 
 interface GoldPrices {
     price_24k: number;
@@ -85,61 +86,90 @@ export default function MetalRates() {
 
     const renderPriceChange = (change: number, changePercentage: number) => {
         const isPositive = change >= 0;
-        const color = isPositive ? 'text-green-600' : 'text-red-600';
+        const Icon = isPositive ? TrendingUp : TrendingDown;
+        const colorClass = isPositive ? 'text-green-600' : 'text-red-600';
+        const bgClass = isPositive ? 'bg-green-50' : 'bg-red-50';
         const sign = isPositive ? '+' : '';
         return (
-            <span className={`${color} text-xs ml-2`}>
+            <span className={`${colorClass} ${bgClass} text-xs ml-2 px-2 py-1 rounded-full flex items-center gap-1 font-medium border ${isPositive ? 'border-green-200' : 'border-red-200'}`}>
+                <Icon className="w-3 h-3" />
                 {sign}{change.toFixed(2)} ({sign}{changePercentage.toFixed(2)}%)
             </span>
         );
     };
 
     if (loading) {
-        return <div className="text-sm text-gray-600 px-4">Loading rates...</div>;
+        return (
+            <div className="flex items-center justify-center py-2">
+                <div className="flex items-center gap-2 text-gray-600">
+                    <Crown className="w-4 h-4 animate-pulse" />
+                    <span className="text-sm font-medium">Loading metal rates...</span>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className="flex items-center space-x-8 px-4">
+        <div className="flex items-center justify-center space-x-6 px-4 py-2 overflow-x-auto">
+            {/* Live Status Indicator */}
+            <div className="flex items-center gap-2 shrink-0">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-gray-600 font-medium">Live Rates</span>
+            </div>
+
             {/* Last Updated */}
-            <div className="text-xs text-gray-500 shrink-0">
-                Last updated: {lastUpdated}
+            <div className="flex items-center gap-1 text-xs text-gray-500 shrink-0">
+                <Clock className="w-3 h-3" />
+                <span>Updated: {lastUpdated}</span>
             </div>
 
             {/* Gold Rates */}
-            <div className="flex items-center space-x-6 shrink-0">
-                <div className="flex items-center">
-                    <span className="font-semibold text-yellow-600">Gold</span>
+            <div className="flex items-center space-x-4 shrink-0 bg-yellow-50 px-4 py-2 rounded-full border border-yellow-200">
+                <div className="flex items-center gap-2">
+                    <Crown className="w-4 h-4 text-yellow-600" />
+                    <span className="font-bold text-yellow-700">Gold</span>
                     {renderPriceChange(rates.gold.change, rates.gold.change_percentage)}
                 </div>
-                <div className="flex items-center space-x-4 text-sm">
-                    <div>
-                        <span className="text-gray-500">24K:</span>
-                        <span className="ml-1 font-medium">₹{rates.gold.price_24k.toFixed(2)}/g</span>
+                <div className="flex items-center space-x-3 text-sm">
+                    <div className="text-center">
+                        <div className="text-xs text-yellow-600 font-medium">24K</div>
+                        <div className="font-bold text-yellow-800">₹{rates.gold.price_24k.toFixed(0)}</div>
                     </div>
-                    <div>
-                        <span className="text-gray-500">22K:</span>
-                        <span className="ml-1 font-medium">₹{rates.gold.price_22k.toFixed(2)}/g</span>
+                    <div className="text-center">
+                        <div className="text-xs text-yellow-600 font-medium">22K</div>
+                        <div className="font-bold text-yellow-800">₹{rates.gold.price_22k.toFixed(0)}</div>
                     </div>
-                    <div>
-                        <span className="text-gray-500">18K:</span>
-                        <span className="ml-1 font-medium">₹{rates.gold.price_18k.toFixed(2)}/g</span>
+                    <div className="text-center">
+                        <div className="text-xs text-yellow-600 font-medium">18K</div>
+                        <div className="font-bold text-yellow-800">₹{rates.gold.price_18k.toFixed(0)}</div>
                     </div>
                 </div>
             </div>
 
-            {/* Divider */}
-            <div className="h-4 w-px bg-gray-300 shrink-0"></div>
+            {/* Decorative Divider */}
+            <div className="flex items-center gap-1 shrink-0">
+                <div className="h-6 w-0.5 bg-yellow-300 rounded-full"></div>
+                <Gem className="w-3 h-3 text-gray-600" />
+                <div className="h-6 w-0.5 bg-gray-300 rounded-full"></div>
+            </div>
 
             {/* Silver Rates */}
-            <div className="flex items-center space-x-6 shrink-0">
-                <div className="flex items-center">
-                    <span className="font-semibold text-gray-400">Silver</span>
+            <div className="flex items-center space-x-4 shrink-0 bg-gray-50 px-4 py-2 rounded-full border border-gray-200">
+                <div className="flex items-center gap-2">
+                    <Gem className="w-4 h-4 text-gray-600" />
+                    <span className="font-bold text-gray-700">Silver</span>
                     {renderPriceChange(rates.silver.change, rates.silver.change_percentage)}
                 </div>
-                <div className="text-sm">
-                    <span className="text-gray-500">Price:</span>
-                    <span className="ml-1 font-medium">₹{rates.silver.price.toFixed(2)}/g</span>
+                <div className="text-sm text-center">
+                    <div className="text-xs text-gray-600 font-medium">Per Gram</div>
+                    <div className="font-bold text-gray-800">₹{rates.silver.price.toFixed(0)}</div>
                 </div>
+            </div>
+
+            {/* Quality Assurance Badge */}
+            <div className="flex items-center gap-1 shrink-0 bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm">
+                <Crown className="w-3 h-3 text-yellow-600" />
+                <span className="text-xs font-medium text-gray-700">Certified Pure</span>
             </div>
         </div>
     );

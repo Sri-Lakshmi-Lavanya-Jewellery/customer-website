@@ -16,8 +16,8 @@ const CollectionsIndexPage: React.FC = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 0v1m-2 0V6a2 2 0 00-2 0v1m2 0V9.5m0 0v3m0-3h9m-9 0H3" />
         </svg>
       ),
-      bgColor: 'from-green-50 to-emerald-50',
-      buttonColor: 'bg-green-600 hover:bg-green-700',
+      bgColor: 'from-yellow-50 to-yellow-100',
+      buttonColor: 'bg-yellow-500 hover:bg-yellow-600',
       count: stats?.newProducts || '15+'
     },
     {
@@ -30,8 +30,8 @@ const CollectionsIndexPage: React.FC = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976-2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
         </svg>
       ),
-      bgColor: 'from-purple-50 to-indigo-50',
-      buttonColor: 'bg-purple-600 hover:bg-purple-700',
+      bgColor: 'from-blue-50 to-blue-100',
+      buttonColor: 'bg-blue-600 hover:bg-blue-700',
       count: '20+'
     },
     {
@@ -44,7 +44,7 @@ const CollectionsIndexPage: React.FC = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
       ),
-      bgColor: 'from-orange-50 to-red-50',
+      bgColor: 'from-yellow-50 to-orange-50',
       buttonColor: 'bg-orange-600 hover:bg-orange-700',
       count: '25+'
     },
@@ -65,14 +65,17 @@ const CollectionsIndexPage: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      {/* Hero Section */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Product Collections</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Explore our carefully curated collections of traditional silver items. Each collection is thoughtfully organized to help you discover the perfect pieces for your needs.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto py-8 px-4">
+        {/* Hero Section */}
+        <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">Product Collections</h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Explore our carefully curated collections of traditional silver items. Each collection is thoughtfully organized to help you discover the perfect pieces for your needs.
+            </p>
+          </div>
+        </div>
 
       {/* Breadcrumb */}
       <nav className="mb-8">
@@ -123,28 +126,29 @@ const CollectionsIndexPage: React.FC = () => {
       )}
 
       {/* Collections Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        {collections.map((collection) => (
-          <div
-            key={collection.id}
-            className={`bg-gradient-to-br ${collection.bgColor} rounded-lg p-8 hover:shadow-lg transition-all duration-300 group`}
-          >
-            <div className="flex items-start justify-between mb-6">
-              <div className="text-gray-600 group-hover:text-gray-700 transition-colors">
-                {collection.icon}
+      <div className="bg-white rounded-lg p-6 shadow-sm border mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {collections.map((collection) => (
+            <div
+              key={collection.id}
+              className={`bg-gradient-to-br ${collection.bgColor} rounded-lg p-8 hover:shadow-lg transition-all duration-300 group border`}
+            >
+              <div className="flex items-start justify-between mb-6">
+                <div className="text-gray-600 group-hover:text-gray-700 transition-colors">
+                  {collection.icon}
+                </div>
+                <div className="bg-white rounded-full px-3 py-1 text-sm font-semibold text-gray-700 shadow-sm">
+                  {collection.count} items
+                </div>
               </div>
-              <div className="bg-white rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
-                {collection.count} items
-              </div>
-            </div>
-            
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">
-              {collection.title}
-            </h3>
-            
-            <p className="text-gray-600 mb-6 line-clamp-2">
-              {collection.description}
-            </p>
+              
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                {collection.title}
+              </h3>
+              
+              <p className="text-gray-600 mb-6 line-clamp-2">
+                {collection.description}
+              </p>
             
             <div className="flex gap-3">
               <Link
@@ -175,10 +179,11 @@ const CollectionsIndexPage: React.FC = () => {
             </div>
           </div>
         ))}
+        </div>
       </div>
 
       {/* Quick Navigation */}
-      <div className="bg-gray-50 rounded-lg p-8">
+      <div className="bg-white rounded-lg p-8 shadow-sm border">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Explore More</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link
@@ -226,6 +231,7 @@ const CollectionsIndexPage: React.FC = () => {
             </div>
           </Link>
         </div>
+      </div>
       </div>
     </div>
   );

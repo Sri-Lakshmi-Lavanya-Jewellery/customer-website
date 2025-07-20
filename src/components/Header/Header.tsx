@@ -1,86 +1,105 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Menu, X, Search } from 'lucide-react'
+import { Menu, X, Search, Crown, Sparkles } from 'lucide-react'
 import MetalRates from '../MetalRates/MetalRates'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
   const closeMenu = () => setIsMenuOpen(false);
-  console.log("Hello, for force deployment");
 
   return (
-    <div>
-        <header className="bg-white shadow-sm">
+    <div className="relative">
+        <header className="bg-gradient-to-r from-gold-50 to-amber-50 shadow-lg border-b border-gold-200">
             {/* Metal rates ticker */}
-            <div className="bg-gray-100 py-1 border-b">
+            <div className="bg-gradient-to-r from-gold-500 to-amber-500 py-2 text-white">
                 <div className="container mx-auto">
-                    <div className="overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                        <MetalRates />
-                    </div>
+                    <MetalRates />
                 </div>
             </div>
 
             <div className="container mx-auto px-4 py-4">
                 {/* Top section with logo, search, and mobile menu button */}
                 <div className="flex justify-between items-center">
-                    <div className="logo">
-                        <NavLink to="/" className="text-xl md:text-2xl font-bold hover:text-[#741B1B]">
-                            Logo
+                    <div className="logo flex items-center gap-3">
+                        <div className="relative">
+                            <Crown className="w-8 h-8 text-gold-600 animate-pulse" />
+                            <Sparkles className="w-4 h-4 text-orange-500 absolute -top-1 -right-1 animate-bounce" />
+                        </div>
+                        <NavLink to="/" className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 hover:text-gold-600 transition-colors duration-300 leading-tight">
+                            Sri Lakshmi Lavanya Jewellery
                         </NavLink>
                     </div>
                     
                     {/* Desktop Search */}
-                    <div className="hidden md:flex flex-1 max-w-md mx-4">
-                        <input 
-                            type='search' 
-                            placeholder='Search' 
-                            className='w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500' 
-                        />
+                    <div className="hidden md:flex flex-1 max-w-md mx-6">
+                        <div className="relative w-full">
+                            <input 
+                                type='search' 
+                                placeholder='Search for jewelry...' 
+                                className='w-full p-3 pl-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-gold-400 bg-white transition-all duration-300' 
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        </div>
                     </div>
 
                     {/* Mobile buttons */}
-                    <div className="md:hidden flex items-center gap-2">
+                    <div className="md:hidden flex items-center gap-3">
                         <button 
                             onClick={toggleSearch}
-                            className="p-2 hover:bg-gray-100 rounded-md"
+                            className="p-3 hover:bg-gold-100 rounded-full transition-colors duration-300 group"
                             aria-label="Toggle search"
                         >
-                            <Search size={20} />
+                            <Search size={20} className="text-gold-600 group-hover:text-gold-700" />
                         </button>
                         <button 
                             onClick={toggleMenu}
-                            className="p-2 hover:bg-gray-100 rounded-md"
+                            className="p-3 hover:bg-gold-100 rounded-full transition-colors duration-300 group"
                             aria-label="Toggle menu"
                         >
-                            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                            {isMenuOpen ? 
+                                <X size={20} className="text-indian-crimson group-hover:text-red-700" /> : 
+                                <Menu size={20} className="text-gold-600 group-hover:text-gold-700" />
+                            }
                         </button>
                     </div>
                 </div>
 
                 {/* Mobile Search Bar */}
                 {isSearchOpen && (
-                    <div className="md:hidden mt-4 pb-4 border-b">
-                        <input 
-                            type='search' 
-                            placeholder='Search' 
-                            className='w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500' 
-                        />
+                    <div className="md:hidden mt-4 pb-4">
+                        <div className="relative">
+                            <input 
+                                type='search' 
+                                placeholder='Search jewelry...' 
+                                className='w-full p-3 pl-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gold-400 bg-white transition-all duration-300' 
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        </div>
                     </div>
                 )}
 
                 {/* Navigation menu */}
-                <nav className={`border-t pt-4 ${isMenuOpen ? 'block' : 'hidden md:block'}`}>
-                    <ul className='flex flex-col md:flex-row items-start md:items-center justify-start md:justify-center gap-4 md:gap-6 text-gray-600'>
+                <nav className={`border-t border-gray-200 pt-4 mt-4 ${isMenuOpen ? 'block' : 'hidden md:block'}`}>
+                    <ul className='flex flex-col md:flex-row items-start md:items-center justify-start md:justify-center gap-4 md:gap-8 text-gray-700 font-medium'>
                         <li>
                             <NavLink 
                                 to="/" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-gold-700 bg-gold-100" 
+                                            : "hover:text-gold-600 hover:bg-gold-50"
+                                    }`
                                 }
                             >
                                 Home
@@ -91,7 +110,11 @@ export default function Header() {
                                 to="/about" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-gold-700 bg-gold-100" 
+                                            : "hover:text-gold-600 hover:bg-gold-50"
+                                    }`
                                 }
                             >
                                 About
@@ -102,10 +125,14 @@ export default function Header() {
                                 to="/categories" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-gold-700 bg-gold-100" 
+                                            : "hover:text-gold-600 hover:bg-gold-50"
+                                    }`
                                 }
                             >
-                                Product Category
+                                Categories
                             </NavLink>
                         </li>
                         <li>
@@ -113,7 +140,11 @@ export default function Header() {
                                 to="/weight-range" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-gold-700 bg-gold-100" 
+                                            : "hover:text-gold-600 hover:bg-gold-50"
+                                    }`
                                 }
                             >
                                 Weight Range
@@ -124,10 +155,14 @@ export default function Header() {
                                 to="/enquiry" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-blue-700 bg-blue-100" 
+                                            : "hover:text-blue-600 hover:bg-blue-50"
+                                    }`
                                 }
                             >
-                                Product Enquiry
+                                Enquiry
                             </NavLink>
                         </li>
                         <li>
@@ -135,7 +170,11 @@ export default function Header() {
                                 to="/orders" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-blue-600 font-medium" : "hover:text-blue-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-green-700 bg-green-100" 
+                                            : "hover:text-green-600 hover:bg-green-50"
+                                    }`
                                 }
                             >
                                 New Orders
@@ -146,7 +185,11 @@ export default function Header() {
                                 to="/calendar" 
                                 onClick={closeMenu}
                                 className={({ isActive }) => 
-                                    isActive ? "text-orange-600 font-medium" : "hover:text-orange-600 transition-colors"
+                                    `px-3 py-2 rounded-lg transition-all duration-300 ${
+                                        isActive 
+                                            ? "text-orange-700 bg-orange-100" 
+                                            : "hover:text-orange-600 hover:bg-orange-50"
+                                    }`
                                 }
                             >
                                 Auspicious Calendar

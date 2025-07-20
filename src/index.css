@@ -1,1 +1,552 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Prevent horizontal scroll */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Custom CSS Variables for Indian Jewelry Theme */
+:root {
+  /* Gold Color Palette */
+  --gold-50: #fefdf8;
+  --gold-100: #fdf6e3;
+  --gold-200: #f9e79f;
+  --gold-300: #f4d03f;
+  --gold-400: #f1c40f;
+  --gold-500: #d4af37;
+  --gold-600: #b7950b;
+  --gold-700: #9a7d0a;
+  --gold-800: #7d6608;
+  --gold-900: #5d4e04;
+
+  /* Silver Color Palette */
+  --silver-50: #f8fafc;
+  --silver-100: #f1f5f9;
+  --silver-200: #e2e8f0;
+  --silver-300: #cbd5e1;
+  --silver-400: #94a3b8;
+  --silver-500: #64748b;
+  --silver-600: #475569;
+  --silver-700: #334155;
+  --silver-800: #1e293b;
+  --silver-900: #0f172a;
+
+  /* Vibrant Indian Colors */
+  --saffron: #ff9933;
+  --deep-saffron: #ff6600;
+  --maroon: #800020;
+  --emerald: #50c878;
+  --royal-blue: #4169e1;
+  --crimson: #dc143c;
+  --peacock-green: #005a5b;
+  --vermillion: #e34234;
+  --turmeric: #e89611;
+  --ruby: #cc313d;
+  --sapphire: #0f4c75;
+  --emerald-dark: #006a4e;
+  --coral: #ff6b6b;
+  --amber: #ffbf00;
+  --pearl: #f8f6ff;
+  --rose-gold: #e8b4b8;
+  --antique-gold: #c9b037;
+  --temple-gold: #b8860b;
+  --kundan: #f7e7ce;
+  --meenakari: #ff6347;
+
+  /* Gradients */
+  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+  --silver-gradient: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 50%, #94a3b8 100%);
+  --royal-gradient: linear-gradient(135deg, #4169e1 0%, #50c878 100%);
+  --sunset-gradient: linear-gradient(135deg, #ff9933 0%, #dc143c 100%);
+  --temple-gradient: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #f4d03f 100%);
+  --kundan-gradient: linear-gradient(135deg, #f7e7ce 0%, #d4af37 50%, #c9b037 100%);
+  --ruby-gradient: linear-gradient(135deg, #cc313d 0%, #ff6b6b 50%, #e34234 100%);
+  --emerald-gradient: linear-gradient(135deg, #006a4e 0%, #50c878 50%, #7dcea0 100%);
+  --peacock-gradient: linear-gradient(135deg, #005a5b 0%, #4169e1 50%, #50c878 100%);
+  --meenakari-gradient: linear-gradient(135deg, #ff6347 0%, #ff9933 50%, #ffbf00 100%);
+  --divine-gradient: radial-gradient(circle at center, #f4d03f 0%, #d4af37 50%, #b8860b 100%);
+}
+
+/* Custom Typography */
+.font-indian-serif {
+  font-family: 'Cinzel', serif;
+}
+
+.font-modern {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Custom Utility Classes */
+.bg-gold-gradient {
+  background: var(--gold-gradient);
+}
+
+.bg-silver-gradient {
+  background: var(--silver-gradient);
+}
+
+.bg-royal-gradient {
+  background: var(--royal-gradient);
+}
+
+.bg-sunset-gradient {
+  background: var(--sunset-gradient);
+}
+
+.text-gold {
+  color: var(--gold-600);
+}
+
+.text-silver {
+  color: var(--silver-600);
+}
+
+.text-saffron {
+  color: var(--saffron);
+}
+
+.border-gold {
+  border-color: var(--gold-500);
+}
+
+.border-silver {
+  border-color: var(--silver-400);
+}
+
+/* Indian Pattern Decorations */
+.indian-border {
+  position: relative;
+}
+
+.indian-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--gold-500) 0px,
+    var(--gold-500) 10px,
+    var(--maroon) 10px,
+    var(--maroon) 20px
+  );
+}
+
+.mandala-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.lotus-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.08'%3E%3Cpath d='M40 10 C30 20, 20 30, 30 40 C20 50, 30 60, 40 70 C50 60, 60 50, 50 40 C60 30, 50 20, 40 10 Z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.kalash-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23b8860b' fill-opacity='0.06'%3E%3Cellipse cx='50' cy='30' rx='15' ry='8'/%3E%3Crect x='45' y='30' width='10' height='40'/%3E%3Cellipse cx='50' cy='70' rx='20' ry='12'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.rangoli-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d4af37' stroke-width='1' stroke-opacity='0.1'%3E%3Cpath d='M60 20 L80 40 L60 60 L40 40 Z'/%3E%3Cpath d='M60 60 L80 80 L60 100 L40 80 Z'/%3E%3Ccircle cx='60' cy='60' r='30'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.peacock-feather-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='90' height='90' viewBox='0 0 90 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23005a5b' fill-opacity='0.05'%3E%3Cellipse cx='45' cy='20' rx='8' ry='15'/%3E%3Ccircle cx='45' cy='15' r='3'/%3E%3Cpath d='M45 20 Q30 45 45 70 Q60 45 45 20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Shimmer Effect for Gold Elements */
+.gold-shimmer {
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.1) 0%,
+    rgba(244, 208, 63, 0.3) 50%,
+    rgba(212, 175, 55, 0.1) 100%
+  );
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { 
+    background-position: -200% 0;
+  }
+  50% { 
+    background-position: 200% 0;
+  }
+}
+
+/* Enhanced Card Hover Effects */
+.card-hover {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 
+    0 25px 50px rgba(212, 175, 55, 0.4),
+    0 0 30px rgba(184, 134, 11, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.card-hover:hover .jewel-sparkle::before,
+.card-hover:hover .jewel-sparkle::after {
+  animation-duration: 1s;
+}
+
+/* Royal Button Styles */
+.btn-royal {
+  background: var(--royal-gradient);
+  color: white;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-royal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-royal:hover::before {
+  left: 100%;
+}
+
+.btn-royal:hover {
+  box-shadow: 0 8px 25px rgba(65, 105, 225, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Gold Button Styles */
+.btn-gold {
+  background: var(--gold-gradient);
+  color: var(--maroon);
+  border: 2px solid var(--gold-600);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gold::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn-gold:hover::before {
+  left: 100%;
+}
+
+.btn-gold:hover {
+  background: var(--temple-gradient);
+  color: white;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Temple Button Styles */
+.btn-temple {
+  background: var(--temple-gradient);
+  color: white;
+  border: 2px solid var(--temple-gold);
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+}
+
+.btn-temple:hover {
+  box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5);
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* Kundan Button Styles */
+.btn-kundan {
+  background: var(--kundan-gradient);
+  color: var(--temple-gold);
+  border: 2px solid var(--kundan);
+  font-weight: 600;
+  box-shadow: 
+    0 4px 15px rgba(247, 231, 206, 0.4),
+    inset 0 1px 3px rgba(255, 255, 255, 0.3);
+}
+
+.btn-kundan:hover {
+  background: var(--gold-gradient);
+  color: white;
+  box-shadow: 
+    0 8px 25px rgba(212, 175, 55, 0.5),
+    inset 0 1px 3px rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Ruby Button Styles */
+.btn-ruby {
+  background: var(--ruby-gradient);
+  color: white;
+  border: 2px solid var(--ruby);
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(204, 49, 61, 0.4);
+}
+
+.btn-ruby:hover {
+  box-shadow: 0 8px 30px rgba(204, 49, 61, 0.6);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Emerald Button Styles */
+.btn-emerald {
+  background: var(--emerald-gradient);
+  color: white;
+  border: 2px solid var(--emerald);
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+}
+
+.btn-emerald:hover {
+  box-shadow: 0 8px 30px rgba(80, 200, 120, 0.5);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Indian Decorative Elements */
+.paisley-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M20 20c0-11 9-20 20-20s20 9 20 20-9 20-20 20S20 31 20 20z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--silver-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-gradient);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-600);
+}
+
+/* Loading Animation */
+.loading-dots {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+.loading-dots div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--gold-500);
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.loading-dots div:nth-child(1) {
+  left: 8px;
+  animation: loading1 0.6s infinite;
+}
+
+.loading-dots div:nth-child(2) {
+  left: 8px;
+  animation: loading2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(3) {
+  left: 32px;
+  animation: loading2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(4) {
+  left: 56px;
+  animation: loading3 0.6s infinite;
+}
+
+@keyframes loading1 {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+@keyframes loading3 {
+  0% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+
+@keyframes loading2 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(24px, 0); }
+}
+
+/* Premium Glass Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.divine-glass {
+  background: rgba(247, 231, 206, 0.2);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(212, 175, 55, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.temple-glass {
+  background: rgba(184, 134, 11, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  box-shadow: 
+    0 6px 24px rgba(184, 134, 11, 0.2),
+    inset 0 1px 0 rgba(244, 208, 63, 0.3);
+}
+
+/* Divine Shimmer Effects */
+.divine-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.divine-shimmer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle, transparent 20%, rgba(212, 175, 55, 0.1) 50%, transparent 80%),
+    linear-gradient(45deg, transparent 30%, rgba(244, 208, 63, 0.2) 50%, transparent 70%);
+  animation: divine-shimmer 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes divine-shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Sacred Glow Effects */
+.sacred-glow {
+  box-shadow: 
+    0 0 10px rgba(212, 175, 55, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.2),
+    0 0 30px rgba(212, 175, 55, 0.1);
+  animation: sacred-pulse 3s ease-in-out infinite;
+}
+
+@keyframes sacred-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 10px rgba(212, 175, 55, 0.3),
+      0 0 20px rgba(212, 175, 55, 0.2),
+      0 0 30px rgba(212, 175, 55, 0.1);
+  }
+  50% { 
+    box-shadow: 
+      0 0 20px rgba(212, 175, 55, 0.5),
+      0 0 40px rgba(212, 175, 55, 0.3),
+      0 0 60px rgba(212, 175, 55, 0.2);
+  }
+}
+
+/* Jewel Sparkle Effect */
+.jewel-sparkle {
+  position: relative;
+}
+
+.jewel-sparkle::before,
+.jewel-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #fff 0%, rgba(212, 175, 55, 0.8) 70%, transparent 100%);
+  border-radius: 50%;
+  animation: sparkle 2s linear infinite;
+}
+
+.jewel-sparkle::before {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.jewel-sparkle::after {
+  top: 70%;
+  right: 20%;
+  animation-delay: 1s;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* Indian Art Inspired Borders */
+.mehndi-border {
+  border: 2px solid;
+  border-image: linear-gradient(45deg, var(--gold-500), var(--saffron), var(--gold-500)) 1;
+}
+
+.temple-border {
+  position: relative;
+  border: 3px solid var(--temple-gold);
+}
+
+.temple-border::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: var(--temple-gradient);
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.kundan-border {
+  border: 2px solid var(--kundan);
+  box-shadow: 
+    inset 0 0 10px rgba(247, 231, 206, 0.5),
+    0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.divine-aura {
+  position: relative;
+}
+
+.divine-aura::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: var(--divine-gradient);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.3;
+  animation: divine-pulse 3s ease-in-out infinite;
+}

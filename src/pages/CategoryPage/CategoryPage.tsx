@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Crown } from 'lucide-react';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import { useProductFilters } from '../../hooks/useProductFilters';
 import { useCategoryPageBySlug, usePagination, useSubcategoryPage } from '../../hooks/useApi';
@@ -72,10 +73,18 @@ export default function CategoryPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="container mx-auto py-8 px-4">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading category...</p>
+          <div className="relative">
+            <div className="loading-dots relative">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <Crown className="w-12 h-12 text-yellow-600 mx-auto mb-4 animate-pulse" />
+          </div>
+          <p className="text-gray-600 text-lg">Loading category...</p>
         </div>
       </div>
     );
@@ -116,33 +125,36 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <CategoryHeader title={category.title || category.name || 'Category'} description={category.description || ''} />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto py-8 px-4">
+        <div className="bg-white rounded-lg shadow-sm border p-8 mb-8">
+          <CategoryHeader title={category.title || category.name || 'Category'} description={category.description || ''} />
 
-      <SubcategoryFilterList
-        subcategories={subcategories}
-        selectedSubcategory={selectedSubcategory}
-        onSubcategorySelect={handleSubcategorySelect}
-      />
-
-      {/* Advanced Filters */}
-      <div className="mb-8 bg-gray-50 p-6 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <AvailabilityFilter
-            inStock={filters.inStock}
-            onFilterChange={handleFilterChange as (filterType: 'inStock', value: boolean) => void}
+          <SubcategoryFilterList
+            subcategories={subcategories}
+            selectedSubcategory={selectedSubcategory}
+            onSubcategorySelect={handleSubcategorySelect}
           />
-          <SortByFilter
-            sortBy={filters.sortBy}
-            onFilterChange={handleFilterChange as (filterType: 'sortBy', value: string) => void}
-          />
+        </div>
 
-          {/* Product Type Filter - Placeholder for future implementation (was Weight Range before) */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Product Type</h3>
-            <div className="flex items-center space-x-2">
+        {/* Advanced Filters */}
+        <div className="mb-8 bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter Products</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <AvailabilityFilter
+              inStock={filters.inStock}
+              onFilterChange={handleFilterChange as (filterType: 'inStock', value: boolean) => void}
+            />
+            <SortByFilter
+              sortBy={filters.sortBy}
+              onFilterChange={handleFilterChange as (filterType: 'sortBy', value: string) => void}
+            />
+
+            {/* Product Type Filter - Placeholder for future implementation (was Weight Range before) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Product Type</label>
               <select
-                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                 defaultValue="all"
               >
                 <option value="all">All Types</option>
@@ -153,74 +165,77 @@ export default function CategoryPage() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Product Listing */}
-      <ProductCountDisplay count={filteredProducts.length} />
+        {/* Product Listing */}
+        <ProductCountDisplay count={filteredProducts.length} />
 
-      {filteredProducts.length > 0 ? (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                title={product.title}
-                image={product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg'}
-                isNew={product.isNewProduct || product.isNew}
-                link={`/product/${product.id}`}
-              />
-            ))}
-          </div>
-
-          {/* Pagination Controls (only for API data) */}
-          {apiData?.pagination && (
-            <div className="flex justify-center items-center space-x-4 mt-8">
-              <button
-                onClick={prevPage}
-                disabled={page === 1}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              
-              <div className="flex space-x-2">
-                {Array.from({ length: Math.min(5, apiData.pagination.totalPages) }, (_, i) => {
-                  const pageNum = i + 1;
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => goToPage(pageNum)}
-                      className={`px-3 py-1 rounded ${
-                        page === pageNum
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
+        {/* Products Grid */}
+        <div className="bg-white rounded-lg shadow-sm border p-8">
+          {filteredProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    title={product.title}
+                    image={product.images?.[0] || product.commonImages?.[0] || '/assets/images/products/default.jpg'}
+                    isNew={product.isNewProduct || product.isNew}
+                    link={`/product/${product.id}`}
+                  />
+                ))}
               </div>
 
-              <button
-                onClick={nextPage}
-                disabled={page === apiData.pagination.totalPages}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-              
-              <span className="text-sm text-gray-600">
-                Page {page} of {apiData.pagination.totalPages} 
-                ({apiData.pagination.total} total products)
-              </span>
-            </div>
+              {/* Pagination Controls (only for API data) */}
+              {apiData?.pagination && (
+                <div className="flex justify-center items-center space-x-4 mt-8 pt-8 border-t border-gray-200">
+                  <button
+                    onClick={prevPage}
+                    disabled={page === 1}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Previous
+                  </button>
+                  
+                  <div className="flex space-x-2">
+                    {Array.from({ length: Math.min(5, apiData.pagination.totalPages) }, (_, i) => {
+                      const pageNum = i + 1;
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => goToPage(pageNum)}
+                          className={`px-3 py-2 rounded-lg transition-colors ${
+                            page === pageNum
+                              ? 'bg-yellow-500 text-white shadow-md'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={nextPage}
+                    disabled={page === apiData.pagination.totalPages}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next
+                  </button>
+                  
+                  <span className="text-sm text-gray-600 ml-4">
+                    Page {page} of {apiData.pagination.totalPages} 
+                    ({apiData.pagination.total} total products)
+                  </span>
+                </div>
+              )}
+            </>
+          ) : (
+            <NoProductsMessage />
           )}
-        </>
-      ) : (
-        <NoProductsMessage />
-      )}
+        </div>
+      </div>
     </div>
   );
 }

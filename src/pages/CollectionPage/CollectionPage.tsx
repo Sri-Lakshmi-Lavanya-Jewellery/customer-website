@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useNewArrivals, useFeaturedProducts, usePagination } from '../../hooks/useApi';
 import ProductCard from '../../components/ProductCard/ProductCard';
+import { Crown } from 'lucide-react';
 
 type CollectionType = 'new-arrivals' | 'featured';
 
@@ -66,8 +67,15 @@ const CollectionPage: React.FC = () => {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading {currentCollection.title.toLowerCase()}...</p>
+          <div className="flex flex-col items-center justify-center min-h-[400px]">
+            <Crown className="w-12 h-12 text-yellow-500 mb-4 animate-pulse" />
+            <div className="flex space-x-1 mb-4">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+            <p className="text-gray-600">Loading {currentCollection.title.toLowerCase()}...</p>
+          </div>
         </div>
       </div>
     );
@@ -90,83 +98,85 @@ const CollectionPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      {/* Hero Section */}
-      <div className={`bg-gradient-to-r ${currentCollection.bgColor} rounded-lg p-8 mb-8`}>
-        <div className="flex items-center justify-center mb-4">
-          <div className="text-gray-600">
-            {currentCollection.icon}
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto py-8 px-4">
+        {/* Hero Section */}
+        <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border">
+          <div className="flex items-center justify-center mb-4">
+            <div className="text-gray-600">
+              {currentCollection.icon}
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800 text-center mb-4">
+            {currentCollection.title}
+          </h1>
+          <p className="text-xl text-gray-600 text-center max-w-2xl mx-auto">
+            {data?.data?.description || currentCollection.description}
+          </p>
+        </div>
+
+        {/* Breadcrumb */}
+        <nav className="mb-8">
+          <ol className="flex items-center space-x-2 text-sm text-gray-500">
+            <li>
+              <Link to="/" className="hover:text-blue-600 transition-colors">
+                Home
+              </Link>
+            </li>
+            <li className="flex items-center">
+              <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+              <Link to="/collections" className="hover:text-blue-600 transition-colors">
+                Collections
+              </Link>
+            </li>
+            <li className="flex items-center">
+              <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+              <span className="text-gray-800 font-medium">{currentCollection.title}</span>
+            </li>
+          </ol>
+        </nav>
+
+        {/* Filters and Controls */}
+        <div className="mb-8 bg-white rounded-lg shadow-sm border p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter & Sort</h3>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Sort Controls */}
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-gray-700">Sort by:</label>
+              <select
+                value={`${sortBy}_${sortOrder}`}
+                onChange={(e) => {
+                  const [newSortBy, newSortOrder] = e.target.value.split('_');
+                  handleSortChange(newSortBy, newSortOrder as 'asc' | 'desc');
+                }}
+                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+              >
+                <option value="createdAt_desc">Newest First</option>
+                <option value="createdAt_asc">Oldest First</option>
+                <option value="title_asc">Name A-Z</option>
+                <option value="title_desc">Name Z-A</option>
+              </select>
+            </div>
+
+            {/* Items per page */}
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-gray-700">Items per page:</label>
+              <select
+                value={limit}
+                onChange={(e) => changeLimit(Number(e.target.value))}
+                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+              >
+                <option value={12}>12</option>
+                <option value={24}>24</option>
+                <option value={48}>48</option>
+              </select>
+            </div>
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-800 text-center mb-4">
-          {currentCollection.title}
-        </h1>
-        <p className="text-xl text-gray-600 text-center max-w-2xl mx-auto">
-          {data?.data?.description || currentCollection.description}
-        </p>
-      </div>
-
-      {/* Breadcrumb */}
-      <nav className="mb-8">
-        <ol className="flex items-center space-x-2 text-sm text-gray-500">
-          <li>
-            <Link to="/" className="hover:text-blue-600 transition-colors">
-              Home
-            </Link>
-          </li>
-          <li className="flex items-center">
-            <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <Link to="/collections" className="hover:text-blue-600 transition-colors">
-              Collections
-            </Link>
-          </li>
-          <li className="flex items-center">
-            <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <span className="text-gray-800 font-medium">{currentCollection.title}</span>
-          </li>
-        </ol>
-      </nav>
-
-      {/* Filters and Controls */}
-      <div className="mb-6 bg-gray-50 p-6 rounded-lg">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          {/* Sort Controls */}
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Sort by:</label>
-            <select
-              value={`${sortBy}_${sortOrder}`}
-              onChange={(e) => {
-                const [newSortBy, newSortOrder] = e.target.value.split('_');
-                handleSortChange(newSortBy, newSortOrder as 'asc' | 'desc');
-              }}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="createdAt_desc">Newest First</option>
-              <option value="createdAt_asc">Oldest First</option>
-              <option value="title_asc">Name A-Z</option>
-              <option value="title_desc">Name Z-A</option>
-            </select>
-          </div>
-
-          {/* Items per page */}
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Items per page:</label>
-            <select
-              value={limit}
-              onChange={(e) => changeLimit(Number(e.target.value))}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value={12}>12</option>
-              <option value={24}>24</option>
-              <option value={48}>48</option>
-            </select>
-          </div>
-        </div>
-      </div>
 
       {/* Results Info */}
       {pagination && (
@@ -292,7 +302,7 @@ const CollectionPage: React.FC = () => {
           )}
         </>
       ) : (
-        <div className="text-center py-12">
+        <div className="bg-white rounded-lg shadow-sm border p-16 text-center">
           <div className="text-gray-500 mb-4">
             {currentCollection.icon}
           </div>
@@ -302,12 +312,13 @@ const CollectionPage: React.FC = () => {
           </p>
           <Link
             to="/products"
-            className={`inline-flex items-center px-6 py-3 text-white font-medium rounded-lg transition-colors ${currentCollection.buttonColor}`}
+            className="inline-flex items-center px-6 py-3 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors"
           >
             Browse All Products
           </Link>
         </div>
       )}
+      </div>
     </div>
   );
 };

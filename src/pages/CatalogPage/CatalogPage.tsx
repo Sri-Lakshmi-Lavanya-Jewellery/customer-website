@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useProductCatalog, usePagination, useDebouncedSearch, useCategories, useSubcategoriesByCategory } from '../../hooks/useApi';
 import ProductCard from '../../components/ProductCard/ProductCard';
+import { Crown } from 'lucide-react';
 
 const CatalogPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -74,8 +75,15 @@ const CatalogPage: React.FC = () => {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading products...</p>
+          <div className="flex flex-col items-center justify-center min-h-[400px]">
+            <Crown className="w-12 h-12 text-yellow-500 mb-4 animate-pulse" />
+            <div className="flex space-x-1 mb-4">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+            <p className="text-gray-600">Loading products...</p>
+          </div>
         </div>
       </div>
     );
