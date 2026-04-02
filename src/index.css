@@ -1,5 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ── Marquee animation ── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 35s linear infinite;
+}
+
+.announcement-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ── Smooth scroll ── */
+html {
+  scroll-behavior: smooth;
+}
 
 /* Prevent horizontal scroll */
 html, body {
@@ -326,23 +347,11 @@ html, body {
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M20 20c0-11 9-20 20-20s20 9 20 20-9 20-20 20S20 31 20 20z'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--silver-100);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--gold-gradient);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-600);
-}
+/* Scrollbar — minimal, neutral */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
 /* Loading Animation */
 .loading-dots {

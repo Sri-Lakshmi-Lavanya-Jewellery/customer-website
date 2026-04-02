@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        'display': ['"Cormorant Garamond"', 'Georgia', 'serif'],
         'indian-serif': ['Cinzel', 'serif'],
         'modern': ['Poppins', 'sans-serif'],
       },

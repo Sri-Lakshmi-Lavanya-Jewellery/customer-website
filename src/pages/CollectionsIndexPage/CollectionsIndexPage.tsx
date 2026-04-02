@@ -1,238 +1,192 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { usePublicStats } from '../../hooks/useApi';
+import { ArrowRight, Sparkles, Star, Package, TrendingUp } from 'lucide-react';
+
+const collections = [
+  {
+    id: 'new-arrivals',
+    label: 'Fresh Designs',
+    title: 'New Arrivals',
+    description: 'The latest additions to our silver catalogue — designs you haven\'t seen before.',
+    accent: 'text-gold-600',
+    bg: 'bg-[#1a1410]',
+    border: 'border-gold-800/30',
+    icon: Sparkles,
+    gradient: 'from-gold-900/40 to-transparent',
+    tag: 'Just In',
+    tagColor: 'bg-gold-500',
+  },
+  {
+    id: 'featured',
+    label: 'Handpicked',
+    title: 'Featured',
+    description: 'Curated by our artisans — the best of our silver craftsmanship, selected for you.',
+    accent: 'text-silver-300',
+    bg: 'bg-[#131820]',
+    border: 'border-blue-900/30',
+    icon: Star,
+    gradient: 'from-blue-900/40 to-transparent',
+    tag: 'Editor\'s Pick',
+    tagColor: 'bg-silver-500',
+  },
+  {
+    id: 'trending',
+    label: 'Most Loved',
+    title: 'Trending',
+    description: 'What everyone is wearing right now — our most popular silver pieces this season.',
+    accent: 'text-rose-400',
+    bg: 'bg-[#1a1015]',
+    border: 'border-rose-900/30',
+    icon: TrendingUp,
+    gradient: 'from-rose-900/40 to-transparent',
+    tag: 'Trending',
+    tagColor: 'bg-rose-500',
+  },
+  {
+    id: 'in-stock',
+    label: 'Ready to Ship',
+    title: 'In Stock',
+    description: 'Available for immediate delivery. Genuine 925 silver, hallmarked and ready.',
+    accent: 'text-emerald-400',
+    bg: 'bg-[#0f1a14]',
+    border: 'border-emerald-900/30',
+    icon: Package,
+    gradient: 'from-emerald-900/40 to-transparent',
+    tag: 'Ready to Ship',
+    tagColor: 'bg-emerald-600',
+  },
+];
 
 const CollectionsIndexPage: React.FC = () => {
-  const { data: stats, loading: statsLoading } = usePublicStats();
+  const { data: stats } = usePublicStats();
 
-  const collections = [
-    {
-      id: 'new-arrivals',
-      title: 'New Arrivals',
-      description: 'Discover our latest collection of traditional silver items',
-      image: '/assets/images/collections/new-arrivals.jpg',
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 0v1m-2 0V6a2 2 0 00-2 0v1m2 0V9.5m0 0v3m0-3h9m-9 0H3" />
-        </svg>
-      ),
-      bgColor: 'from-yellow-50 to-yellow-100',
-      buttonColor: 'bg-yellow-500 hover:bg-yellow-600',
-      count: stats?.newProducts || '15+'
-    },
-    {
-      id: 'featured',
-      title: 'Featured Products',
-      description: 'Handpicked premium items from our collection',
-      image: '/assets/images/collections/featured.jpg',
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976-2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-        </svg>
-      ),
-      bgColor: 'from-blue-50 to-blue-100',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700',
-      count: '20+'
-    },
-    {
-      id: 'trending',
-      title: 'Trending Products',
-      description: 'Most popular items from our collection',
-      image: '/assets/images/collections/trending.jpg',
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-        </svg>
-      ),
-      bgColor: 'from-yellow-50 to-orange-50',
-      buttonColor: 'bg-orange-600 hover:bg-orange-700',
-      count: '25+'
-    },
-    {
-      id: 'in-stock',
-      title: 'In Stock Items',
-      description: 'Products ready for immediate delivery',
-      image: '/assets/images/collections/in-stock.jpg',
-      icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      bgColor: 'from-blue-50 to-cyan-50',
-      buttonColor: 'bg-blue-600 hover:bg-blue-700',
-      count: stats?.inStock || '140+'
-    }
-  ];
+  const counts: Record<string, string | number> = {
+    'new-arrivals': stats?.newProducts || '—',
+    'featured': '—',
+    'trending': stats?.totalProducts ? Math.round(Number(stats.totalProducts) * 0.4) : '—',
+    'in-stock': stats?.inStock || '—',
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-8 px-4">
-        {/* Hero Section */}
-        <div className="bg-white rounded-lg p-8 mb-8 shadow-sm border">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">Product Collections</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore our carefully curated collections of traditional silver items. Each collection is thoughtfully organized to help you discover the perfect pieces for your needs.
-            </p>
+    <div className="bg-white min-h-screen">
+
+      {/* ── Page hero ── */}
+      <section className="bg-gray-950 pt-16 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5 bg-rangoli-bg" />
+        <div className="relative z-10 container mx-auto px-4 text-center">
+          <p className="text-gold-400 text-xs font-semibold tracking-[0.35em] uppercase font-indian-serif mb-3">
+            Curated For You
+          </p>
+          <h1 className="font-display text-4xl md:text-6xl font-light text-white mb-4 leading-tight">
+            Our Collections
+          </h1>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="h-px w-12 bg-gold-400/40" />
+            <span className="text-gold-500 text-lg">✦</span>
+            <div className="h-px w-12 bg-gold-400/40" />
           </div>
+          <p className="text-gray-400 font-modern text-sm md:text-base max-w-xl mx-auto">
+            Every piece in our collections is crafted from BIS-hallmarked 925 silver
+            by skilled artisans who honour tradition in every detail.
+          </p>
         </div>
+      </section>
 
-      {/* Breadcrumb */}
-      <nav className="mb-8">
-        <ol className="flex items-center space-x-2 text-sm text-gray-500">
-          <li>
-            <Link to="/" className="hover:text-blue-600 transition-colors">
-              Home
-            </Link>
-          </li>
-          <li className="flex items-center">
-            <svg className="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <span className="text-gray-800 font-medium">Collections</span>
-          </li>
-        </ol>
-      </nav>
-
-      {/* Statistics Section */}
-      {stats && !statsLoading && (
-        <div className="mb-12">
-          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Our Collection at a Glance</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h3 className="text-3xl font-bold text-blue-600">{stats.totalProducts}</h3>
-                <p className="text-gray-600 font-medium">Total Products</p>
-              </div>
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h3 className="text-3xl font-bold text-green-600">{stats.categoriesCount}</h3>
-                <p className="text-gray-600 font-medium">Categories</p>
-              </div>
-              {stats.inStock && (
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <h3 className="text-3xl font-bold text-emerald-600">{stats.inStock}</h3>
-                  <p className="text-gray-600 font-medium">In Stock</p>
+      {/* ── Stats strip ── */}
+      {stats && (
+        <div className="bg-gold-500">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gold-400/30">
+              {[
+                { val: stats.totalProducts, label: 'Total Designs' },
+                { val: stats.categoriesCount, label: 'Categories' },
+                { val: stats.inStock || '—', label: 'In Stock' },
+                { val: stats.newProducts || '—', label: 'New Arrivals' },
+              ].map(({ val, label }) => (
+                <div key={label} className="text-center py-4 px-6">
+                  <p className="font-display text-2xl md:text-3xl font-light text-white">{val}</p>
+                  <p className="text-gold-100/80 text-xs font-modern uppercase tracking-widest">{label}</p>
                 </div>
-              )}
-              {stats.newProducts && (
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <h3 className="text-3xl font-bold text-purple-600">{stats.newProducts}</h3>
-                  <p className="text-gray-600 font-medium">New Items</p>
-                </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
       )}
 
-      {/* Collections Grid */}
-      <div className="bg-white rounded-lg p-6 shadow-sm border mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {collections.map((collection) => (
-            <div
-              key={collection.id}
-              className={`bg-gradient-to-br ${collection.bgColor} rounded-lg p-8 hover:shadow-lg transition-all duration-300 group border`}
+      {/* ── Collections grid ── */}
+      <section className="py-16 md:py-24 container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {collections.map(({ id, label, title, description, accent, bg, border, icon: Icon, gradient, tag, tagColor }) => (
+            <Link
+              key={id}
+              to={`/collections/${id}`}
+              className={`group relative rounded-3xl overflow-hidden ${bg} border ${border} p-8 md:p-10 flex flex-col justify-between min-h-[260px] hover:shadow-2xl transition-all duration-300 hover:-translate-y-1`}
             >
-              <div className="flex items-start justify-between mb-6">
-                <div className="text-gray-600 group-hover:text-gray-700 transition-colors">
-                  {collection.icon}
-                </div>
-                <div className="bg-white rounded-full px-3 py-1 text-sm font-semibold text-gray-700 shadow-sm">
-                  {collection.count} items
+              {/* Background gradient wash */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} pointer-events-none`} />
+
+              {/* Tag */}
+              <div className="relative z-10 flex items-start justify-between mb-6">
+                <span className={`${tagColor} text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full font-modern`}>
+                  {tag}
+                </span>
+                {counts[id] !== '—' && (
+                  <span className="text-gray-500 text-xs font-modern">{counts[id]} items</span>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="relative z-10">
+                <Icon size={28} className={`${accent} mb-4 opacity-80`} />
+                <p className={`text-[11px] font-semibold tracking-[0.3em] uppercase font-indian-serif mb-2 ${accent} opacity-70`}>
+                  {label}
+                </p>
+                <h2 className={`font-display text-3xl md:text-4xl font-light mb-3 ${accent}`}>{title}</h2>
+                <p className="text-gray-400 text-sm font-modern leading-relaxed max-w-xs">{description}</p>
+              </div>
+
+              {/* CTA */}
+              <div className="relative z-10 mt-8 flex items-center justify-between">
+                <span className={`flex items-center gap-2 text-xs font-semibold tracking-widest uppercase font-modern ${accent} group-hover:gap-3 transition-all duration-200`}>
+                  Explore <ArrowRight size={13} />
+                </span>
+                <div className={`w-10 h-10 rounded-full border ${border} flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity duration-200`}>
+                  <ArrowRight size={14} className={accent} />
                 </div>
               </div>
-              
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                {collection.title}
-              </h3>
-              
-              <p className="text-gray-600 mb-6 line-clamp-2">
-                {collection.description}
-              </p>
-            
-            <div className="flex gap-3">
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Bottom nav ── */}
+      <section className="bg-gold-50 border-t border-gold-100 py-10">
+        <div className="container mx-auto px-4">
+          <p className="text-center text-gold-600 text-xs font-semibold tracking-[0.3em] uppercase font-indian-serif mb-6">
+            Explore More
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+            {[
+              { to: '/categories', icon: '📂', label: 'Browse by Category' },
+              { to: '/products', icon: '🔍', label: 'Search All Products' },
+              { to: '/enquiry', icon: '💬', label: 'Custom Order Enquiry' },
+            ].map(({ to, icon, label }) => (
               <Link
-                to={`/collections/${collection.id}`}
-                className={`inline-flex items-center px-6 py-3 text-white font-medium rounded-lg transition-colors ${collection.buttonColor}`}
+                key={to}
+                to={to}
+                className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gold-200 hover:border-gold-400 hover:shadow-gold transition-all duration-200 group"
               >
-                Explore Collection
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                <span className="text-2xl">{icon}</span>
+                <span className="text-sm font-semibold text-gray-700 group-hover:text-gold-700 font-modern transition-colors">
+                  {label}
+                </span>
+                <ArrowRight size={14} className="ml-auto text-gray-300 group-hover:text-gold-500 transition-colors" />
               </Link>
-              
-              {collection.id === 'in-stock' ? (
-                <Link
-                  to="/products?inStock=true"
-                  className="inline-flex items-center px-4 py-3 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors border"
-                >
-                  View All
-                </Link>
-              ) : collection.id === 'trending' ? (
-                <Link
-                  to="/products?sortBy=popularity&sortOrder=desc"
-                  className="inline-flex items-center px-4 py-3 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors border"
-                >
-                  View All
-                </Link>
-              ) : null}
-            </div>
+            ))}
           </div>
-        ))}
         </div>
-      </div>
-
-      {/* Quick Navigation */}
-      <div className="bg-white rounded-lg p-8 shadow-sm border">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Explore More</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link
-            to="/categories"
-            className="flex items-center p-4 bg-white rounded-lg hover:bg-blue-50 transition-colors border hover:border-blue-200 group"
-          >
-            <div className="text-blue-600 mr-4 group-hover:text-blue-700">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 group-hover:text-blue-700">Browse Categories</h3>
-              <p className="text-sm text-gray-600">Explore by product type</p>
-            </div>
-          </Link>
-
-          <Link
-            to="/products"
-            className="flex items-center p-4 bg-white rounded-lg hover:bg-green-50 transition-colors border hover:border-green-200 group"
-          >
-            <div className="text-green-600 mr-4 group-hover:text-green-700">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 group-hover:text-green-700">Search Products</h3>
-              <p className="text-sm text-gray-600">Find specific items</p>
-            </div>
-          </Link>
-
-          <Link
-            to="/products?sortBy=createdAt&sortOrder=desc&limit=24"
-            className="flex items-center p-4 bg-white rounded-lg hover:bg-purple-50 transition-colors border hover:border-purple-200 group"
-          >
-            <div className="text-purple-600 mr-4 group-hover:text-purple-700">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 group-hover:text-purple-700">Latest Updates</h3>
-              <p className="text-sm text-gray-600">Recently added items</p>
-            </div>
-          </Link>
-        </div>
-      </div>
-      </div>
+      </section>
     </div>
   );
 };

@@ -1,180 +1,197 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from 'react-icons/fa';
-import { Crown, Gem, Star, Phone, Mail, MapPin, Clock, Heart } from 'lucide-react';
+import { FaFacebook, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
 export default function Footer() {
-    return (
-        <footer className="bg-gradient-to-br from-gray-800 to-gray-900 text-white">
-            <div className="border-t border-gold-300"></div>
-            
-            <div className="container mx-auto px-4 py-12">
-                {/* Top section */}
-                <div className="text-center mb-12">
-                    <div className="flex justify-center items-center gap-4 mb-4">
-                        <Crown className="w-8 h-8 text-gold-500" />
-                        <h2 className="text-3xl font-bold text-white">
-                            Sri Lakshmi Lavanya Jewellery
-                        </h2>
-                        <Crown className="w-8 h-8 text-gold-500" />
-                    </div>
-                    <p className="text-gray-300">
-                        Your Trusted Home for Sacred Jewelry
-                    </p>
-                </div>
+  const quickLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/categories', label: 'Silver Jewellery' },
+    { to: '/products', label: 'New Arrivals' },
+    { to: '/collections', label: 'Collections' },
+    { to: '/weight-range', label: 'Weight Range' },
+    { to: '/calendar', label: 'Auspicious Calendar' },
+    { to: '/enquiry', label: 'Enquiry' },
+    { to: '/about', label: 'About Us' },
+  ];
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                    {/* About Section */}
-                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
-                        <div className="flex items-center gap-3 mb-4">
-                            <Heart className="w-6 h-6 text-red-400" />
-                            <h3 className="text-xl font-semibold text-gold-400">About Us</h3>
-                        </div>
-                        <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-                            We celebrate life's precious moments with authentic Indian craftsmanship and quality jewelry.
-                        </p>
-                        <div className="flex space-x-4">
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
-                               className="text-gray-400 hover:text-blue-400 transition-colors">
-                                <FaFacebook size={20} />
-                            </a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
-                               className="text-gray-400 hover:text-pink-400 transition-colors">
-                                <FaInstagram size={20} />
-                            </a>
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" 
-                               className="text-gray-400 hover:text-blue-300 transition-colors">
-                                <FaTwitter size={20} />
-                            </a>
-                            <a href="https://wa.me/917288865969" target="_blank" rel="noopener noreferrer" 
-                               className="text-gray-400 hover:text-green-400 transition-colors">
-                                <FaWhatsapp size={20} />
-                            </a>
-                        </div>
-                    </div>
+  const categories = [
+    'Necklaces & Sets',
+    'Bangles & Kadas',
+    'Earrings',
+    'Anklets',
+    'Rings',
+    'Pendants & Chains',
+    'Baby Silver',
+    'Pooja Items',
+  ];
 
-                    {/* Quick Links */}
-                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Star className="w-6 h-6 text-blue-400" />
-                            <h3 className="text-xl font-semibold text-gold-400">Quick Links</h3>
-                        </div>
-                        <ul className="space-y-2 text-gray-300 text-sm">
-                            <li>
-                                <Link to="/" className="hover:text-gold-400 transition-colors">
-                                    Home
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/categories" className="hover:text-gold-400 transition-colors">
-                                    Categories
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/weight-range" className="hover:text-gold-400 transition-colors">
-                                    Weight Range
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/enquiry" className="hover:text-gold-400 transition-colors">
-                                    Enquiry
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/calendar" className="hover:text-gold-400 transition-colors">
-                                    Auspicious Calendar
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+  return (
+    <footer className="bg-gray-950 text-white">
+      {/* Top gold divider */}
+      <div className="h-1 bg-gold-gradient" />
 
-                    {/* Contact Info */}
-                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Phone className="w-6 h-6 text-green-400" />
-                            <h3 className="text-xl font-semibold text-gold-400">Contact Us</h3>
-                        </div>
-                        <ul className="space-y-3 text-gray-300 text-sm">
-                            <li className="flex items-start gap-3">
-                                <MapPin className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-                                <div>
-                                    <div>123 Jewelry Street</div>
-                                    <div>City, State 12345</div>
-                                </div>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <Phone className="w-4 h-4 text-green-400 flex-shrink-0" />
-                                <div>
-                                    <div>+91 72888 65969</div>
-                                    <div className="text-xs text-gray-400">Call for precious moments</div>
-                                </div>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <Mail className="w-4 h-4 text-blue-400 flex-shrink-0" />
-                                <div>
-                                    <div>info@silvergold.com</div>
-                                    <div className="text-xs text-gray-400">Sacred jewelry inquiries</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+      {/* Main content */}
+      <div className="container mx-auto px-4 py-14 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12">
 
-                    {/* Business Hours */}
-                    <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-700">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Clock className="w-6 h-6 text-yellow-400" />
-                            <h3 className="text-xl font-semibold text-gold-400">Business Hours</h3>
-                        </div>
-                        <ul className="space-y-2 text-gray-300 text-sm">
-                            <li className="flex justify-between items-center">
-                                <span>Monday - Friday</span>
-                                <span className="text-gold-400">10:00 AM - 8:00 PM</span>
-                            </li>
-                            <li className="flex justify-between items-center">
-                                <span>Saturday</span>
-                                <span className="text-gold-400">10:00 AM - 6:00 PM</span>
-                            </li>
-                            <li className="flex justify-between items-center">
-                                <span>Sunday</span>
-                                <span className="text-red-400">Closed</span>
-                            </li>
-                            <li className="pt-2 border-t border-gray-600">
-                                <div className="text-xs text-gray-400">
-                                    Call for auspicious timings
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Bottom Bar */}
-                <div className="border-t border-gray-700 pt-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="text-center md:text-left">
-                            <p className="text-gray-300 text-sm">
-                                &copy; {new Date().getFullYear()} Silver & Gold Collection. All rights reserved.
-                            </p>
-                            <p className="text-gray-400 text-xs mt-1">
-                                Crafted with love for precious moments.
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2 text-xs text-gray-400">
-                                <Crown className="w-4 h-4 text-gold-500" />
-                                <span>Authentic</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-gray-400">
-                                <Gem className="w-4 h-4 text-gray-400" />
-                                <span>Pure</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-gray-400">
-                                <Heart className="w-4 h-4 text-red-400" />
-                                <span>Sacred</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          {/* Column 1: Brand */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <svg width="28" height="28" viewBox="0 0 64 64" fill="none" className="text-gold-400 flex-shrink-0">
+                <path d="M32 56 C32 56 12 44 12 28 C12 20 20 14 28 18 C29.5 18.6 31 19.5 32 20.5 C33 19.5 34.5 18.6 36 18 C44 14 52 20 52 28 C52 44 32 56 32 56Z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M32 56 C32 56 22 48 22 36 C22 28 27 24 32 26 C37 24 42 28 42 36 C42 48 32 56 32 56Z" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="1.5"/>
+                <circle cx="32" cy="38" r="4" fill="currentColor"/>
+              </svg>
+              <div>
+                <h2 className="font-indian-serif text-lg text-white leading-none">Sri Lakshmi Lavanya</h2>
+                <p className="text-[10px] text-gray-500 tracking-[0.25em] uppercase font-modern mt-0.5">Silver Jewellery</p>
+              </div>
             </div>
-        </footer>
-    );
-} 
+            <p className="text-gray-400 text-sm font-modern leading-relaxed mb-6">
+              Crafting pure 925 silver jewellery with love and tradition since 2001. Every piece
+              is BIS hallmarked and handcrafted to last a lifetime.
+            </p>
+            {/* Social */}
+            <div className="flex items-center gap-3">
+              {[
+                { href: 'https://facebook.com', icon: FaFacebook, label: 'Facebook' },
+                { href: 'https://instagram.com', icon: FaInstagram, label: 'Instagram' },
+                { href: 'https://wa.me/917288865969', icon: FaWhatsapp, label: 'WhatsApp' },
+                { href: 'https://youtube.com', icon: FaYoutube, label: 'YouTube' },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full bg-white/5 hover:bg-gold-500 border border-white/10 hover:border-gold-500 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
+                >
+                  <Icon size={15} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Column 2: Quick Links */}
+          <div>
+            <h3 className="font-indian-serif text-sm text-gold-400 uppercase tracking-widest mb-5">Quick Links</h3>
+            <ul className="space-y-2.5">
+              {quickLinks.map(({ to, label }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className="text-sm text-gray-400 hover:text-gold-400 font-modern transition-colors duration-200 flex items-center gap-2 group"
+                  >
+                    <span className="w-1 h-1 bg-gold-500/0 group-hover:bg-gold-500 rounded-full transition-colors duration-200" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Categories */}
+          <div>
+            <h3 className="font-indian-serif text-sm text-gold-400 uppercase tracking-widest mb-5">Categories</h3>
+            <ul className="space-y-2.5">
+              {categories.map(cat => (
+                <li key={cat}>
+                  <Link
+                    to="/categories"
+                    className="text-sm text-gray-400 hover:text-gold-400 font-modern transition-colors duration-200 flex items-center gap-2 group"
+                  >
+                    <span className="w-1 h-1 bg-gold-500/0 group-hover:bg-gold-500 rounded-full transition-colors duration-200" />
+                    {cat}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Contact */}
+          <div>
+            <h3 className="font-indian-serif text-sm text-gold-400 uppercase tracking-widest mb-5">Contact Us</h3>
+            <ul className="space-y-4">
+              <li className="flex gap-3">
+                <MapPin size={15} className="text-gold-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-400 font-modern leading-relaxed">
+                  123 Silver Street, Jewellery Nagar,<br />
+                  Hyderabad, Telangana 500 001
+                </span>
+              </li>
+              <li>
+                <a
+                  href="tel:+917288865969"
+                  className="flex items-center gap-3 text-sm text-gray-400 hover:text-gold-400 font-modern transition-colors duration-200"
+                >
+                  <Phone size={15} className="text-gold-500 flex-shrink-0" />
+                  +91 72888 65969
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:info@silvergold.com"
+                  className="flex items-center gap-3 text-sm text-gray-400 hover:text-gold-400 font-modern transition-colors duration-200"
+                >
+                  <Mail size={15} className="text-gold-500 flex-shrink-0" />
+                  info@srilakshmilavanya.com
+                </a>
+              </li>
+              <li className="flex gap-3">
+                <Clock size={15} className="text-gold-500 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-gray-400 font-modern space-y-1">
+                  <div className="flex justify-between gap-4">
+                    <span>Mon – Sat</span>
+                    <span className="text-gold-400">10 AM – 8 PM</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span>Sunday</span>
+                    <span className="text-red-400">Closed</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+            {/* WhatsApp CTA */}
+            <a
+              href="https://wa.me/917288865969"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold tracking-wide font-modern px-5 py-2.5 rounded-full w-fit transition-colors duration-200"
+            >
+              <FaWhatsapp size={14} />
+              Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="border-t border-white/5">
+        <div className="container mx-auto px-4 py-5">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-600 font-modern">
+            <p>
+              &copy; {new Date().getFullYear()} Sri Lakshmi Lavanya Jewellery. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-gold-500" />
+                BIS Hallmarked Silver
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-green-500" />
+                Certified Authentic
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
+                Trusted Since 2001
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
