@@ -29,28 +29,16 @@ export default function Header() {
     { to: '/about', label: 'About Us' },
   ];
 
-  const RateChip = ({ label, value, color }: { label: string; value?: number; color: string }) => (
-    <div className="flex items-center gap-1.5">
-      <span className={`tracking-wide ${color}`}>{label}</span>
-      {value ? (
-        <span className="text-ivory font-medium">₹{value.toFixed(0)}/g</span>
-      ) : (
-        <span className="text-charcoal-muted/70 text-[10px]">—</span>
-      )}
-    </div>
-  );
-
   return (
     <div className={`sticky top-0 z-50 transition-shadow duration-300 ${scrolled ? 'shadow-lg' : ''}`}>
 
       {/* ── Row 1: Live-rate announcement bar ── */}
       <div className="bg-charcoal text-ivory">
         <div className="container mx-auto px-4">
-          {/* grid-cols-3 keeps the live rates perfectly centred */}
-          <div className="grid grid-cols-3 items-center h-9 text-[11px]">
+          <div className="flex items-center justify-between h-9 text-[11px] gap-2">
 
             {/* Left: contact (desktop) */}
-            <div className="hidden md:flex items-center gap-4 text-ivory/55">
+            <div className="hidden md:flex items-center gap-4 text-ivory/55 shrink-0">
               <a href="tel:+917288865969"
                 className="flex items-center gap-1 hover:text-gold-400 transition-colors duration-200">
                 <Phone size={10} />
@@ -61,15 +49,21 @@ export default function Header() {
               <span className="text-ivory/15">|</span>
               <span className="flex items-center gap-1"><Video size={10} />Video Call</span>
             </div>
-            <div className="md:hidden" />
 
-            {/* Center: today's live gold & silver rate — always visible */}
-            <div className="col-span-1 flex items-center justify-center gap-3 md:gap-4">
+            {/* Center: today's live gold (24K + 22K) & silver rate */}
+            <div className="flex-1 flex items-center justify-center gap-2 md:gap-3 min-w-0 whitespace-nowrap overflow-hidden">
               {rates ? (
                 <>
-                  <RateChip label="Gold 22K" value={rates.gold22k} color="text-gold-400" />
+                  <span className="text-gold-400 tracking-wide">Gold</span>
+                  <span className="hidden sm:inline text-ivory/80">
+                    24K <span className="font-medium text-ivory">₹{rates.gold24k > 0 ? rates.gold24k.toFixed(0) : '—'}</span>
+                  </span>
+                  <span className="text-ivory/80">
+                    22K <span className="font-medium text-ivory">₹{rates.gold22k > 0 ? rates.gold22k.toFixed(0) : '—'}</span>/g
+                  </span>
                   <span className="text-ivory/15">|</span>
-                  <RateChip label="Silver" value={rates.silverPerGram} color="text-ivory/70" />
+                  <span className="text-ivory/70 tracking-wide">Silver</span>
+                  <span className="font-medium text-ivory">₹{rates.silverPerGram > 0 ? rates.silverPerGram.toFixed(0) : '—'}/g</span>
                 </>
               ) : (
                 <span className="tracking-[0.18em] uppercase text-ivory/50 text-[10px]">
@@ -79,11 +73,10 @@ export default function Header() {
             </div>
 
             {/* Right: trust (desktop) */}
-            <div className="hidden md:flex items-center gap-2 justify-end text-ivory/55">
+            <div className="hidden md:flex items-center gap-2 justify-end text-ivory/55 shrink-0">
               <ShieldCheck size={11} className="text-gold-400" />
               <span className="tracking-wide">BIS Hallmark-Grade · Est. 2001</span>
             </div>
-            <div className="md:hidden" />
           </div>
         </div>
       </div>
@@ -230,9 +223,11 @@ export default function Header() {
             ))}
             {/* Mobile rates row */}
             {rates && (
-              <li className="px-6 py-3 bg-charcoal flex items-center justify-between text-xs">
-                <span className="text-gold-400 font-semibold">Gold 22K: ₹{rates.gold22k.toFixed(0)}/g</span>
-                <span className="text-ivory/70">Silver: ₹{rates.silverPerGram.toFixed(0)}/g</span>
+              <li className="px-6 py-3 bg-charcoal flex items-center justify-between text-xs gap-2">
+                <span className="text-gold-400 font-semibold">
+                  Gold 24K ₹{rates.gold24k > 0 ? rates.gold24k.toFixed(0) : '—'} · 22K ₹{rates.gold22k > 0 ? rates.gold22k.toFixed(0) : '—'}
+                </span>
+                <span className="text-ivory/70">Silver ₹{rates.silverPerGram > 0 ? rates.silverPerGram.toFixed(0) : '—'}/g</span>
               </li>
             )}
             <li className="px-6 py-4">
