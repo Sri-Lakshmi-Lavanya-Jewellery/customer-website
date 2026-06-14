@@ -143,7 +143,7 @@ const Home: React.FC = () => {
   const sep = '  ✦  ';
   const rateParts: string[] = [];
   if (rates?.gold22k) rateParts.push(`Today's Gold 22K · ₹${rates.gold22k.toFixed(0)}/g`);
-  if (rates?.silverPerGram) rateParts.push(`Today's Silver · ₹${rates.silverPerGram.toFixed(0)}/g`);
+  if (rates?.silverPerKg) rateParts.push(`Today's Silver · ₹${rates.silverPerKg.toLocaleString('en-IN')}/kg`);
   const marqueeLine = [
     ...(rateParts.length ? rateParts : ['Authentic Silver & Gold']),
     'BIS Hallmark-Grade Silver',

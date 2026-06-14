@@ -139,13 +139,13 @@ export default function ProductPage() {
                 <span>+ Making charges</span>
                 <span className="text-charcoal">By craftsmanship</span>
               </div>
-              {rates && (rates.gold22k > 0 || rates.silverPerGram > 0) && (
+              {rates && (rates.gold22k > 0 || rates.silverPerKg > 0) && (
                 <div className="flex items-center justify-between pt-2 mt-2 border-t border-gold-200/60">
                   <span className="text-charcoal-muted">Today's rate</span>
                   <span className="font-semibold text-gold-700">
                     {[
                       rates.gold22k > 0 ? `Gold 22K ₹${rates.gold22k.toFixed(0)}/g` : null,
-                      rates.silverPerGram > 0 ? `Silver ₹${rates.silverPerGram.toFixed(0)}/g` : null,
+                      rates.silverPerKg > 0 ? `Silver ₹${rates.silverPerKg.toLocaleString('en-IN')}/kg` : null,
                     ].filter(Boolean).join(' · ')}
                   </span>
                 </div>

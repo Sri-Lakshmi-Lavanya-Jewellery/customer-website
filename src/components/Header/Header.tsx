@@ -63,7 +63,7 @@ export default function Header() {
                   </span>
                   <span className="text-ivory/15">|</span>
                   <span className="text-ivory/70 tracking-wide">Silver</span>
-                  <span className="font-medium text-ivory">₹{rates.silverPerGram > 0 ? rates.silverPerGram.toFixed(0) : '—'}/g</span>
+                  <span className="font-medium text-ivory">₹{rates.silverPerKg > 0 ? rates.silverPerKg.toLocaleString('en-IN') : '—'}/kg</span>
                 </>
               ) : (
                 <span className="tracking-[0.18em] uppercase text-ivory/50 text-[10px]">
@@ -227,7 +227,7 @@ export default function Header() {
                 <span className="text-gold-400 font-semibold">
                   Gold 24K ₹{rates.gold24k > 0 ? rates.gold24k.toFixed(0) : '—'} · 22K ₹{rates.gold22k > 0 ? rates.gold22k.toFixed(0) : '—'}
                 </span>
-                <span className="text-ivory/70">Silver ₹{rates.silverPerGram > 0 ? rates.silverPerGram.toFixed(0) : '—'}/g</span>
+                <span className="text-ivory/70">Silver ₹{rates.silverPerKg > 0 ? rates.silverPerKg.toLocaleString('en-IN') : '—'}/kg</span>
               </li>
             )}
             <li className="px-6 py-4">

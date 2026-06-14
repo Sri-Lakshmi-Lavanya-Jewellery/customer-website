@@ -69,8 +69,8 @@ export default function MetalRates() {
                     <span className="font-semibold text-silver-700">Silver</span>
                 </div>
                 <div className="text-sm text-center">
-                    <div className="text-[10px] text-silver-600 font-medium tracking-wide">Per Gram</div>
-                    <div className="font-semibold text-charcoal">₹{rates.silverPerGram.toFixed(0)}</div>
+                    <div className="text-[10px] text-silver-600 font-medium tracking-wide">Per Kg</div>
+                    <div className="font-semibold text-charcoal">₹{rates.silverPerKg.toLocaleString('en-IN')}</div>
                 </div>
             </div>
 
