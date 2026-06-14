@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { Product } from '../services/api'; // Import Product type from API service
 
 // If getProductsBySubcategory is to be used directly and it's not already imported,
@@ -28,21 +28,21 @@ export const useProductFilters = ({
   allProductsForCategory,
   initialCategoryId, // Though categoryId is used to fetch allProductsForCategory, it might be useful for subcategory logic
 }: UseProductFiltersProps): UseProductFiltersReturn => {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(allProductsForCategory);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [filters, setFilters] = useState<ProductFiltersState>({
     inStock: false,
     sortBy: 'newest', // Default sort
   });
 
-  useEffect(() => {
+  // Derive the filtered/sorted list with useMemo. (Previously this used a
+  // useEffect + setState, which infinite-looped: `allProductsForCategory` is a
+  // fresh array reference every render, so the effect re-fired endlessly →
+  // "Maximum update depth exceeded".)
+  const filteredProducts = useMemo<Product[]>(() => {
     let result: Product[] = [...allProductsForCategory];
 
     // Filter by subcategory if selected
     if (selectedSubcategory) {
-      // Assuming direct filtering on allProductsForCategory.
-      // If getProductsBySubcategory from productData.ts is used, it needs access to the global 'products' array.
-      // For a hook, it's better to work with the passed 'allProductsForCategory'.
       result = result.filter(product => product.subcategory === selectedSubcategory);
     }
 
@@ -53,7 +53,7 @@ export const useProductFilters = ({
 
     // Sort products
     if (filters.sortBy === 'newest') {
-      // This sort puts new items first, then the rest, maintaining original relative order for non-new.
+      // New items first, then the rest, preserving original relative order.
       const newItems = result.filter(product => product.isNew);
       const oldItems = result.filter(product => !product.isNew);
       result = [...newItems, ...oldItems];
@@ -63,8 +63,8 @@ export const useProductFilters = ({
       result.sort((a, b) => b.title.localeCompare(a.title));
     }
 
-    setFilteredProducts(result);
-  }, [allProductsForCategory, selectedSubcategory, filters, initialCategoryId]);
+    return result;
+  }, [allProductsForCategory, selectedSubcategory, filters]);
 
 
   const handleSubcategorySelect = (subcategoryId: string | null) => {

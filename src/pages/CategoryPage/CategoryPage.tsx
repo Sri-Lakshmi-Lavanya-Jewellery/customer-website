@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Crown } from 'lucide-react';
 import ProductCard from '../../components/ProductCard/ProductCard';
@@ -35,8 +35,10 @@ export default function CategoryPage() {
 
   // Determine which data to use
   const category = apiData?.data.category;
-  const products = apiData?.data.products || [];
-  const subcategories = apiData?.data.subcategories || [];
+  // Memoised so the array reference is stable across renders (otherwise the
+  // downstream filter hook recomputes every render).
+  const products = useMemo(() => apiData?.data.products || [], [apiData]);
+  const subcategories = useMemo(() => apiData?.data.subcategories || [], [apiData]);
   
   // Generate breadcrumbs based on page type
   const generateBreadcrumbs = () => {
