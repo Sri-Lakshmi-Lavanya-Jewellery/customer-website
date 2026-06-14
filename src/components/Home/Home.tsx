@@ -141,9 +141,11 @@ const Home: React.FC = () => {
 
   // Scrolling announcement — leads with today's live gold & silver rate.
   const sep = '  ✦  ';
+  const rateParts: string[] = [];
+  if (rates?.gold22k) rateParts.push(`Today's Gold 22K · ₹${rates.gold22k.toFixed(0)}/g`);
+  if (rates?.silverPerGram) rateParts.push(`Today's Silver · ₹${rates.silverPerGram.toFixed(0)}/g`);
   const marqueeLine = [
-    rates ? `Today's Gold 22K · ₹${rates.gold22k.toFixed(0)}/g` : 'Authentic Silver & Gold',
-    rates ? `Today's Silver · ₹${rates.silverPerGram.toFixed(0)}/g` : 'BIS Hallmark-Grade Purity',
+    ...(rateParts.length ? rateParts : ['Authentic Silver & Gold']),
     'BIS Hallmark-Grade Silver',
     '100% Authentic Craftsmanship',
     'Sold by Honest Weight',
