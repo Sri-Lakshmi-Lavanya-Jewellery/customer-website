@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import { useProductDetailsWithModels } from '../../hooks/useApi';
 import { useDynamicImages } from '../../hooks/useDynamicImages';
+import { useMetalRates } from '../../hooks/useMetalRates';
 import type { Category, Product } from '../../services/api'; // Import from API service
 import { getCategoryName, getCategorySlug, generateProductBreadcrumbs } from '../../utils/productUtils';
 
@@ -46,10 +47,13 @@ export default function ProductPage() {
     selectedDimension
   });
 
+  // Today's live gold/silver rate for the price-explainer box
+  const rates = useMetalRates();
+
   if (loading) {
     return (
       <div className="container mx-auto py-16 px-4 flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-600"></div>
       </div>
     );
   }
@@ -62,7 +66,7 @@ export default function ProductPage() {
           <p className="text-gray-600 mb-6">
             {error ? 'An error occurred while loading the product.' : 'The product you are looking for does not exist.'}
           </p>
-          <Link to="/" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+          <Link to="/" className="inline-block bg-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-700 transition-colors">
             Back to Home
           </Link>
         </div>
@@ -93,7 +97,7 @@ export default function ProductPage() {
           <ol className="list-none p-0 inline-flex">
             {apiBreadcrumbs.map((breadcrumb, index) => (
               <li key={index} className="flex items-center">
-                <Link to={breadcrumb.url} className="text-blue-600 hover:text-blue-800">
+                <Link to={breadcrumb.url} className="text-gold-700 hover:text-gold-800">
                   {breadcrumb.name}
                 </Link>
                 {index < apiBreadcrumbs.length - 1 && (
@@ -122,6 +126,32 @@ export default function ProductPage() {
         <div>
           <ProductTitleBadge title={product.title} />
           <ProductBasicInfo product={product} weight={product.weight} inStock={product.inStock} />
+
+          {/* How pricing works — transparency builds trust, uses today's live rate */}
+          <div className="mb-6 rounded-xl border border-gold-100 bg-gold-50/60 p-5">
+            <h3 className="font-display text-lg text-charcoal mb-3">How Your Price Is Calculated</h3>
+            <div className="space-y-2 text-sm text-charcoal-light font-modern">
+              <div className="flex items-center justify-between">
+                <span>Metal value</span>
+                <span className="text-charcoal">Weight × today's rate</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>+ Making charges</span>
+                <span className="text-charcoal">By craftsmanship</span>
+              </div>
+              {rates && (
+                <div className="flex items-center justify-between pt-2 mt-2 border-t border-gold-200/60">
+                  <span className="text-charcoal-muted">Today's rate</span>
+                  <span className="font-semibold text-gold-700">
+                    Silver ₹{rates.silverPerGram.toFixed(0)}/g · Gold 22K ₹{rates.gold22k.toFixed(0)}/g
+                  </span>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-charcoal-muted mt-3">
+              Articles are sold by weight. Share this piece on WhatsApp for an exact, up-to-the-day quote.
+            </p>
+          </div>
 
           {hasModels && product.models && (
             <ModelSelector
@@ -152,7 +182,7 @@ export default function ProductPage() {
               {/* Help tip */}
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <div className="flex items-start gap-3 text-sm text-gray-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gold-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                   <p>You can compare different models and select specific dimensions above. The dimension ranges show all possible variations for this model.</p>
                 </div>
               </div>
@@ -192,7 +222,7 @@ export default function ProductPage() {
                 title={relatedProduct.title}
                 image={relatedProduct.images?.[0] || relatedProduct.commonImages?.[0] || '/assets/images/products/default.jpg'}
                 isNew={relatedProduct.isNewProduct || relatedProduct.isNew}
-                link={`/products/${relatedProduct.id}`}
+                link={`/product/${relatedProduct.id}`}
               />
             ))
           ) : (
