@@ -69,7 +69,7 @@ export default function AuspiciousCalendar() {
                                                     </span>
                                                     <div className="mt-1 space-y-1">
                                                         {day.auspiciousTypes.map((auspiciousDay, index) => (
-                                                            <div key={index} className="text-yellow-500 text-lg flex items-center" title={dayTypes[auspiciousDay.type]?.name}>
+                                                            <div key={index} className="text-gold-500 text-lg flex items-center" title={dayTypes[auspiciousDay.type]?.name}>
                                                                 {dayTypes[auspiciousDay.type]?.icon}
                                                                 {/* Optionally display name: <span className="text-xs ml-1">{dayTypes[auspiciousDay.type]?.name}</span> */}
                                                             </div>

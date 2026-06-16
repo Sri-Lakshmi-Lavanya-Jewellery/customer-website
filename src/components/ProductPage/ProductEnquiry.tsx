@@ -56,8 +56,8 @@ Thank you!`
       <div className={`${isModal ? 'max-w-lg' : 'max-w-2xl mx-auto'}`}>
         {!isModal && (
           <>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">Product Enquiry</h1>
-            <p className="text-gray-600 mb-8 text-center">
+            <h1 className="font-display text-3xl md:text-4xl font-light text-charcoal mb-2 text-center">Product Enquiry</h1>
+            <p className="text-charcoal-muted font-modern mb-8 text-center">
               Fill out the form below to inquire about this specific product.
             </p>
           </>
@@ -79,10 +79,10 @@ Thank you!`
               {product.weight && (
                 <p className="text-sm text-gray-600">Weight: {product.weight}</p>
               )}
-              <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                product.inStock 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-red-100 text-red-800'
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium font-modern ${
+                product.inStock
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : 'bg-maroon/10 text-maroon'
               }`}>
                 {product.inStock ? 'In Stock' : 'Out of Stock'}
               </span>
@@ -92,16 +92,18 @@ Thank you!`
 
         {isSubmitted ? (
           <div className="text-center py-8">
-            <div className="bg-green-100 border border-green-400 text-green-700 px-6 py-8 rounded-lg">
+            <div className="bg-white border border-gold-100 shadow-card px-6 py-10 rounded-2xl">
               <div className="flex items-center justify-center mb-4">
-                <svg className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                  <svg className="h-7 w-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-2">Enquiry Submitted!</h3>
-              <p>We'll get back to you within 24 hours about the {product.title}.</p>
+              <h3 className="font-display text-2xl font-light text-charcoal mb-2">Enquiry Submitted!</h3>
+              <p className="text-charcoal-muted font-modern">We'll get back to you within 24 hours about the {product.title}.</p>
               {isModal && (
-                <p className="text-sm mt-2">This window will close automatically...</p>
+                <p className="text-sm mt-2 text-charcoal-muted font-modern">This window will close automatically…</p>
               )}
             </div>
           </div>
@@ -116,7 +118,7 @@ Thank you!`
             <form onSubmit={handleFormSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="customerName" className="block text-gray-700 font-medium mb-1">
+                  <label htmlFor="customerName" className="block text-charcoal font-modern text-sm font-medium mb-1">
                     Full Name *
                   </label>
                   <input
@@ -127,13 +129,13 @@ Thank you!`
                     onChange={handleChange}
                     required
                     maxLength={100}
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     placeholder="Your full name"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="customerEmail" className="block text-gray-700 font-medium mb-1">
+                  <label htmlFor="customerEmail" className="block text-charcoal font-modern text-sm font-medium mb-1">
                     Email Address *
                   </label>
                   <input
@@ -143,14 +145,14 @@ Thank you!`
                     value={formData.customerEmail}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     placeholder="your@email.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="customerPhone" className="block text-gray-700 font-medium mb-1">
+                <label htmlFor="customerPhone" className="block text-charcoal font-modern text-sm font-medium mb-1">
                   Phone Number
                 </label>
                 <input
@@ -159,13 +161,13 @@ Thank you!`
                   name="customerPhone"
                   value={formData.customerPhone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                   placeholder="+91 XXXXX XXXXX"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-gray-700 font-medium mb-1">
+                <label htmlFor="subject" className="block text-charcoal font-modern text-sm font-medium mb-1">
                   Subject *
                 </label>
                 <input
@@ -176,12 +178,12 @@ Thank you!`
                   onChange={handleChange}
                   required
                   maxLength={200}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-gray-700 font-medium mb-1">
+                <label htmlFor="message" className="block text-charcoal font-modern text-sm font-medium mb-1">
                   Message *
                 </label>
                 <textarea
@@ -192,7 +194,7 @@ Thank you!`
                   required
                   maxLength={2000}
                   rows={6}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
@@ -209,7 +211,7 @@ Thank you!`
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`${isModal ? 'flex-1' : 'w-full'} px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2`}
+                  className={`${isModal ? 'flex-1' : 'w-full'} px-4 py-2.5 bg-gold-600 text-white rounded-full hover:bg-gold-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-modern text-sm font-semibold tracking-wide flex items-center justify-center gap-2`}
                 >
                   {isSubmitting ? (
                     <>

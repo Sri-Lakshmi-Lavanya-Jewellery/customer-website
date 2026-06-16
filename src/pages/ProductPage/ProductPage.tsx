@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import { useProductDetailsWithModels } from '../../hooks/useApi';
 import { useDynamicImages } from '../../hooks/useDynamicImages';
+import { useMetalRates } from '../../hooks/useMetalRates';
 import type { Category, Product } from '../../services/api'; // Import from API service
 import { getCategoryName, getCategorySlug, generateProductBreadcrumbs } from '../../utils/productUtils';
 
@@ -18,6 +19,7 @@ import DimensionSelector from '../../components/ProductPage/DimensionSelector';
 import SelectedDimensionDetails from '../../components/ProductPage/SelectedDimensionDetails';
 import ProductSection from '../../components/ProductPage/ProductSection'; // Import ProductSection
 import ProductCard from '../../components/ProductCard/ProductCard';
+import JsonLd from '../../components/seo/JsonLd';
 
 export default function ProductPage() {
   const { productId } = useParams<{ productId: string }>();
@@ -46,10 +48,13 @@ export default function ProductPage() {
     selectedDimension
   });
 
+  // Today's live gold/silver rate for the price-explainer box
+  const rates = useMetalRates();
+
   if (loading) {
     return (
       <div className="container mx-auto py-16 px-4 flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-600"></div>
       </div>
     );
   }
@@ -62,7 +67,7 @@ export default function ProductPage() {
           <p className="text-gray-600 mb-6">
             {error ? 'An error occurred while loading the product.' : 'The product you are looking for does not exist.'}
           </p>
-          <Link to="/" className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+          <Link to="/" className="inline-block bg-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-700 transition-colors">
             Back to Home
           </Link>
         </div>
@@ -85,24 +90,70 @@ export default function ProductPage() {
   const apiBreadcrumbs = productDetails?.breadcrumbs;
   const relatedProducts = productDetails?.relatedProducts || [];
 
+  // Structured data for Google rich results. NOTE: no Offer/price is emitted —
+  // articles are sold by live weight via WhatsApp enquiry (no online checkout),
+  // and marking a fixed price on a non-purchasable page violates Google's
+  // merchant-listing guidelines and risks a manual action.
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const abs = (u?: string): string | undefined =>
+    typeof u !== 'string' || !u ? undefined : u.startsWith('http') ? u : `${origin}${u.startsWith('/') ? '' : '/'}${u}`;
+  const productLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description || `${product.title} — handcrafted silver/gold article from Sri Lakshmi Lavanya Jewellery.`,
+    image: dynamicImages.map((img) => abs(img.url)).filter(Boolean),
+    category: getCategoryName(product),
+    brand: { '@type': 'Brand', name: 'Sri Lakshmi Lavanya Jewellery' },
+    url: `${origin}/product/${productId}`,
+  };
+  const breadcrumbLd = apiBreadcrumbs && apiBreadcrumbs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: apiBreadcrumbs.map((b, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: b.name,
+          item: abs(b.url),
+        })),
+      }
+    : null;
+
   return (
     <div className="container mx-auto py-8 px-4">
-      {/* API Breadcrumbs */}
+      <JsonLd id="product" data={productLd} />
+      {breadcrumbLd && <JsonLd id="breadcrumb" data={breadcrumbLd} />}
+      {/* API Breadcrumbs — collapse consecutive duplicate names (the seed data
+          can repeat e.g. "Harathi Stand / Harathi Stand"), and show the final
+          crumb as the current page (muted, not a link). */}
       {apiBreadcrumbs && apiBreadcrumbs.length > 0 ? (
-        <nav className="mb-8 text-sm">
-          <ol className="list-none p-0 inline-flex">
-            {apiBreadcrumbs.map((breadcrumb, index) => (
-              <li key={index} className="flex items-center">
-                <Link to={breadcrumb.url} className="text-blue-600 hover:text-blue-800">
-                  {breadcrumb.name}
-                </Link>
-                {index < apiBreadcrumbs.length - 1 && (
-                  <span className="mx-2 text-gray-500">/</span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
+        (() => {
+          const crumbs = apiBreadcrumbs.filter(
+            (b, i, arr) => i === 0 || b.name.trim().toLowerCase() !== arr[i - 1].name.trim().toLowerCase()
+          );
+          return (
+            <nav className="mb-8 text-sm font-modern" aria-label="Breadcrumb">
+              <ol className="list-none p-0 flex flex-wrap items-center">
+                {crumbs.map((breadcrumb, index) => {
+                  const isLast = index === crumbs.length - 1;
+                  return (
+                    <li key={index} className="flex items-center">
+                      {isLast ? (
+                        <span className="text-charcoal" aria-current="page">{breadcrumb.name}</span>
+                      ) : (
+                        <Link to={breadcrumb.url} className="text-charcoal-muted hover:text-gold-700 transition-colors">
+                          {breadcrumb.name}
+                        </Link>
+                      )}
+                      {!isLast && <span className="mx-2 text-gold-300">/</span>}
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+          );
+        })()
       ) : (
         <ProductBreadcrumb product={product} category={category} />
       )}
@@ -123,6 +174,35 @@ export default function ProductPage() {
           <ProductTitleBadge title={product.title} />
           <ProductBasicInfo product={product} weight={product.weight} inStock={product.inStock} />
 
+          {/* How pricing works — transparency builds trust, uses today's live rate */}
+          <div className="mb-6 rounded-xl border border-gold-100 bg-gold-50/60 p-5">
+            <h3 className="font-display text-lg text-charcoal mb-3">How Your Price Is Calculated</h3>
+            <div className="space-y-2 text-sm text-charcoal-light font-modern">
+              <div className="flex items-center justify-between">
+                <span>Metal value</span>
+                <span className="text-charcoal">Weight × today's rate</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>+ Making charges</span>
+                <span className="text-charcoal">By craftsmanship</span>
+              </div>
+              {rates && (rates.gold22k > 0 || rates.silverPerKg > 0) && (
+                <div className="flex items-center justify-between pt-2 mt-2 border-t border-gold-200/60">
+                  <span className="text-charcoal-muted">Today's rate</span>
+                  <span className="font-semibold text-gold-700">
+                    {[
+                      rates.gold22k > 0 ? `Gold 22K ₹${rates.gold22k.toFixed(0)}/g` : null,
+                      rates.silverPerKg > 0 ? `Silver ₹${rates.silverPerKg.toLocaleString('en-IN')}/kg` : null,
+                    ].filter(Boolean).join(' · ')}
+                  </span>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-charcoal-muted mt-3">
+              Articles are sold by weight. Share this piece on WhatsApp for an exact, up-to-the-day quote.
+            </p>
+          </div>
+
           {hasModels && product.models && (
             <ModelSelector
               models={product.models}
@@ -134,7 +214,7 @@ export default function ProductPage() {
 
           {currentModelData && (
             <div className="mb-6 bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Model Specifications</h3>
+              <h3 className="font-display text-lg text-charcoal mb-4">Model Specifications</h3>
               
               <DimensionRangeDisplay dimensionRangeSet={dimensionRangeSet} />
               
@@ -152,7 +232,7 @@ export default function ProductPage() {
               {/* Help tip */}
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <div className="flex items-start gap-3 text-sm text-gray-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gold-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                   <p>You can compare different models and select specific dimensions above. The dimension ranges show all possible variations for this model.</p>
                 </div>
               </div>
@@ -192,7 +272,7 @@ export default function ProductPage() {
                 title={relatedProduct.title}
                 image={relatedProduct.images?.[0] || relatedProduct.commonImages?.[0] || '/assets/images/products/default.jpg'}
                 isNew={relatedProduct.isNewProduct || relatedProduct.isNew}
-                link={`/products/${relatedProduct.id}`}
+                link={`/product/${relatedProduct.id}`}
               />
             ))
           ) : (

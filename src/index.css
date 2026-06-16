@@ -1,5 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Poppins:wght@300;400;500;600;700&display=swap');
+/* Fonts are loaded via <link rel="preconnect"> + stylesheet in index.html so the
+   request isn't serialized behind this CSS file (faster first paint). */
 @import 'tailwindcss';
+
+/* Tailwind v4 does NOT auto-load a legacy tailwind.config.js — without this
+   directive the entire custom theme (antique-gold/ivory/charcoal/maroon scales,
+   font-display, shadow-gold, bg-mandala, animations) is silently dropped and
+   every `gold-*`/`bg-ivory`/`text-charcoal` utility renders as a no-op. This
+   line restores the full design system. */
+@config "../tailwind.config.js";
+
+/* ──────────────────────────────────────────────
+   DESIGN SYSTEM · Minimal luxury · Indian jewellery
+   Background ivory · Charcoal text · Antique-gold accent
+   Maroon used sparingly · Playfair/Marcellus + Inter
+────────────────────────────────────────────── */
+body {
+  background-color: #FBF8F3;        /* ivory */
+  color: #2B2B2B;                   /* charcoal */
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Tasteful selection colour */
+::selection { background: rgba(184, 134, 11, 0.18); color: #2B2B2B; }
 
 /* ── Marquee animation ── */
 @keyframes marquee {
@@ -29,17 +57,21 @@ html, body {
 
 /* Custom CSS Variables for Indian Jewelry Theme */
 :root {
-  /* Gold Color Palette */
-  --gold-50: #fefdf8;
-  --gold-100: #fdf6e3;
-  --gold-200: #f9e79f;
-  --gold-300: #f4d03f;
-  --gold-400: #f1c40f;
-  --gold-500: #d4af37;
-  --gold-600: #b7950b;
-  --gold-700: #9a7d0a;
-  --gold-800: #7d6608;
-  --gold-900: #5d4e04;
+  /* Antique-gold palette (muted, #B8860B primary) */
+  --gold-50: #faf6ee;
+  --gold-100: #f3e9d2;
+  --gold-200: #e7d3a6;
+  --gold-300: #d9bd7a;
+  --gold-400: #c9a14e;
+  --gold-500: #b8860b;
+  --gold-600: #a37709;
+  --gold-700: #876108;
+  --gold-800: #6b4d0a;
+  --gold-900: #4d3807;
+
+  /* Brand neutrals */
+  --ivory: #FBF8F3;
+  --charcoal: #2B2B2B;
 
   /* Silver Color Palette */
   --silver-50: #f8fafc;
@@ -56,7 +88,7 @@ html, body {
   /* Vibrant Indian Colors */
   --saffron: #ff9933;
   --deep-saffron: #ff6600;
-  --maroon: #800020;
+  --maroon: #7B2D26;
   --emerald: #50c878;
   --royal-blue: #4169e1;
   --crimson: #dc143c;
@@ -76,11 +108,11 @@ html, body {
   --meenakari: #ff6347;
 
   /* Gradients */
-  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #f4d03f 50%, #d4af37 100%);
+  --gold-gradient: linear-gradient(135deg, #a37709 0%, #c9a14e 50%, #a37709 100%);
   --silver-gradient: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 50%, #94a3b8 100%);
   --royal-gradient: linear-gradient(135deg, #4169e1 0%, #50c878 100%);
   --sunset-gradient: linear-gradient(135deg, #ff9933 0%, #dc143c 100%);
-  --temple-gradient: linear-gradient(135deg, #b8860b 0%, #d4af37 50%, #f4d03f 100%);
+  --temple-gradient: linear-gradient(135deg, #876108 0%, #b8860b 50%, #c9a14e 100%);
   --kundan-gradient: linear-gradient(135deg, #f7e7ce 0%, #d4af37 50%, #c9b037 100%);
   --ruby-gradient: linear-gradient(135deg, #cc313d 0%, #ff6b6b 50%, #e34234 100%);
   --emerald-gradient: linear-gradient(135deg, #006a4e 0%, #50c878 50%, #7dcea0 100%);
@@ -198,15 +230,14 @@ html, body {
 
 /* Enhanced Card Hover Effects */
 .card-hover {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
 .card-hover:hover {
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 
-    0 25px 50px rgba(212, 175, 55, 0.4),
-    0 0 30px rgba(184, 134, 11, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 16px rgba(43, 43, 43, 0.06),
+    0 18px 40px rgba(43, 43, 43, 0.10);
 }
 
 .card-hover:hover .jewel-sparkle::before,

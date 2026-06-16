@@ -80,8 +80,8 @@ export default function ProductGallery({
               onClick={() => setSelectedImage(img)}
               className={`relative overflow-hidden rounded-md border-2 transition-all duration-200 hover:scale-105 ${
                 selectedImage.id === img.id
-                  ? 'border-blue-500 ring-2 ring-blue-200 shadow-md'
-                  : 'border-gray-200 hover:border-gray-400'
+                  ? 'border-gold-500 ring-2 ring-gold-200 shadow-md'
+                  : 'border-gold-100 hover:border-gold-300'
               }`}
             >
               <img
@@ -189,7 +189,7 @@ export default function ProductGallery({
                     }}
                     className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-110 ${
                       selectedImage.id === img.id
-                        ? 'border-blue-400 ring-2 ring-blue-300 bg-transparent' 
+                        ? 'border-gold-400 ring-2 ring-gold-300 bg-transparent'
                         : 'border-gray-600 hover:border-gray-400 bg-transparent'
                     }`}
                   >

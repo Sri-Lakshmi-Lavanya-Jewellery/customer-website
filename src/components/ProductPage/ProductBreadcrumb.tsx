@@ -16,31 +16,33 @@ const ProductBreadcrumb: React.FC<ProductBreadcrumbProps> = ({ product, category
   const subcategorySlug = getSubcategorySlug(product);
 
   return (
-    <nav className="mb-8 text-sm">
-      <ol className="list-none p-0 inline-flex">
+    <nav className="mb-8 text-sm font-modern" aria-label="Breadcrumb">
+      <ol className="list-none p-0 flex flex-wrap items-center">
         <li className="flex items-center">
-          <Link to="/" className="text-blue-600 hover:text-blue-800">Home</Link>
-          <span className="mx-2 text-gray-500">/</span>
+          <Link to="/" className="text-charcoal-muted hover:text-gold-700 transition-colors">Home</Link>
+          <span className="mx-2 text-gold-300">/</span>
         </li>
         <li className="flex items-center">
-          <Link to="/products" className="text-blue-600 hover:text-blue-800">Products</Link>
-          <span className="mx-2 text-gray-500">/</span>
+          <Link to="/products" className="text-charcoal-muted hover:text-gold-700 transition-colors">Products</Link>
+          <span className="mx-2 text-gold-300">/</span>
         </li>
-        <li className="flex items-center">
-          <Link to={`/categories/${categorySlug}`} className="text-blue-600 hover:text-blue-800">
-            {categoryName}
-          </Link>
-          <span className="mx-2 text-gray-500">/</span>
-        </li>
-        {subcategoryName && subcategorySlug && (
+        {categoryName && categoryName.trim().toLowerCase() !== product.title.trim().toLowerCase() && (
           <li className="flex items-center">
-            <Link to={`/categories/${categorySlug}/${subcategorySlug}`} className="text-blue-600 hover:text-blue-800">
-              {subcategoryName}
+            <Link to={`/category/${categorySlug}`} className="text-charcoal-muted hover:text-gold-700 transition-colors">
+              {categoryName}
             </Link>
-            <span className="mx-2 text-gray-500">/</span>
+            <span className="mx-2 text-gold-300">/</span>
           </li>
         )}
-        <li className="text-gray-600">{product.title}</li>
+        {subcategoryName && subcategorySlug && subcategoryName.trim().toLowerCase() !== product.title.trim().toLowerCase() && (
+          <li className="flex items-center">
+            <Link to={`/category/${categorySlug}/subcategory/${subcategorySlug}`} className="text-charcoal-muted hover:text-gold-700 transition-colors">
+              {subcategoryName}
+            </Link>
+            <span className="mx-2 text-gold-300">/</span>
+          </li>
+        )}
+        <li className="text-charcoal" aria-current="page">{product.title}</li>
       </ol>
     </nav>
   );

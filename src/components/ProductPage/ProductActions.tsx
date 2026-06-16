@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Product } from '../../services/api';
 import { WHATSAPP_CONFIG, openWhatsApp } from '../../utils/whatsapp-new';
+import { useWishlist } from '../../hooks/useWishlist';
 import ProductEnquiry from './ProductEnquiry';
 
 interface ProductActionsProps {
@@ -10,6 +11,8 @@ interface ProductActionsProps {
 
 const ProductActions: React.FC<ProductActionsProps> = ({ inStock, product }) => {
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
+  const { has, toggle } = useWishlist();
+  const wished = has(product.id);
 
   const handleWhatsAppConnect = () => {
     const message = inStock 
@@ -24,11 +27,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ inStock, product }) => 
       <div className="flex flex-col sm:flex-row gap-4">
         <button
           onClick={handleWhatsAppConnect}
-          className={`w-full sm:w-auto font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${
-            inStock 
-              ? 'bg-green-600 hover:bg-green-700 text-white' 
-              : 'bg-orange-600 hover:bg-orange-700 text-white'
-          }`}
+          className="w-full sm:w-auto font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-white"
         >
           {/* WhatsApp Icon */}
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -39,7 +38,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ inStock, product }) => 
 
         <button
           onClick={() => setIsEnquiryModalOpen(true)}
-          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="w-full sm:w-auto bg-gold-600 hover:bg-gold-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -47,11 +46,19 @@ const ProductActions: React.FC<ProductActionsProps> = ({ inStock, product }) => 
           Send Enquiry
         </button>
 
-        <button className="w-full sm:w-auto border border-gray-300 hover:bg-gray-50 font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <button
+          onClick={() => toggle(product.id)}
+          aria-pressed={wished}
+          className={`w-full sm:w-auto border font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${
+            wished
+              ? 'border-maroon bg-maroon/5 text-maroon'
+              : 'border-gold-200 hover:bg-gold-50 text-charcoal'
+          }`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill={wished ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={wished ? 0 : 1.5}>
             <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
           </svg>
-          Add to Wishlist
+          {wished ? 'Saved to Wishlist' : 'Add to Wishlist'}
         </button>
       </div>
 

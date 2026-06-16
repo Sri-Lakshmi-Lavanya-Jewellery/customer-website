@@ -51,19 +51,22 @@ export default function Enquiry() {
         return (
             <div className="container mx-auto px-4 py-12">
                 <div className="max-w-2xl mx-auto text-center">
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-6 py-8 rounded-lg">
-                        <div className="flex items-center justify-center mb-4">
-                            <svg className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                    <div className="bg-white border border-gold-100 shadow-card px-6 py-12 rounded-2xl">
+                        <div className="flex items-center justify-center mb-5">
+                            <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                                <svg className="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
                         </div>
-                        <h2 className="text-2xl font-bold mb-4">Thank You!</h2>
-                        <p className="text-lg mb-6">
-                            Your enquiry has been submitted successfully. We will get back to you soon.
+                        <h2 className="font-display text-3xl font-light text-charcoal mb-3">Thank You!</h2>
+                        <p className="text-charcoal-muted font-modern mb-8 max-w-sm mx-auto">
+                            Your enquiry has been submitted successfully. We'll get back to you soon —
+                            for the quickest reply, message us on WhatsApp.
                         </p>
-                        <button 
+                        <button
                             onClick={resetForm}
-                            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                            className="bg-gold-600 text-white px-8 py-3 rounded-full hover:bg-gold-700 transition-colors font-modern text-xs font-semibold tracking-widest uppercase"
                         >
                             Submit Another Enquiry
                         </button>
@@ -76,10 +79,21 @@ export default function Enquiry() {
     return (
         <div className="container mx-auto px-4 py-12">
             <div className="max-w-4xl mx-auto">
-                <h1 className="text-3xl font-bold text-gray-800 mb-2 text-center">Make an Enquiry</h1>
-                <p className="text-gray-600 mb-8 text-center">
-                    Fill out the form below and we'll get back to you as soon as possible.
-                </p>
+                <div className="text-center mb-10">
+                    <p className="text-[10px] md:text-xs font-bold tracking-[0.35em] uppercase font-indian-serif text-gold-600 mb-3">
+                        We're Here to Help
+                    </p>
+                    <h1 className="font-display text-3xl md:text-5xl font-light text-charcoal leading-tight">Make an Enquiry</h1>
+                    <p className="mt-3 text-sm text-charcoal-muted font-modern max-w-md mx-auto">
+                        Share what you're looking for and we'll respond personally — or message us
+                        directly on WhatsApp for the quickest reply.
+                    </p>
+                    <div className="flex items-center gap-3 mt-4 justify-center">
+                        <div className="h-px w-10 bg-gold-300" />
+                        <span className="text-sm text-gold-500">✦</span>
+                        <div className="h-px w-10 bg-gold-300" />
+                    </div>
+                </div>
 
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
@@ -91,7 +105,7 @@ export default function Enquiry() {
                     {/* Personal Information Section */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="customerName" className="block text-gray-700 font-medium mb-2">
+                            <label htmlFor="customerName" className="block text-charcoal font-modern text-sm font-medium mb-2">
                                 Full Name *
                             </label>
                             <input
@@ -102,13 +116,13 @@ export default function Enquiry() {
                                 onChange={handleChange}
                                 required
                                 maxLength={100}
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                                 placeholder="Your full name"
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="customerEmail" className="block text-gray-700 font-medium mb-2">
+                            <label htmlFor="customerEmail" className="block text-charcoal font-modern text-sm font-medium mb-2">
                                 Email Address *
                             </label>
                             <input
@@ -118,14 +132,14 @@ export default function Enquiry() {
                                 value={formData.customerEmail}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                                 placeholder="your@email.com"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label htmlFor="customerPhone" className="block text-gray-700 font-medium mb-2">
+                        <label htmlFor="customerPhone" className="block text-charcoal font-modern text-sm font-medium mb-2">
                             Phone Number
                         </label>
                         <input
@@ -134,7 +148,7 @@ export default function Enquiry() {
                             name="customerPhone"
                             value={formData.customerPhone}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                             placeholder="+91 XXXXX XXXXX"
                         />
                     </div>
@@ -142,7 +156,7 @@ export default function Enquiry() {
                     {/* Enquiry Details Section */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label htmlFor="type" className="block text-gray-700 font-medium mb-2">
+                            <label htmlFor="type" className="block text-charcoal font-modern text-sm font-medium mb-2">
                                 Enquiry Type *
                             </label>
                             <select
@@ -151,7 +165,7 @@ export default function Enquiry() {
                                 value={formData.type}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                             >
                                 {ENQUIRY_TYPES.map(type => (
                                     <option key={type.value} value={type.value}>
@@ -162,7 +176,7 @@ export default function Enquiry() {
                         </div>
 
                         <div>
-                            <label htmlFor="priority" className="block text-gray-700 font-medium mb-2">
+                            <label htmlFor="priority" className="block text-charcoal font-modern text-sm font-medium mb-2">
                                 Priority Level
                             </label>
                             <select
@@ -170,7 +184,7 @@ export default function Enquiry() {
                                 name="priority"
                                 value={formData.priority}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                             >
                                 {PRIORITY_LEVELS.map(priority => (
                                     <option key={priority.value} value={priority.value}>
@@ -182,7 +196,7 @@ export default function Enquiry() {
                     </div>
 
                     <div>
-                        <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
+                        <label htmlFor="subject" className="block text-charcoal font-modern text-sm font-medium mb-2">
                             Subject *
                         </label>
                         <input
@@ -193,20 +207,20 @@ export default function Enquiry() {
                             onChange={handleChange}
                             required
                             maxLength={200}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                             placeholder="Brief description of your inquiry"
                         />
                         
                         {/* Quick Subject Options */}
                         <div className="mt-3">
-                            <p className="text-sm text-gray-600 mb-2">Quick options:</p>
+                            <p className="text-sm text-charcoal-muted font-modern mb-2">Quick options:</p>
                             <div className="flex flex-wrap gap-2">
                                 {COMMON_SUBJECTS.map((subject, index) => (
                                     <button
                                         key={index}
                                         type="button"
                                         onClick={() => handleSubjectSelect(subject)}
-                                        className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                        className="px-3 py-1 text-sm font-modern text-charcoal-light bg-gold-50 border border-gold-100 rounded-full hover:bg-gold-100 hover:text-gold-700 transition-colors"
                                     >
                                         {subject}
                                     </button>
@@ -216,7 +230,7 @@ export default function Enquiry() {
                     </div>
 
                     <div>
-                        <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
+                        <label htmlFor="message" className="block text-charcoal font-modern text-sm font-medium mb-2">
                             Message *
                         </label>
                         <textarea
@@ -227,7 +241,7 @@ export default function Enquiry() {
                             required
                             maxLength={2000}
                             rows={6}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-2 border border-gold-200 rounded-lg font-modern text-charcoal focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                             placeholder="Please provide detailed information about your inquiry..."
                         />
                         <div className="text-right text-sm text-gray-500 mt-1">
@@ -238,7 +252,7 @@ export default function Enquiry() {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center gap-2"
+                        className="w-full bg-gold-600 text-white py-3.5 px-6 rounded-full hover:bg-gold-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-modern text-sm font-semibold tracking-widest uppercase flex items-center justify-center gap-2"
                     >
                         {isSubmitting ? (
                             <>

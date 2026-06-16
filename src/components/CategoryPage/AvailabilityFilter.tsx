@@ -9,15 +9,15 @@ interface AvailabilityFilterProps {
 const AvailabilityFilter: React.FC<AvailabilityFilterProps> = ({ inStock, onFilterChange }) => {
   return (
     <div>
-      <h3 className="text-lg font-semibold text-gray-800 mb-2">Availability</h3>
+      <h3 className="font-display text-base text-charcoal mb-2">Availability</h3>
       <label className="flex items-center space-x-2 cursor-pointer">
         <input
           type="checkbox"
           checked={inStock}
           onChange={(e) => onFilterChange('inStock', e.target.checked)}
-          className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+          className="form-checkbox h-5 w-5 text-gold-600 rounded focus:ring-gold-500 accent-gold-600"
         />
-        <span className="text-gray-700">In Stock Only</span>
+        <span className="text-charcoal-light font-modern">In Stock Only</span>
       </label>
     </div>
   );

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useProductCatalog, usePagination, useDebouncedSearch, useCategories, useSubcategoriesByCategory } from '../../hooks/useApi';
 import ProductCard from '../../components/ProductCard/ProductCard';
-import { Crown } from 'lucide-react';
 
 const CatalogPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -76,13 +75,8 @@ const CatalogPage: React.FC = () => {
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
           <div className="flex flex-col items-center justify-center min-h-[400px]">
-            <Crown className="w-12 h-12 text-yellow-500 mb-4 animate-pulse" />
-            <div className="flex space-x-1 mb-4">
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-            </div>
-            <p className="text-gray-600">Loading products...</p>
+            <div className="w-12 h-12 border-4 border-gold-200 border-t-gold-600 rounded-full animate-spin mb-4" />
+            <p className="text-charcoal-muted font-modern text-sm tracking-wide">Loading products…</p>
           </div>
         </div>
       </div>
@@ -96,7 +90,7 @@ const CatalogPage: React.FC = () => {
           <p>Error loading products: {error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="mt-4 px-6 py-2.5 bg-gold-600 text-white rounded-full hover:bg-gold-700 font-modern text-sm font-semibold tracking-wide transition-colors"
           >
             Retry
           </button>
@@ -124,22 +118,30 @@ const CatalogPage: React.FC = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          {selectedCategory && selectedSubcategory ? 
-            `${selectedCategoryName} - ${selectedSubcategoryName}` :
-            selectedCategory ? 
+      <div className="mb-10 text-center">
+        <p className="text-[10px] md:text-xs font-bold tracking-[0.35em] uppercase font-indian-serif text-gold-600 mb-3">
+          Our Collection
+        </p>
+        <h1 className="font-display text-3xl md:text-5xl font-light text-charcoal leading-tight">
+          {selectedCategory && selectedSubcategory ?
+            `${selectedCategoryName} – ${selectedSubcategoryName}` :
+            selectedCategory ?
               selectedCategoryName :
-              'Product Catalog'
+              'Product Catalogue'
           }
         </h1>
-        <p className="text-gray-600">
-          {query ? `Search results for "${query}"` : 
-           selectedCategory ? 
-             `Browse products in ${selectedCategoryName}${selectedSubcategoryName ? ` - ${selectedSubcategoryName}` : ''}` :
-             'Browse our complete product collection'
+        <p className="mt-3 text-sm text-charcoal-muted font-modern max-w-md mx-auto">
+          {query ? `Search results for "${query}"` :
+           selectedCategory ?
+             `Browse products in ${selectedCategoryName}${selectedSubcategoryName ? ` – ${selectedSubcategoryName}` : ''}` :
+             'Handcrafted silver & gold articles — sold by honest weight.'
           }
         </p>
+        <div className="flex items-center gap-3 mt-4 justify-center">
+          <div className="h-px w-10 bg-gold-300" />
+          <span className="text-sm text-gold-500">✦</span>
+          <div className="h-px w-10 bg-gold-300" />
+        </div>
       </div>
 
       {/* Breadcrumbs */}
@@ -147,16 +149,16 @@ const CatalogPage: React.FC = () => {
         <nav className="mb-6 text-sm text-gray-600">
           <ol className="flex items-center space-x-2">
             <li>
-              <Link to="/" className="hover:text-blue-600">Home</Link>
+              <Link to="/" className="hover:text-gold-700 transition-colors">Home</Link>
             </li>
             <li className="flex items-center">
               <span className="mx-2">/</span>
-              <Link to="/products" className="hover:text-blue-600">Catalog</Link>
+              <Link to="/products" className="hover:text-gold-700 transition-colors">Catalog</Link>
             </li>
             {selectedCategory && (
               <li className="flex items-center">
                 <span className="mx-2">/</span>
-                <Link to={`/products?category=${selectedCategory}`} className="hover:text-blue-600">
+                <Link to={`/products?category=${selectedCategory}`} className="hover:text-gold-700 transition-colors">
                   {selectedCategoryName}
                 </Link>
               </li>
@@ -178,7 +180,7 @@ const CatalogPage: React.FC = () => {
           placeholder="Search products..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
         />
       </div>
 
@@ -191,7 +193,7 @@ const CatalogPage: React.FC = () => {
             <select
               value={selectedCategory}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
             >
               <option value="">All Categories</option>
               {categories?.map((category) => (
@@ -208,7 +210,7 @@ const CatalogPage: React.FC = () => {
             <select
               value={selectedSubcategory}
               onChange={(e) => handleSubcategoryChange(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
               disabled={!selectedCategory || subcategoriesLoading}
             >
               <option value="">
@@ -236,7 +238,7 @@ const CatalogPage: React.FC = () => {
                 const [newSortBy, newSortOrder] = e.target.value.split('_');
                 handleSortChange(newSortBy, newSortOrder as 'asc' | 'desc');
               }}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
             >
               {filters?.sortOptions?.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -258,7 +260,7 @@ const CatalogPage: React.FC = () => {
             <select
               value={inStock.toString()}
               onChange={(e) => setInStock(e.target.value === 'true')}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
             >
               <option value="true">In Stock Only</option>
               <option value="false">All Products</option>
@@ -271,7 +273,7 @@ const CatalogPage: React.FC = () => {
             <select
               value={limit}
               onChange={(e) => changeLimit(Number(e.target.value))}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-gold-500 focus:border-gold-500"
             >
               <option value={12}>12</option>
               <option value={24}>24</option>
@@ -339,10 +341,10 @@ const CatalogPage: React.FC = () => {
                     <button
                       key={pageNum}
                       onClick={() => goToPage(pageNum)}
-                      className={`px-3 py-1 rounded ${
+                      className={`px-3 py-1 rounded font-modern ${
                         page === pageNum
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          ? 'bg-gold-600 text-white'
+                          : 'bg-gold-50 text-charcoal-light hover:bg-gold-100 border border-gold-100'
                       }`}
                     >
                       {pageNum}
@@ -399,7 +401,7 @@ const CatalogPage: React.FC = () => {
               setInStock(true);
               goToPage(1);
             }}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-6 py-2.5 bg-gold-600 text-white rounded-full hover:bg-gold-700 font-modern text-sm font-semibold tracking-wide transition-colors"
           >
             Clear Filters
           </button>
@@ -408,9 +410,9 @@ const CatalogPage: React.FC = () => {
 
       {/* Loading overlay for search */}
       {loading && data && (
-        <div className="fixed top-4 right-4 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-2 rounded">
+        <div className="fixed top-4 right-4 bg-gold-50 border border-gold-200 text-gold-700 px-4 py-2 rounded-lg shadow-card font-modern text-sm">
           <div className="flex items-center">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gold-600 mr-2"></div>
             {query ? 'Searching...' : 'Loading...'}
           </div>
         </div>

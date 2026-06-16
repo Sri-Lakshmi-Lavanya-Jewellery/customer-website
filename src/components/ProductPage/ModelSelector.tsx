@@ -20,7 +20,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
 
   return (
     <div className="mb-6">
-      <h3 className="text-lg font-semibold text-gray-800 mb-3">Select Model</h3>
+      <h3 className="font-display text-lg text-charcoal mb-3">Select Model</h3>
       <div className="flex flex-wrap gap-3"> {/* Use flex-wrap for better responsiveness */}
         {modelKeys.map(modelKey => {
           const modelData = models[modelKey];
@@ -32,15 +32,15 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
             <button
               key={modelKey}
               onClick={() => onModelChange(modelKey)}
-              className={`border p-4 rounded-lg text-left transition-all w-full sm:w-auto hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+              className={`border p-4 rounded-lg text-left transition-all w-full sm:w-auto hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-opacity-50 ${
                 selectedModel === modelKey
-                  ? 'border-blue-500 bg-blue-50 shadow-md'
-                  : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                  ? 'border-gold-500 bg-gold-50 shadow-md'
+                  : 'border-gray-300 hover:border-gold-300 hover:bg-gold-50/50'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className={`font-medium ${selectedModel === modelKey ? 'text-blue-800' : 'text-gray-800'}`}>
+                  <div className={`font-medium font-modern ${selectedModel === modelKey ? 'text-gold-800' : 'text-charcoal'}`}>
                     {modelKey}
                   </div>
                   {previewDimensions && (
@@ -52,7 +52,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
                 </div>
                 <div className={`ml-4 w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                   selectedModel === modelKey
-                    ? 'border-blue-500 bg-blue-500'
+                    ? 'border-gold-500 bg-gold-500'
                     : 'border-gray-300'
                 }`}>
                   {selectedModel === modelKey && (

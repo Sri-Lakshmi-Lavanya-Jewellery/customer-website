@@ -15,8 +15,8 @@ const DimensionRangeDisplay: React.FC<DimensionRangeDisplayProps> = ({ dimension
     return (
       <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm transition-transform hover:translate-y-[-2px]">
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">{label}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+          <span className="text-charcoal-muted font-modern text-sm">{label}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gold-600" viewBox="0 0 20 20" fill="currentColor">
             <path d={iconPath} />
           </svg>
         </div>
@@ -38,7 +38,7 @@ const DimensionRangeDisplay: React.FC<DimensionRangeDisplayProps> = ({ dimension
 
   return (
     <div className="mb-6 border-b border-gray-200 pb-6">
-      <h4 className="font-medium text-gray-800 mb-3">Available Dimension Ranges</h4>
+      <h4 className="font-display text-base text-charcoal mb-3">Available Dimension Ranges</h4>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {renderRangeCard("Length Range", dimensionRangeSet.length, lengthIconPath)}
         {renderRangeCard("Breadth Range", dimensionRangeSet.breadth, breadthIconPath)}

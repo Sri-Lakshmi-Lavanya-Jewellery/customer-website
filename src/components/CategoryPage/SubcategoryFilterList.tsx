@@ -24,14 +24,14 @@ const SubcategoryFilterList: React.FC<SubcategoryFilterListProps> = ({
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Subcategories</h2>
+      <h2 className="font-display text-lg text-charcoal mb-4">Subcategories</h2>
       <div className="flex flex-wrap gap-2">
         <Link
           to={`/products?category=${currentCategorySlug}`}
-          className={`px-4 py-2 rounded-lg transition-colors ${
+          className={`px-4 py-2 rounded-full font-modern text-sm transition-colors ${
             selectedSubcategory === null
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+              ? 'bg-gold-600 text-white'
+              : 'bg-gold-50 hover:bg-gold-100 text-charcoal-light border border-gold-100'
           }`}
         >
           All Products
@@ -40,10 +40,10 @@ const SubcategoryFilterList: React.FC<SubcategoryFilterListProps> = ({
           <Link
             key={subcategory.id}
             to={`/products?category=${currentCategorySlug}&subcategory=${subcategory.slug || subcategory.id}`}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`px-4 py-2 rounded-full font-modern text-sm transition-colors ${
               selectedSubcategory === subcategory.id
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
+                ? 'bg-gold-600 text-white'
+                : 'bg-gold-50 hover:bg-gold-100 text-charcoal-light border border-gold-100'
             }`}
           >
             {subcategory.name}

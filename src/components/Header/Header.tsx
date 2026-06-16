@@ -1,40 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink, Link } from 'react-router-dom'
-import { Menu, X, Search, Phone, MapPin, Video, MessageCircle, TrendingUp, TrendingDown } from 'lucide-react'
-
-interface MetalRates {
-  gold22k: number;
-  silver: number;
-  goldChange: number;
-  silverChange: number;
-}
-
-function useMetalRates() {
-  const [rates, setRates] = useState<MetalRates | null>(null);
-  useEffect(() => {
-    const fetch_ = async () => {
-      try {
-        const h = new Headers();
-        h.append('x-api-key', 'sk_4024Ab155D400078f102Fd4485Eadec7884a3acA86Ea67Ca');
-        const res = await fetch(
-          'https://gold.g.apised.com/v1/latest?metals=XAU,XAG&base_currency=INR&currencies=INR&weight_unit=gram',
-          { headers: h }
-        );
-        const d = await res.json();
-        setRates({
-          gold22k: d.data.metal_prices.XAU.price_22k,
-          silver: d.data.metal_prices.XAG.price,
-          goldChange: d.data.metal_prices.XAU.change,
-          silverChange: d.data.metal_prices.XAG.change,
-        });
-      } catch { /* fail silently — show static label */ }
-    };
-    fetch_();
-    const t = setInterval(fetch_, 3_600_000);
-    return () => clearInterval(t);
-  }, []);
-  return rates;
-}
+import { Menu, X, Search, Phone, MapPin, Video, MessageCircle, ShieldCheck } from 'lucide-react'
+import { useMetalRates } from '../../hooks/useMetalRates'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -62,74 +29,54 @@ export default function Header() {
     { to: '/about', label: 'About Us' },
   ];
 
-  const RateChip = ({
-    label, value, change, color,
-  }: { label: string; value?: number; change?: number; color: string }) => {
-    const up = (change ?? 0) >= 0;
-    return (
-      <div className="flex items-center gap-1.5">
-        <span className={`font-semibold ${color}`}>{label}</span>
-        {value ? (
-          <>
-            <span className="text-white font-medium">₹{value.toFixed(0)}/g</span>
-            <span className={up ? 'text-green-400' : 'text-red-400'}>
-              {up ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
-            </span>
-          </>
-        ) : (
-          <span className="text-gray-500 text-[10px]">loading…</span>
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className={`sticky top-0 z-50 transition-shadow duration-300 ${scrolled ? 'shadow-lg' : ''}`}>
 
-      {/* ── Row 1: Top Info Bar ── */}
-      <div className="bg-gray-950 text-white border-b border-gray-800">
+      {/* ── Row 1: Live-rate announcement bar ── */}
+      <div className="bg-charcoal text-ivory">
         <div className="container mx-auto px-4">
-          {/* grid-cols-3 ensures center is ALWAYS truly centered */}
-          <div className="grid grid-cols-3 items-center h-9 text-xs">
+          <div className="flex items-center justify-between h-9 text-[11px] gap-2">
 
-            {/* Left: contact */}
-            <div className="hidden md:flex items-center gap-4 text-gray-400">
+            {/* Left: contact (desktop) */}
+            <div className="hidden md:flex items-center gap-4 text-ivory/55 shrink-0">
               <a href="tel:+917288865969"
                 className="flex items-center gap-1 hover:text-gold-400 transition-colors duration-200">
                 <Phone size={10} />
                 <span>+91 72888 65969</span>
               </a>
-              <span className="text-gray-700">|</span>
+              <span className="text-ivory/15">|</span>
               <span className="flex items-center gap-1"><MapPin size={10} />Store</span>
-              <span className="text-gray-700">|</span>
+              <span className="text-ivory/15">|</span>
               <span className="flex items-center gap-1"><Video size={10} />Video Call</span>
             </div>
-            {/* Mobile: empty left */}
-            <div className="md:hidden" />
 
-            {/* Center: established — always truly centered via grid */}
-            <div className="text-center tracking-[0.2em] text-gray-500 uppercase font-light text-[10px] md:text-xs">
-              ✦ Established 2001 ✦
+            {/* Center: today's live gold (24K + 22K) & silver rate */}
+            <div className="flex-1 flex items-center justify-center gap-2 md:gap-3 min-w-0 whitespace-nowrap overflow-hidden">
+              {rates ? (
+                <>
+                  <span className="text-gold-400 tracking-wide">Gold</span>
+                  <span className="hidden sm:inline text-ivory/80">
+                    24K <span className="font-medium text-ivory">₹{rates.gold24k > 0 ? rates.gold24k.toFixed(0) : '—'}</span>
+                  </span>
+                  <span className="text-ivory/80">
+                    22K <span className="font-medium text-ivory">₹{rates.gold22k > 0 ? rates.gold22k.toFixed(0) : '—'}</span>/g
+                  </span>
+                  <span className="text-ivory/15">|</span>
+                  <span className="text-ivory/70 tracking-wide">Silver</span>
+                  <span className="font-medium text-ivory">₹{rates.silverPerKg > 0 ? rates.silverPerKg.toLocaleString('en-IN') : '—'}/kg</span>
+                </>
+              ) : (
+                <span className="tracking-[0.18em] uppercase text-ivory/50 text-[10px]">
+                  Authentic Silver &amp; Gold · Today's Rate
+                </span>
+              )}
             </div>
 
-            {/* Right: live rates */}
-            <div className="hidden md:flex items-center gap-4 justify-end text-[11px]">
-              <RateChip
-                label="Gold 22K"
-                value={rates?.gold22k}
-                change={rates?.goldChange}
-                color="text-gold-400"
-              />
-              <span className="text-gray-700">|</span>
-              <RateChip
-                label="Silver"
-                value={rates?.silver}
-                change={rates?.silverChange}
-                color="text-gray-300"
-              />
+            {/* Right: trust (desktop) */}
+            <div className="hidden md:flex items-center gap-2 justify-end text-ivory/55 shrink-0">
+              <ShieldCheck size={11} className="text-gold-400" />
+              <span className="tracking-wide">BIS Hallmark-Grade · Est. 2001</span>
             </div>
-            {/* Mobile: empty right */}
-            <div className="md:hidden" />
           </div>
         </div>
       </div>
@@ -157,11 +104,13 @@ export default function Header() {
               <div className="flex items-center gap-2 md:gap-3">
                 <LotusIcon className="text-gold-500 w-7 h-7 hidden sm:block" />
                 <div className="text-center">
-                  <h1 className="font-display text-lg md:text-2xl font-light text-gray-900 tracking-wider leading-none group-hover:text-gold-700 transition-colors duration-300">
+                  {/* Brand wordmark — a <span>, not <h1>, so each page keeps a
+                      single content-level H1 for accessibility & SEO. */}
+                  <span className="block font-display text-lg md:text-2xl font-light text-gray-900 tracking-wider leading-none group-hover:text-gold-700 transition-colors duration-300">
                     Sri Lakshmi Lavanya
-                  </h1>
-                  <p className="text-[9px] md:text-[10px] text-gray-400 tracking-[0.3em] uppercase mt-0.5 font-modern">
-                    Silver Jewellery
+                  </span>
+                  <p className="text-[9px] md:text-[10px] text-charcoal-muted tracking-[0.3em] uppercase mt-0.5 font-modern">
+                    Silver &amp; Gold Jewellery
                   </p>
                 </div>
                 <LotusIcon className="text-gold-500 w-7 h-7 hidden sm:block" />
@@ -276,9 +225,11 @@ export default function Header() {
             ))}
             {/* Mobile rates row */}
             {rates && (
-              <li className="px-6 py-3 bg-gray-950 flex items-center justify-between text-xs">
-                <span className="text-gold-400 font-semibold">Gold 22K: ₹{rates.gold22k.toFixed(0)}/g</span>
-                <span className="text-gray-400">Silver: ₹{rates.silver.toFixed(0)}/g</span>
+              <li className="px-6 py-3 bg-charcoal flex items-center justify-between text-xs gap-2">
+                <span className="text-gold-400 font-semibold">
+                  Gold 24K ₹{rates.gold24k > 0 ? rates.gold24k.toFixed(0) : '—'} · 22K ₹{rates.gold22k > 0 ? rates.gold22k.toFixed(0) : '—'}
+                </span>
+                <span className="text-ivory/70">Silver ₹{rates.silverPerKg > 0 ? rates.silverPerKg.toLocaleString('en-IN') : '—'}/kg</span>
               </li>
             )}
             <li className="px-6 py-4">

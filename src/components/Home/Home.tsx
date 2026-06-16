@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import Carousel from '../Carousel/Carousel';
 import ProductCard from '../ProductCard/ProductCard';
 import { useHomepageContent } from '../../hooks/useApi';
-import { ShieldCheck, Truck, RefreshCw, Award, ArrowRight, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMetalRates } from '../../hooks/useMetalRates';
+import { ShieldCheck, Truck, RefreshCw, Award, ArrowRight, Phone, ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 
 /* ── Section heading ── */
 const SectionHeading = ({
@@ -88,8 +89,28 @@ const occasions = [
   { icon: '🛕', label: 'Temple & Religious', color: 'from-yellow-50 to-amber-50', dot: 'bg-yellow-500' },
 ];
 
+/* ── Testimonials ── */
+const testimonials = [
+  {
+    quote: 'The silver Kamakshi deepam I ordered is breathtaking — the weight and finish are exactly as promised. Truly heirloom quality.',
+    name: 'Lakshmi Priya',
+    place: 'Hyderabad',
+  },
+  {
+    quote: 'Honest weight, fair rate and such warm service on WhatsApp. They guided me through the whole purchase for my daughter\'s wedding.',
+    name: 'Ramesh Kumar',
+    place: 'Vijayawada',
+  },
+  {
+    quote: 'Authentic craftsmanship you can feel. Our family has been buying pooja silver here for years — never once disappointed.',
+    name: 'Sridevi Reddy',
+    place: 'Chennai',
+  },
+];
+
 const Home: React.FC = () => {
-  const { data: homepageData, loading } = useHomepageContent();
+  const { data: homepageData, loading, error, refetch } = useHomepageContent();
+  const rates = useMetalRates();
   const catScrollRef = useRef<HTMLDivElement>(null);
   const productScrollRef = useRef<HTMLDivElement>(null);
 
@@ -101,22 +122,36 @@ const Home: React.FC = () => {
       }))
     : [];
 
-  const latestProducts = (homepageData?.latestProducts || []).map((p: any) => ({
-    id: p.id, title: p.title,
+  const mapProduct = (p: any, forceNew = false) => ({
+    id: p.id,
+    title: p.title,
     image: p.images?.[0] || p.commonImages?.[0] || '',
-    isNew: p.isNewProduct || p.isNew || false,
+    image2: p.images?.[1] || p.commonImages?.[1] || undefined,
+    isNew: forceNew || p.isNewProduct || p.isNew || false,
+    purity: p.purity || undefined,
+    weight: p.weight || undefined,
     link: `/product/${p.id}`,
-  }));
+  });
 
-  const newArrivals = (homepageData?.newArrivals || []).map((p: any) => ({
-    id: p.id, title: p.title,
-    image: p.images?.[0] || p.commonImages?.[0] || '',
-    isNew: true,
-    link: `/product/${p.id}`,
-  }));
+  const latestProducts = (homepageData?.latestProducts || []).map((p: any) => mapProduct(p));
+  const newArrivals = (homepageData?.newArrivals || []).map((p: any) => mapProduct(p, true));
 
   const bestSellers = latestProducts.slice(0, 6);
   const arrivalProducts = newArrivals.length > 0 ? newArrivals.slice(0, 8) : latestProducts.slice(0, 8);
+
+  // Scrolling announcement — leads with today's live gold & silver rate.
+  const sep = '  ✦  ';
+  const rateParts: string[] = [];
+  if (rates?.gold22k) rateParts.push(`Today's Gold 22K · ₹${rates.gold22k.toFixed(0)}/g`);
+  if (rates?.silverPerKg) rateParts.push(`Today's Silver · ₹${rates.silverPerKg.toLocaleString('en-IN')}/kg`);
+  const marqueeLine = [
+    ...(rateParts.length ? rateParts : ['Authentic Silver & Gold']),
+    'BIS Hallmark-Grade Silver',
+    '100% Authentic Craftsmanship',
+    'Sold by Honest Weight',
+    'Personal WhatsApp Service',
+    'Trusted Since 2001',
+  ].join(sep);
 
   const scrollCats = (dir: 'l' | 'r') => {
     if (catScrollRef.current) catScrollRef.current.scrollBy({ left: dir === 'l' ? -240 : 240, behavior: 'smooth' });
@@ -139,6 +174,23 @@ const Home: React.FC = () => {
   return (
     <div className="bg-white overflow-x-hidden">
 
+      {/* If the catalogue couldn't load, tell the user and offer a retry —
+          but still render the rest of the page (hero, value props, testimonials)
+          so the site never looks blank/broken. */}
+      {error && (
+        <div className="bg-maroon/5 border-y border-maroon/20 text-center py-3 px-4">
+          <span className="text-sm text-charcoal font-modern">
+            We couldn't load the latest collection just now.
+          </span>
+          <button
+            onClick={() => refetch()}
+            className="ml-3 text-sm font-semibold text-gold-700 underline hover:text-gold-800"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       {/* ═══════════════════════════════════════
           §1 · HERO CAROUSEL
       ═══════════════════════════════════════ */}
@@ -149,19 +201,11 @@ const Home: React.FC = () => {
       {/* ═══════════════════════════════════════
           §2 · ANNOUNCEMENT MARQUEE
       ═══════════════════════════════════════ */}
-      <section className="bg-gold-500 overflow-hidden">
+      <section className="bg-gold-600 overflow-hidden">
         <div className="py-2.5 px-4">
           <div className="announcement-marquee whitespace-nowrap">
-            <span className="inline-block text-white text-[11px] font-semibold tracking-widest uppercase font-modern animate-marquee">
-              ✦&nbsp;&nbsp;BIS Hallmarked 925 Silver&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;Free Shipping above ₹5,000&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;100% Authentic Craftsmanship&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;Easy 7-Day Returns&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;Lifetime Cleaning Service&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;Trusted Since 2001&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;BIS Hallmarked 925 Silver&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;Free Shipping above ₹5,000&nbsp;&nbsp;&nbsp;&nbsp;
-              ✦&nbsp;&nbsp;100% Authentic Craftsmanship&nbsp;&nbsp;&nbsp;&nbsp;
+            <span className="inline-block text-white text-[11px] font-medium tracking-[0.15em] uppercase font-modern animate-marquee">
+              {sep}{marqueeLine}{sep}{marqueeLine}{sep}
             </span>
           </div>
         </div>
@@ -227,7 +271,7 @@ const Home: React.FC = () => {
                   title: n, image: '', link: '/categories',
                 }))
             ).map((cat, i) => (
-              <CircleCategoryTile key={i} {...cat} />
+              <CircleCategoryTile key={`${cat.title}-${i}`} {...cat} />
             ))}
             {/* "View All" circle */}
             <Link to="/categories" className="group flex flex-col items-center gap-3 shrink-0 w-24 md:w-28">
@@ -624,6 +668,35 @@ const Home: React.FC = () => {
                 Read Our Story <ArrowRight size={13} />
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          §10b · TESTIMONIALS
+      ═══════════════════════════════════════ */}
+      <section className="py-14 md:py-20 bg-ivory">
+        <div className="container mx-auto px-4">
+          <SectionHeading eyebrow="Words of Trust" title="What Our Patrons Say" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((t) => (
+              <div
+                key={t.name}
+                className="relative bg-white rounded-2xl p-7 md:p-8 border border-ivory-200 shadow-card"
+              >
+                <Quote className="w-8 h-8 text-gold-300 mb-4" />
+                <p className="text-charcoal-light font-modern text-sm leading-relaxed mb-6">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="flex items-center gap-1 mb-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} size={13} className="fill-gold-500 text-gold-500" />
+                  ))}
+                </div>
+                <p className="font-display text-lg text-charcoal leading-none">{t.name}</p>
+                <p className="text-xs text-charcoal-muted font-modern mt-1">{t.place}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
