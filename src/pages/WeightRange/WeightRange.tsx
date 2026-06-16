@@ -20,7 +20,7 @@ const WeightRange: React.FC = () => {
         <div className="absolute inset-0 bg-mandala opacity-10 pointer-events-none" />
         <div className="container mx-auto relative text-center">
           <p className="uppercase tracking-[0.3em] text-silver-100 text-sm mb-3">Sold by Weight</p>
-          <h1 className="font-display text-4xl md:text-6xl font-semibold mb-4">Shop by Weight</h1>
+          <h1 className="font-display text-4xl md:text-6xl font-light mb-4">Shop by Weight</h1>
           <p className="max-w-2xl mx-auto text-silver-50/90 text-lg">
             Silver articles are priced by weight at the day's rate. Pick a weight range to find pieces that suit your need and budget.
           </p>

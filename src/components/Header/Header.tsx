@@ -104,9 +104,11 @@ export default function Header() {
               <div className="flex items-center gap-2 md:gap-3">
                 <LotusIcon className="text-gold-500 w-7 h-7 hidden sm:block" />
                 <div className="text-center">
-                  <h1 className="font-display text-lg md:text-2xl font-light text-gray-900 tracking-wider leading-none group-hover:text-gold-700 transition-colors duration-300">
+                  {/* Brand wordmark — a <span>, not <h1>, so each page keeps a
+                      single content-level H1 for accessibility & SEO. */}
+                  <span className="block font-display text-lg md:text-2xl font-light text-gray-900 tracking-wider leading-none group-hover:text-gold-700 transition-colors duration-300">
                     Sri Lakshmi Lavanya
-                  </h1>
+                  </span>
                   <p className="text-[9px] md:text-[10px] text-charcoal-muted tracking-[0.3em] uppercase mt-0.5 font-modern">
                     Silver &amp; Gold Jewellery
                   </p>

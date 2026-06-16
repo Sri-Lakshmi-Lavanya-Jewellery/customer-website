@@ -159,7 +159,7 @@ export default function Footer() {
               href="https://wa.me/917288865969"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold tracking-wide font-modern px-5 py-2.5 rounded-full w-fit transition-colors duration-200"
+              className="mt-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-white text-xs font-semibold tracking-wide font-modern px-5 py-2.5 rounded-full w-fit transition-colors duration-200"
             >
               <FaWhatsapp size={14} />
               Chat on WhatsApp
@@ -181,7 +181,7 @@ export default function Footer() {
                 BIS Hallmarked Silver
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-green-500" />
+                <span className="w-2 h-2 rounded-full bg-gold-500" />
                 Certified Authentic
               </span>
               <span className="flex items-center gap-1.5">

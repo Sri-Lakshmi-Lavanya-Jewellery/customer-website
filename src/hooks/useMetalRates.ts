@@ -41,8 +41,10 @@ export function useMetalRates(): MetalRates | null {
     let active = true;
 
     const load = async () => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 6000);
       try {
-        const res = await fetch(RATES_URL);
+        const res = await fetch(RATES_URL, { signal: controller.signal });
         if (!res.ok) throw new Error(`rates ${res.status}`);
         const json = await res.json();
         const d = json?.data;
@@ -59,8 +61,10 @@ export function useMetalRates(): MetalRates | null {
           source: d?.source || '',
         });
       } catch {
-        // Service offline (e.g. backend not yet deployed) — keep null, show static label.
+        // Service offline / timed out — keep null, show static label.
         if (active) setRates(null);
+      } finally {
+        clearTimeout(timer);
       }
     };
 

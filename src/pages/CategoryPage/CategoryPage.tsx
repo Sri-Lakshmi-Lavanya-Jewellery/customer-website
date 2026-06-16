@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Crown } from 'lucide-react';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import { useProductFilters } from '../../hooks/useProductFilters';
 import { useCategoryPageBySlug, usePagination, useSubcategoryPage } from '../../hooks/useApi';
@@ -28,10 +27,13 @@ export default function CategoryPage() {
   // Determine if this is a subcategory page
   const isSubcategoryPage = !!(categorySlug && subcategorySlug);
   
-  // Fetch from API - no fallback
-  const { data: apiData, loading, error } = isSubcategoryPage
-    ? useSubcategoryPage(categorySlug!, subcategorySlug!, { page, limit })
-    : useCategoryPageBySlug(categoryIdentifier, { page, limit });
+  // Fetch from API. IMPORTANT: both hooks are ALWAYS called (never conditionally)
+  // to obey the Rules of Hooks — otherwise navigating between a category and a
+  // subcategory route changes hook order and React crashes the page. The hook
+  // that isn't relevant for this route is skipped internally (no network call).
+  const subResult = useSubcategoryPage(categorySlug || '', subcategorySlug || '', { page, limit }, !isSubcategoryPage);
+  const catResult = useCategoryPageBySlug(categoryIdentifier, { page, limit }, isSubcategoryPage);
+  const { data: apiData, loading, error } = isSubcategoryPage ? subResult : catResult;
 
   // Determine which data to use
   const category = apiData?.data.category;
@@ -76,17 +78,9 @@ export default function CategoryPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="loading-dots relative">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-            <Crown className="w-12 h-12 text-yellow-600 mx-auto mb-4 animate-pulse" />
-          </div>
-          <p className="text-gray-600 text-lg">Loading category...</p>
+        <div className="flex flex-col items-center justify-center min-h-[300px]">
+          <div className="w-12 h-12 border-4 border-gold-200 border-t-gold-600 rounded-full animate-spin mb-4" />
+          <p className="text-charcoal-muted font-modern text-sm tracking-wide">Loading category…</p>
         </div>
       </div>
     );
@@ -102,11 +96,11 @@ export default function CategoryPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Unable to Load Category</h2>
-          <p className="text-gray-600 mb-4">There was an error loading the category.</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          <h2 className="font-display text-2xl text-charcoal mb-2">Unable to Load Category</h2>
+          <p className="text-charcoal-muted font-modern mb-4">There was an error loading the category.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-gold-600 text-white px-7 py-2.5 rounded-full hover:bg-gold-700 font-modern text-sm font-semibold tracking-wide transition-colors"
           >
             Retry
           </button>
@@ -119,17 +113,17 @@ export default function CategoryPage() {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Category not found</h1>
-          <p className="text-gray-600">The requested category could not be found.</p>
+          <h1 className="font-display text-2xl text-charcoal mb-4">Category not found</h1>
+          <p className="text-charcoal-muted font-modern">The requested category could not be found.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-ivory">
       <div className="container mx-auto py-8 px-4">
-        <div className="bg-white rounded-lg shadow-sm border p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-card border border-ivory-200 p-8 mb-8">
           <CategoryHeader title={category.title || category.name || 'Category'} description={category.description || ''} />
 
           <SubcategoryFilterList
@@ -140,8 +134,8 @@ export default function CategoryPage() {
         </div>
 
         {/* Advanced Filters */}
-        <div className="mb-8 bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Filter Products</h3>
+        <div className="mb-8 bg-white rounded-2xl shadow-card border border-ivory-200 p-6">
+          <h3 className="font-display text-lg text-charcoal mb-4">Filter Products</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <AvailabilityFilter
               inStock={filters.inStock}
@@ -154,9 +148,9 @@ export default function CategoryPage() {
 
             {/* Product Type Filter - Placeholder for future implementation (was Weight Range before) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Product Type</label>
+              <label className="block text-sm font-medium text-charcoal font-modern mb-2">Product Type</label>
               <select
-                className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                className="block w-full border-gold-200 rounded-md shadow-sm font-modern text-charcoal focus:ring-gold-500 focus:border-gold-500 sm:text-sm p-2"
                 defaultValue="all"
               >
                 <option value="all">All Types</option>
@@ -172,7 +166,7 @@ export default function CategoryPage() {
         <ProductCountDisplay count={filteredProducts.length} />
 
         {/* Products Grid */}
-        <div className="bg-white rounded-lg shadow-sm border p-8">
+        <div className="bg-white rounded-2xl shadow-card border border-ivory-200 p-8">
           {filteredProducts.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -206,10 +200,10 @@ export default function CategoryPage() {
                         <button
                           key={pageNum}
                           onClick={() => goToPage(pageNum)}
-                          className={`px-3 py-2 rounded-lg transition-colors ${
+                          className={`px-3 py-2 rounded-lg font-modern transition-colors ${
                             page === pageNum
-                              ? 'bg-yellow-500 text-white shadow-md'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              ? 'bg-gold-600 text-white shadow-md'
+                              : 'bg-gold-50 text-charcoal-light hover:bg-gold-100 border border-gold-100'
                           }`}
                         >
                           {pageNum}

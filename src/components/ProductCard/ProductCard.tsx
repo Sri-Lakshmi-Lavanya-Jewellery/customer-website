@@ -36,19 +36,24 @@ export default function ProductCard({
     <Link to={link} className="group block">
       <div className="bg-white rounded-2xl overflow-hidden border border-ivory-200 shadow-card card-hover">
 
-        {/* Image */}
-        <div className="relative aspect-square overflow-hidden bg-ivory-100">
+        {/* Image — products are shot as wide group photos (up to ~2.2:1), so
+            `object-contain` on an ivory field shows the whole piece instead of
+            center-cropping to empty cloth. */}
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-ivory-100 to-ivory-200 p-2">
           {image && !imgError ? (
             <>
               {imgLoading && <div className="absolute inset-0 bg-ivory-200 animate-pulse" />}
+              {/* Fade in via opacity (NOT display:none) — a display:none lazy
+                  image has no layout box, so the browser never loads it and
+                  onLoad never fires, deadlocking the skeleton. */}
               <img
                 src={image}
                 alt={title}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-contain transition-[transform,opacity] duration-700 group-hover:scale-105"
                 onError={() => { setImgError(true); setImgLoading(false); }}
                 onLoad={() => setImgLoading(false)}
-                style={{ display: imgLoading ? 'none' : 'block' }}
+                style={{ opacity: imgLoading ? 0 : 1 }}
               />
               {/* Second image on hover (if provided) */}
               {image2 && (
@@ -57,7 +62,7 @@ export default function ProductCard({
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  className="absolute inset-0 w-full h-full object-contain p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 />
               )}
             </>

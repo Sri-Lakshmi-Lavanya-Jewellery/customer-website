@@ -1,17 +1,28 @@
 import { useState, useEffect, useMemo } from 'react';
 import { apiService, ApiResponse } from '../services/api';
 
-// Generic hook for API calls
+// Generic hook for API calls.
+// Pass `skip = true` to NOT fire the request (e.g. when required params are
+// empty/null) — this avoids guaranteed-failing calls and unnecessary backend load.
 export function useApiCall<T>(
   apiMethod: () => Promise<T>,
-  dependencies: any[] = []
+  dependencies: any[] = [],
+  skip: boolean = false
 ) {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!skip);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+
+    if (skip) {
+      setLoading(false);
+      setError(null);
+      return () => {
+        isMounted = false;
+      };
+    }
 
     const fetchData = async () => {
       try {
@@ -37,7 +48,8 @@ export function useApiCall<T>(
     return () => {
       isMounted = false;
     };
-  }, dependencies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...dependencies, skip]);
 
   const refetch = async () => {
     try {
@@ -92,10 +104,11 @@ export function useSubcategoryBySlug(categorySlug: string, subcategorySlug: stri
   );
 }
 
-export function useCategoryPageBySlug(slug: string, params: any = {}) {
+export function useCategoryPageBySlug(slug: string, params: any = {}, skip: boolean = false) {
   return useApiCall(
     () => apiService.getCategoryPageBySlug(slug, params),
-    [slug, JSON.stringify(params)]
+    [slug, JSON.stringify(params)],
+    skip || !slug
   );
 }
 
@@ -113,10 +126,7 @@ export function useProductDetailsWithModels(productId: string) {
   const [selectedDimension, setSelectedDimension] = useState<string>('');
   
   const { data: productDetails, loading, error } = useProductDetails(productId);
-  
-  // Debug logging
-  console.log('Product Details API Response:', { productDetails, loading, error, productId });
-  
+
   // Extract the product from the API response structure
   const product = productDetails?.product;
   
@@ -239,23 +249,28 @@ export function useRelatedProducts(productId: string, limit: number = 4) {
 }
 
 export function useSearchProducts(params: any = {}) {
+  // A null params means "don't search yet" (query too short) — skip the call so
+  // we never run searchProducts(null), which would throw in buildQueryString.
   return useApiCall(
     () => apiService.searchProducts(params),
-    [JSON.stringify(params)]
+    [JSON.stringify(params)],
+    params == null
   );
 }
 
-export function useNewArrivals(params: any = {}) {
+export function useNewArrivals(params: any = {}, skip: boolean = false) {
   return useApiCall(
     () => apiService.getNewArrivals(params),
-    [JSON.stringify(params)]
+    [JSON.stringify(params)],
+    skip
   );
 }
 
-export function useFeaturedProducts(params: any = {}) {
+export function useFeaturedProducts(params: any = {}, skip: boolean = false) {
   return useApiCall(
     () => apiService.getFeaturedProducts(params),
-    [JSON.stringify(params)]
+    [JSON.stringify(params)],
+    skip
   );
 }
 
@@ -389,9 +404,10 @@ export function useDebouncedSearch(initialQuery = '', delay = 500) {
   };
 }
 
-export function useSubcategoryPage(categorySlug: string, subcategorySlug: string, params: any = {}) {
+export function useSubcategoryPage(categorySlug: string, subcategorySlug: string, params: any = {}, skip: boolean = false) {
   return useApiCall(
     () => apiService.getSubcategoryPage(categorySlug, subcategorySlug, params),
-    [categorySlug, subcategorySlug, JSON.stringify(params)]
+    [categorySlug, subcategorySlug, JSON.stringify(params)],
+    skip || !categorySlug || !subcategorySlug
   );
 }

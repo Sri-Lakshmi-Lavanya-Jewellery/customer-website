@@ -267,14 +267,23 @@ const buildQueryString = (params: Record<string, any>): string => {
   return queryString ? `?${queryString}` : '';
 };
 
-// Base fetch wrapper with error handling
+// How long to wait for the backend before giving up. Without this, a slow or
+// hung backend (cold-starting host, dropped TCP, Mongo buffering) leaves every
+// fetch pending forever and the page spins indefinitely. 12s is generous enough
+// for a cold-starting host but short enough that the UI can show an error.
+const REQUEST_TIMEOUT_MS = 12000;
+
+// Base fetch wrapper with error handling + a hard timeout.
 const fetchWithErrorHandling = async <T>(url: string, options?: RequestInit): Promise<ApiResponse<T>> => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers,
       },
+      signal: controller.signal,
       ...options,
     });
 
@@ -283,15 +292,21 @@ const fetchWithErrorHandling = async <T>(url: string, options?: RequestInit): Pr
     }
 
     const data: ApiResponse<T> = await response.json();
-    
+
     if (!data.success) {
       throw new Error(data.message || 'API request failed');
     }
 
     return data;
   } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error('API Error: request timed out', url);
+      throw new Error('The server is taking too long to respond. Please try again.');
+    }
     console.error('API Error:', error);
     throw error;
+  } finally {
+    clearTimeout(timer);
   }
 };
 

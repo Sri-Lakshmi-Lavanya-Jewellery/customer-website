@@ -27,11 +27,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ inStock, product }) => 
       <div className="flex flex-col sm:flex-row gap-4">
         <button
           onClick={handleWhatsAppConnect}
-          className={`w-full sm:w-auto font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${
-            inStock 
-              ? 'bg-green-600 hover:bg-green-700 text-white' 
-              : 'bg-orange-600 hover:bg-orange-700 text-white'
-          }`}
+          className="w-full sm:w-auto font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5b] text-white"
         >
           {/* WhatsApp Icon */}
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -56,7 +52,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ inStock, product }) => 
           className={`w-full sm:w-auto border font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 ${
             wished
               ? 'border-maroon bg-maroon/5 text-maroon'
-              : 'border-gray-300 hover:bg-gray-50 text-charcoal'
+              : 'border-gold-200 hover:bg-gold-50 text-charcoal'
           }`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill={wished ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={wished ? 0 : 1.5}>

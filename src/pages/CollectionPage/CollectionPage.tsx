@@ -37,8 +37,9 @@ const CollectionPage: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   const isNewArrivals = collectionType === 'new-arrivals';
-  const newData = useNewArrivals(isNewArrivals ? { page, limit, sortBy, sortOrder } : {});
-  const featuredData = useFeaturedProducts(!isNewArrivals ? { page, limit, sortBy, sortOrder } : {});
+  // Skip the collection we're NOT viewing so only one request fires.
+  const newData = useNewArrivals({ page, limit, sortBy, sortOrder }, !isNewArrivals);
+  const featuredData = useFeaturedProducts({ page, limit, sortBy, sortOrder }, isNewArrivals);
   const { data, loading } = isNewArrivals ? newData : featuredData;
 
   const meta = collectionMeta[collectionType || 'new-arrivals'];

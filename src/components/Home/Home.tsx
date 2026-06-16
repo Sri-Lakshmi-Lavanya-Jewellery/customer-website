@@ -109,7 +109,7 @@ const testimonials = [
 ];
 
 const Home: React.FC = () => {
-  const { data: homepageData, loading } = useHomepageContent();
+  const { data: homepageData, loading, error, refetch } = useHomepageContent();
   const rates = useMetalRates();
   const catScrollRef = useRef<HTMLDivElement>(null);
   const productScrollRef = useRef<HTMLDivElement>(null);
@@ -173,6 +173,23 @@ const Home: React.FC = () => {
 
   return (
     <div className="bg-white overflow-x-hidden">
+
+      {/* If the catalogue couldn't load, tell the user and offer a retry —
+          but still render the rest of the page (hero, value props, testimonials)
+          so the site never looks blank/broken. */}
+      {error && (
+        <div className="bg-maroon/5 border-y border-maroon/20 text-center py-3 px-4">
+          <span className="text-sm text-charcoal font-modern">
+            We couldn't load the latest collection just now.
+          </span>
+          <button
+            onClick={() => refetch()}
+            className="ml-3 text-sm font-semibold text-gold-700 underline hover:text-gold-800"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* ═══════════════════════════════════════
           §1 · HERO CAROUSEL

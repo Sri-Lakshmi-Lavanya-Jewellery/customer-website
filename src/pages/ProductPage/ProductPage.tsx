@@ -19,6 +19,7 @@ import DimensionSelector from '../../components/ProductPage/DimensionSelector';
 import SelectedDimensionDetails from '../../components/ProductPage/SelectedDimensionDetails';
 import ProductSection from '../../components/ProductPage/ProductSection'; // Import ProductSection
 import ProductCard from '../../components/ProductCard/ProductCard';
+import JsonLd from '../../components/seo/JsonLd';
 
 export default function ProductPage() {
   const { productId } = useParams<{ productId: string }>();
@@ -89,24 +90,70 @@ export default function ProductPage() {
   const apiBreadcrumbs = productDetails?.breadcrumbs;
   const relatedProducts = productDetails?.relatedProducts || [];
 
+  // Structured data for Google rich results. NOTE: no Offer/price is emitted —
+  // articles are sold by live weight via WhatsApp enquiry (no online checkout),
+  // and marking a fixed price on a non-purchasable page violates Google's
+  // merchant-listing guidelines and risks a manual action.
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const abs = (u?: string): string | undefined =>
+    typeof u !== 'string' || !u ? undefined : u.startsWith('http') ? u : `${origin}${u.startsWith('/') ? '' : '/'}${u}`;
+  const productLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description || `${product.title} — handcrafted silver/gold article from Sri Lakshmi Lavanya Jewellery.`,
+    image: dynamicImages.map((img) => abs(img.url)).filter(Boolean),
+    category: getCategoryName(product),
+    brand: { '@type': 'Brand', name: 'Sri Lakshmi Lavanya Jewellery' },
+    url: `${origin}/product/${productId}`,
+  };
+  const breadcrumbLd = apiBreadcrumbs && apiBreadcrumbs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: apiBreadcrumbs.map((b, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: b.name,
+          item: abs(b.url),
+        })),
+      }
+    : null;
+
   return (
     <div className="container mx-auto py-8 px-4">
-      {/* API Breadcrumbs */}
+      <JsonLd id="product" data={productLd} />
+      {breadcrumbLd && <JsonLd id="breadcrumb" data={breadcrumbLd} />}
+      {/* API Breadcrumbs — collapse consecutive duplicate names (the seed data
+          can repeat e.g. "Harathi Stand / Harathi Stand"), and show the final
+          crumb as the current page (muted, not a link). */}
       {apiBreadcrumbs && apiBreadcrumbs.length > 0 ? (
-        <nav className="mb-8 text-sm">
-          <ol className="list-none p-0 inline-flex">
-            {apiBreadcrumbs.map((breadcrumb, index) => (
-              <li key={index} className="flex items-center">
-                <Link to={breadcrumb.url} className="text-gold-700 hover:text-gold-800">
-                  {breadcrumb.name}
-                </Link>
-                {index < apiBreadcrumbs.length - 1 && (
-                  <span className="mx-2 text-gray-500">/</span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
+        (() => {
+          const crumbs = apiBreadcrumbs.filter(
+            (b, i, arr) => i === 0 || b.name.trim().toLowerCase() !== arr[i - 1].name.trim().toLowerCase()
+          );
+          return (
+            <nav className="mb-8 text-sm font-modern" aria-label="Breadcrumb">
+              <ol className="list-none p-0 flex flex-wrap items-center">
+                {crumbs.map((breadcrumb, index) => {
+                  const isLast = index === crumbs.length - 1;
+                  return (
+                    <li key={index} className="flex items-center">
+                      {isLast ? (
+                        <span className="text-charcoal" aria-current="page">{breadcrumb.name}</span>
+                      ) : (
+                        <Link to={breadcrumb.url} className="text-charcoal-muted hover:text-gold-700 transition-colors">
+                          {breadcrumb.name}
+                        </Link>
+                      )}
+                      {!isLast && <span className="mx-2 text-gold-300">/</span>}
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+          );
+        })()
       ) : (
         <ProductBreadcrumb product={product} category={category} />
       )}
@@ -167,7 +214,7 @@ export default function ProductPage() {
 
           {currentModelData && (
             <div className="mb-6 bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Model Specifications</h3>
+              <h3 className="font-display text-lg text-charcoal mb-4">Model Specifications</h3>
               
               <DimensionRangeDisplay dimensionRangeSet={dimensionRangeSet} />
               

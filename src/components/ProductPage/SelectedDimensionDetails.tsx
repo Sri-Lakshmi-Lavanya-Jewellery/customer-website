@@ -19,17 +19,17 @@ const SelectedDimensionDetails: React.FC<SelectedDimensionDetailsProps> = ({
   const renderDetailCard = (label: string, value: string | undefined) => {
     if (!value) return null;
     return (
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-        <div className="text-gray-600 text-sm mb-1">{label}</div>
-        <div className="text-xl font-semibold text-blue-800">{value}</div>
+      <div className="bg-gold-50 p-4 rounded-lg border border-gold-100">
+        <div className="text-charcoal-muted font-modern text-sm mb-1">{label}</div>
+        <div className="text-xl font-semibold text-charcoal">{value}</div>
       </div>
     );
   };
 
   return (
     <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-      <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+      <h4 className="font-display text-base text-charcoal mb-4 flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-gold-500"></span>
         {selectedDimension} Specifications
       </h4>
 

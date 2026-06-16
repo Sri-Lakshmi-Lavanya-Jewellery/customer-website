@@ -39,7 +39,7 @@ const About: React.FC = () => {
         <div className="absolute inset-0 bg-mandala opacity-10 pointer-events-none" />
         <div className="container mx-auto relative text-center">
           <p className="uppercase tracking-[0.3em] text-gold-100 text-sm mb-3">Since Generations</p>
-          <h1 className="font-display text-4xl md:text-6xl font-semibold mb-4">Our Story</h1>
+          <h1 className="font-display text-4xl md:text-6xl font-light mb-4">Our Story</h1>
           <p className="max-w-2xl mx-auto text-gold-50/90 text-lg">
             A legacy of trust, artistry and devotion — the journey of Sri Lakshmi Lavanya Jewellery.
           </p>
