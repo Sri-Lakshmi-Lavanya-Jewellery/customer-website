@@ -60,7 +60,7 @@ const CircleCategoryTile = ({
   return (
     <Link to={link} className="group flex flex-col items-center gap-3 shrink-0 w-24 md:w-28">
       <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-transparent group-hover:border-gold-400 transition-all duration-300 bg-gold-50 shadow-sm group-hover:shadow-gold">
-        {!err ? (
+        {image && !err ? (
           <img
             src={image}
             alt={title}
