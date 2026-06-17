@@ -4,6 +4,7 @@ import Carousel from '../Carousel/Carousel';
 import ProductCard from '../ProductCard/ProductCard';
 import { useHomepageContent } from '../../hooks/useApi';
 import { useMetalRates } from '../../hooks/useMetalRates';
+import { useSiteContent } from '../../hooks/useSiteContent';
 import { ShieldCheck, Truck, RefreshCw, Award, ArrowRight, Phone, ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 
 /* ── Section heading ── */
@@ -79,38 +80,24 @@ const CircleCategoryTile = ({
   );
 };
 
-/* ── Occasions ── */
-const occasions = [
-  { icon: '💍', label: 'Bridal & Wedding', color: 'from-rose-50 to-pink-50', dot: 'bg-rose-400' },
-  { icon: '🪔', label: 'Festivals & Puja', color: 'from-amber-50 to-orange-50', dot: 'bg-amber-400' },
-  { icon: '⭐', label: 'Daily Wear', color: 'from-sky-50 to-blue-50', dot: 'bg-sky-400' },
-  { icon: '👶', label: 'Baby & Kids', color: 'from-green-50 to-emerald-50', dot: 'bg-emerald-400' },
-  { icon: '🎁', label: 'Gifting', color: 'from-purple-50 to-violet-50', dot: 'bg-violet-400' },
-  { icon: '🛕', label: 'Temple & Religious', color: 'from-yellow-50 to-amber-50', dot: 'bg-yellow-500' },
-];
-
-/* ── Testimonials ── */
-const testimonials = [
-  {
-    quote: 'The silver Kamakshi deepam I ordered is breathtaking — the weight and finish are exactly as promised. Truly heirloom quality.',
-    name: 'Lakshmi Priya',
-    place: 'Hyderabad',
-  },
-  {
-    quote: 'Honest weight, fair rate and such warm service on WhatsApp. They guided me through the whole purchase for my daughter\'s wedding.',
-    name: 'Ramesh Kumar',
-    place: 'Vijayawada',
-  },
-  {
-    quote: 'Authentic craftsmanship you can feel. Our family has been buying pooja silver here for years — never once disappointed.',
-    name: 'Sridevi Reddy',
-    place: 'Chennai',
-  },
+/* ── Occasion card colour palette (applied by index; labels/icons/links come
+      from editable site content) ── */
+const OCCASION_STYLES = [
+  { color: 'from-rose-50 to-pink-50', dot: 'bg-rose-400' },
+  { color: 'from-amber-50 to-orange-50', dot: 'bg-amber-400' },
+  { color: 'from-sky-50 to-blue-50', dot: 'bg-sky-400' },
+  { color: 'from-green-50 to-emerald-50', dot: 'bg-emerald-400' },
+  { color: 'from-purple-50 to-violet-50', dot: 'bg-violet-400' },
+  { color: 'from-yellow-50 to-amber-50', dot: 'bg-yellow-500' },
 ];
 
 const Home: React.FC = () => {
   const { data: homepageData, loading, error, refetch } = useHomepageContent();
   const rates = useMetalRates();
+  const content = useSiteContent();
+  const occasions = content.occasions.items;
+  const testimonials = content.testimonials.items;
+  const featured = content.featuredBanner;
   const catScrollRef = useRef<HTMLDivElement>(null);
   const productScrollRef = useRef<HTMLDivElement>(null);
 
@@ -146,11 +133,7 @@ const Home: React.FC = () => {
   if (rates?.silverPerKg) rateParts.push(`Today's Silver · ₹${rates.silverPerKg.toLocaleString('en-IN')}/kg`);
   const marqueeLine = [
     ...(rateParts.length ? rateParts : ['Authentic Silver & Gold']),
-    'BIS Hallmark-Grade Silver',
-    '100% Authentic Craftsmanship',
-    'Sold by Honest Weight',
-    'Personal WhatsApp Service',
-    'Trusted Since 2001',
+    ...content.announcement.lines,
   ].join(sep);
 
   const scrollCats = (dir: 'l' | 'r') => {
@@ -195,7 +178,7 @@ const Home: React.FC = () => {
           §1 · HERO CAROUSEL
       ═══════════════════════════════════════ */}
       <section>
-        <Carousel />
+        <Carousel slides={content.hero.slides} />
       </section>
 
       {/* ═══════════════════════════════════════
@@ -386,30 +369,29 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 opacity-5 bg-mandala lg:hidden" />
             <div className="relative z-10 max-w-md">
               <p className="text-gold-400 text-[10px] font-bold tracking-[0.4em] uppercase font-indian-serif mb-4">
-                ✦ Exclusive Collection ✦
+                {featured.eyebrow}
               </p>
               <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2 leading-tight">
-                The Shubhalagnam
+                {featured.title}
               </h2>
               <h3 className="font-display text-2xl md:text-3xl font-light text-gold-400 italic mb-6">
-                Bridal Silver Set
+                {featured.subtitle}
               </h3>
               <p className="text-gray-400 text-sm font-modern leading-relaxed mb-8 max-w-sm">
-                Handcrafted in pure 925 silver — our signature bridal collection blends
-                traditional artistry with timeless elegance. Perfect for your most sacred moments.
+                {featured.description}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link
-                  to="/collections/featured"
+                  to={featured.primaryLink}
                   className="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-white text-xs font-bold tracking-widest uppercase px-8 py-3.5 rounded-full transition-all duration-300 font-modern"
                 >
-                  Explore Collection <ArrowRight size={13} />
+                  {featured.primaryCta} <ArrowRight size={13} />
                 </Link>
                 <Link
-                  to="/enquiry"
+                  to={featured.secondaryLink}
                   className="inline-flex items-center gap-2 border border-white/20 text-white/80 hover:border-gold-400 hover:text-gold-300 text-xs font-semibold tracking-widest uppercase px-8 py-3.5 rounded-full transition-all duration-300 font-modern"
                 >
-                  Book Consultation
+                  {featured.secondaryCta}
                 </Link>
               </div>
             </div>
@@ -496,10 +478,12 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-4">
           <SectionHeading eyebrow="Perfect For Every Moment" title="Shop by Occasion" />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-            {occasions.map(({ icon, label, color, dot }) => (
+            {occasions.map(({ icon, label, link }, i) => {
+              const { color, dot } = OCCASION_STYLES[i % OCCASION_STYLES.length];
+              return (
               <Link
-                key={label}
-                to="/collections"
+                key={`${label}-${i}`}
+                to={link || '/collections'}
                 className={`group relative bg-gradient-to-br ${color} rounded-2xl p-5 md:p-7 flex flex-col gap-4 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-white`}
               >
                 {/* Background pattern hint */}
@@ -519,7 +503,8 @@ const Home: React.FC = () => {
                   </span>
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

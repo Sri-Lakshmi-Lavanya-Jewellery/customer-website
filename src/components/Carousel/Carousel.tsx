@@ -10,40 +10,12 @@ import { ChevronLeft, ChevronRight, ArrowRight, BadgeCheck } from 'lucide-react'
  */
 const WHATSAPP = 'https://wa.me/917288865969?text=Namaste%2C%20I%27d%20like%20to%20enquire%20about%20your%20silver%20collection.';
 
-const carouselItems = [
-  {
-    image: '/assets/images/products/kamakshi-deepam/1.jpg',
-    eyebrow: 'Pure 925 Silver',
-    title: 'Sacred Lamps,',
-    titleAccent: 'Crafted to Last Generations',
-    subtitle:
-      'Hand-finished silver Kamakshi deepams for your daily pooja and festive altar.',
-    cta: 'Explore Pooja Silver',
-    ctaLink: '/categories',
-  },
-  {
-    image: '/assets/images/products/harathi stand/1.1.jpg',
-    eyebrow: 'Temple & Ritual',
-    title: 'Authentic Silver',
-    titleAccent: 'for Every Ritual',
-    subtitle:
-      'Harathi stands, bells and uddharini — sold by honest weight, at today’s fair rate.',
-    cta: 'Shop the Collection',
-    ctaLink: '/categories',
-  },
-  {
-    image: '/assets/images/products/agarbatti stand/1.jpg',
-    eyebrow: 'Heirloom Craft',
-    title: 'Heritage Silver,',
-    titleAccent: 'Made to Be Treasured',
-    subtitle:
-      'Two decades of trusted craftsmanship in BIS hallmark-grade 925 silver.',
-    cta: 'Our Story',
-    ctaLink: '/about',
-  },
-];
+import { SITE_CONTENT_DEFAULTS, type HeroSlide } from '../../hooks/useSiteContent';
 
-export default function Carousel() {
+const DEFAULT_SLIDES = SITE_CONTENT_DEFAULTS.hero.slides;
+
+export default function Carousel({ slides }: { slides?: HeroSlide[] }) {
+  const carouselItems = slides && slides.length > 0 ? slides : DEFAULT_SLIDES;
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const total = carouselItems.length;
