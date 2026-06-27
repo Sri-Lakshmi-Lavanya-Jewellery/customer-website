@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ZoomIn, ChevronLeft, ChevronRight, Camera } from 'lucide-react';
 import { useProductGallery } from '../../hooks/useProductGallery';
 import type { ProductImage } from '../../hooks/useProductGallery';
 
@@ -34,7 +34,7 @@ export default function ProductGallery({
       <div className="w-full h-96 bg-gray-100 flex items-center justify-center rounded-lg">
         <div className="text-gray-400 text-center">
           <div className="w-16 h-16 mx-auto mb-2 bg-gray-300 rounded flex items-center justify-center">
-            <span className="text-2xl">📷</span>
+            <Camera className="w-8 h-8 text-gray-500" />
           </div>
           <p>No images available</p>
         </div>

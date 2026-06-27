@@ -1,7 +1,8 @@
-import React from 'react'; // Removed useState and ReactElement
+import React from 'react';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import { useCalendar } from '../../hooks/useCalendar'; // Import custom hook
-import { dayTypes } from '../../data/calendarData'; // Import dayTypes from new location
+import { useCalendar } from '../../hooks/useCalendar';
+import { dayTypes } from '../../data/calendarData';
+import { Icon, type IconName } from '../Icon/Icon';
 
 export default function AuspiciousCalendar() {
     const {
@@ -69,9 +70,8 @@ export default function AuspiciousCalendar() {
                                                     </span>
                                                     <div className="mt-1 space-y-1">
                                                         {day.auspiciousTypes.map((auspiciousDay, index) => (
-                                                            <div key={index} className="text-gold-500 text-lg flex items-center" title={dayTypes[auspiciousDay.type]?.name}>
-                                                                {dayTypes[auspiciousDay.type]?.icon}
-                                                                {/* Optionally display name: <span className="text-xs ml-1">{dayTypes[auspiciousDay.type]?.name}</span> */}
+                                                            <div key={index} className="text-gold-500 flex items-center" title={dayTypes[auspiciousDay.type]?.name}>
+                                                                <Icon name={dayTypes[auspiciousDay.type]?.icon as IconName} className="w-5 h-5" />
                                                             </div>
                                                         ))}
                                                     </div>
@@ -94,7 +94,7 @@ export default function AuspiciousCalendar() {
                         <div className="space-y-4">
                             {Object.entries(dayTypes).map(([key, value]) => (
                                 <div key={key} className="flex items-center gap-3">
-                                    <span className="text-2xl">{value.icon}</span>
+                                    <Icon name={value.icon as IconName} className="w-5 h-5 text-gold-600 shrink-0" />
                                     <span className="text-gray-700">{value.name}</span>
                                 </div>
                             ))}

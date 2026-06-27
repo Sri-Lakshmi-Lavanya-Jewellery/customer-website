@@ -153,7 +153,7 @@ const About: React.FC = () => {
               Tell us the silver article you need — we'll share the current price, customisation and delivery on WhatsApp.
             </p>
             <div className="flex flex-wrap gap-4 justify-center relative">
-              <a href={waLink('Namaste SLLJ 🙏 I would like to know more about your silver articles.')}
+              <a href={waLink('Namaste SLLJ! I would like to know more about your silver articles.')}
                  target="_blank" rel="noopener noreferrer"
                  className="btn-gold px-8 py-3 rounded-full">Chat on WhatsApp</a>
               <Link to="/products" className="border-2 border-white/70 text-white px-8 py-3 rounded-full hover:bg-white hover:text-gold-800 transition-colors">

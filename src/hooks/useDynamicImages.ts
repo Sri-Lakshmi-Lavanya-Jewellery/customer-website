@@ -30,7 +30,7 @@ export const useDynamicImages = ({
         // Only add dimension images that aren't already in the main images
         const newImages = dimensionImages.filter(img => !imageUrls.includes(img));
         imageUrls = [...imageUrls, ...newImages];
-        console.log('🎯 Added dimension-specific images:', newImages, 'for dimension:', selectedDimension);
+        console.log('Added dimension-specific images:', newImages, 'for dimension:', selectedDimension);
       }
     }
 
@@ -38,10 +38,10 @@ export const useDynamicImages = ({
        // Always start with top-level product images (these should be visible in all dimensions)
       if (product.images && product.images.length > 0) {
         imageUrls = [...product.images];
-        console.log('🖼️ Starting with top-level product images:', imageUrls);
+        console.log('Starting with top-level product images:', imageUrls);
       } else if (product.commonImages && product.commonImages.length > 0) {
         imageUrls = [...product.commonImages];
-        console.log('📦 Starting with common images:', imageUrls);
+        console.log('Starting with common images:', imageUrls);
       }
     }
     
@@ -52,7 +52,7 @@ export const useDynamicImages = ({
       altText: `${product.title}${selectedDimension ? ` - ${selectedDimension}` : ''} - Image ${index + 1}`
     }));
     
-    console.log('✨ Final converted images:', convertedImages);
+    console.log('Final converted images:', convertedImages);
     return convertedImages;
   }, [product, selectedModel, selectedDimension]);
   

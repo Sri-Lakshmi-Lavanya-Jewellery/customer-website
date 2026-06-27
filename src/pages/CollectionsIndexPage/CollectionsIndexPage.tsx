@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { usePublicStats } from '../../hooks/useApi';
-import { ArrowRight, Sparkles, Star, Package, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles, Star, Package, TrendingUp, Folder, Search, MessageCircle } from 'lucide-react';
 
 const collections = [
   {
@@ -168,16 +168,16 @@ const CollectionsIndexPage: React.FC = () => {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
-              { to: '/categories', icon: '📂', label: 'Browse by Category' },
-              { to: '/products', icon: '🔍', label: 'Search All Products' },
-              { to: '/enquiry', icon: '💬', label: 'Custom Order Enquiry' },
-            ].map(({ to, icon, label }) => (
+              { to: '/categories', icon: Folder, label: 'Browse by Category' },
+              { to: '/products', icon: Search, label: 'Search All Products' },
+              { to: '/enquiry', icon: MessageCircle, label: 'Custom Order Enquiry' },
+            ].map(({ to, icon: Icon, label }) => (
               <Link
                 key={to}
                 to={to}
                 className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gold-200 hover:border-gold-400 hover:shadow-gold transition-all duration-200 group"
               >
-                <span className="text-2xl">{icon}</span>
+                <Icon size={22} className="text-gold-600 shrink-0" />
                 <span className="text-sm font-semibold text-gray-700 group-hover:text-gold-700 font-modern transition-colors">
                   {label}
                 </span>

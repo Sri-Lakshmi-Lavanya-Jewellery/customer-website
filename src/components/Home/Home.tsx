@@ -5,6 +5,7 @@ import ProductCard from '../ProductCard/ProductCard';
 import { useHomepageContent } from '../../hooks/useApi';
 import { useMetalRates } from '../../hooks/useMetalRates';
 import { ShieldCheck, Truck, RefreshCw, Award, ArrowRight, Phone, ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
+import { Icon, type IconName } from '../Icon/Icon';
 
 /* ── Section heading ── */
 const SectionHeading = ({
@@ -80,13 +81,13 @@ const CircleCategoryTile = ({
 };
 
 /* ── Occasions ── */
-const occasions = [
-  { icon: '💍', label: 'Bridal & Wedding', color: 'from-rose-50 to-pink-50', dot: 'bg-rose-400' },
-  { icon: '🪔', label: 'Festivals & Puja', color: 'from-amber-50 to-orange-50', dot: 'bg-amber-400' },
-  { icon: '⭐', label: 'Daily Wear', color: 'from-sky-50 to-blue-50', dot: 'bg-sky-400' },
-  { icon: '👶', label: 'Baby & Kids', color: 'from-green-50 to-emerald-50', dot: 'bg-emerald-400' },
-  { icon: '🎁', label: 'Gifting', color: 'from-purple-50 to-violet-50', dot: 'bg-violet-400' },
-  { icon: '🛕', label: 'Temple & Religious', color: 'from-yellow-50 to-amber-50', dot: 'bg-yellow-500' },
+const occasions: Array<{ iconName: IconName; label: string; color: string; dot: string }> = [
+  { iconName: 'bridal',     label: 'Bridal & Wedding',   color: 'from-rose-50 to-pink-50',     dot: 'bg-rose-400' },
+  { iconName: 'festivals',  label: 'Festivals & Puja',   color: 'from-amber-50 to-orange-50',  dot: 'bg-amber-400' },
+  { iconName: 'daily-wear', label: 'Daily Wear',         color: 'from-sky-50 to-blue-50',      dot: 'bg-sky-400' },
+  { iconName: 'baby',       label: 'Baby & Kids',        color: 'from-green-50 to-emerald-50', dot: 'bg-emerald-400' },
+  { iconName: 'gifting',    label: 'Gifting',            color: 'from-purple-50 to-violet-50', dot: 'bg-violet-400' },
+  { iconName: 'temple',     label: 'Temple & Religious', color: 'from-yellow-50 to-amber-50',  dot: 'bg-yellow-500' },
 ];
 
 /* ── Testimonials ── */
@@ -496,7 +497,7 @@ const Home: React.FC = () => {
         <div className="container mx-auto px-4">
           <SectionHeading eyebrow="Perfect For Every Moment" title="Shop by Occasion" />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-            {occasions.map(({ icon, label, color, dot }) => (
+            {occasions.map(({ iconName, label, color, dot }) => (
               <Link
                 key={label}
                 to="/collections"
@@ -508,9 +509,9 @@ const Home: React.FC = () => {
 
                 <div className="relative">
                   <div className={`w-2 h-2 rounded-full ${dot} mb-3`} />
-                  <span className="text-3xl md:text-4xl block mb-3 group-hover:scale-110 transition-transform duration-300 origin-left">
-                    {icon}
-                  </span>
+                  <div className="w-9 h-9 md:w-10 md:h-10 mb-3 group-hover:scale-110 transition-transform duration-300 origin-left text-gray-700">
+                    <Icon name={iconName} className="w-full h-full" />
+                  </div>
                   <p className="text-sm md:text-base font-semibold text-gray-800 font-modern leading-tight">
                     {label}
                   </p>

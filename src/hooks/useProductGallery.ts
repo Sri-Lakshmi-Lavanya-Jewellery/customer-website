@@ -38,10 +38,10 @@ export const useProductGallery = ({ images, title }: UseProductGalleryProps): Us
 
   // Update selectedImage when images array changes
   useEffect(() => {
-    console.log('🔄 Images array changed:', images.length, 'images');
-    
+    console.log('Images array changed:', images.length, 'images');
+
     if (images.length > 0) {
-      console.log('� Setting to first image:', images[0]);
+      console.log('Setting to first image:', images[0]);
       // Always select the first image when images array changes
       setSelectedImage(images[0]);
     }

@@ -70,7 +70,7 @@ const WeightRange: React.FC = () => {
             Share the article and occasion, and we'll recommend the right weight and finish for you.
           </p>
           <a
-            href={waLink('Namaste SLLJ 🙏 I need help choosing the right weight for a silver article.')}
+            href={waLink('Namaste SLLJ! I need help choosing the right weight for a silver article.')}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-gold px-8 py-3 rounded-full inline-block"

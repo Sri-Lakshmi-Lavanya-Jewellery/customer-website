@@ -12,16 +12,16 @@ export interface DayType {
 }
 
 export const dayTypes: Record<string, DayType> = {
-    valarpirai: { name: 'Valarpirai', icon: '🌒' },
-    subhamuhurtham: { name: 'Subhamuhurtham', icon: '🕉️' },
-    chaturti: { name: 'Chaturti', icon: '🙏' },
-    shasti_viradham: { name: 'Shasti Viradham', icon: '🪔' },
-    kirthigai: { name: 'Kirthigai', icon: '☀️' },
-    womens_day: { name: 'Womens day', icon: '🌺' },
-    ekhadashi: { name: 'Ekhadashi', icon: '🌙' },
-    pradhosham: { name: 'Pradhosham', icon: '👥' },
-    pournami: { name: 'Pournami', icon: '😊' },
-    sankatahara_chaturti: { name: 'Sankatahara Chaturti', icon: '🙏' }
+    valarpirai: { name: 'Valarpirai', icon: 'waxing-crescent' },
+    subhamuhurtham: { name: 'Subhamuhurtham', icon: 'om-star' },
+    chaturti: { name: 'Chaturti', icon: 'lotus' },
+    shasti_viradham: { name: 'Shasti Viradham', icon: 'lamp' },
+    kirthigai: { name: 'Kirthigai', icon: 'sun' },
+    womens_day: { name: 'Womens day', icon: 'flower' },
+    ekhadashi: { name: 'Ekhadashi', icon: 'crescent-moon' },
+    pradhosham: { name: 'Pradhosham', icon: 'group' },
+    pournami: { name: 'Pournami', icon: 'full-moon' },
+    sankatahara_chaturti: { name: 'Sankatahara Chaturti', icon: 'lotus' },
 };
 
 // Sample data - in a real app, this might come from an API or a more complex data structure
